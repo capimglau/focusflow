@@ -28,6 +28,11 @@
   --sep:rgba(255,255,255,.08);--line:rgba(255,255,255,.12);--shadow:rgba(0,0,0,.3);
   --chk:#48484A;--nav-bg:rgba(28,28,30,.85);--nav-active:rgba(58,58,60,.95);
 }
+
+[data-dark="1"] html,
+[data-dark="1"] body {
+  background-color: #000000 !important;
+}
 @media(prefers-color-scheme:dark){
   :root:not([data-dark="0"]){
     --bg:#000000;--card:#1C1C1E;--card2:#2C2C2E;--fg:#FFFFFF;--sub:#8E8E93;
@@ -39,17 +44,17 @@
    BASE
 ══════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+html,body{height:100dvh;min-height:-webkit-fill-available;overflow:hidden;overscroll-behavior:none}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--fg);
   -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;transition:background .25s,color .25s}
 
 /* ══════════════════════════════════════
    PAGES + TRANSITIONS
 ══════════════════════════════════════ */
-.pages{flex:1;overflow:hidden;position:relative}
-.page{position:absolute;inset:0;overflow-y:auto;padding-bottom:100px;display:none;
+.pages{flex:1;overflow:hidden;position:relative;height:100%}
+.page{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;overflow-y:auto;padding-bottom:100px;display:none;
   overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
-  padding-top:env(safe-area-inset-top,0px)}
+  padding-top:0}
 .page.active{display:block}
 @keyframes slideInR{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes slideInL{from{transform:translateX(-40px);opacity:0}to{transform:translateX(0);opacity:1}}
@@ -426,6 +431,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
 /* Fundo — gradient claro: azul tênue esquerda-topo → branco direita */
 html:not([data-dark="1"]) {
+  min-height: 100vh;
+  background-color: #e8effa;
   background:
     linear-gradient(125deg,
       #e8effa 0%,
@@ -436,8 +443,8 @@ html:not([data-dark="1"]) {
     ) fixed !important;
 }
 html:not([data-dark="1"]) body {
-  background: transparent !important;
-  transition: none !important;
+  background: transparent;
+  transition: background .25s, color .25s;
 }
 html:not([data-dark="1"]) .pages,
 html:not([data-dark="1"]) .page {
@@ -485,7 +492,7 @@ html:not([data-dark="1"]) .date-banner { color: #8e8e93 !important }
 #hdr-dt { display: none !important }
 .hdr { padding: 6px 20px 4px !important }
 .sec-t { font-size: 12px !important; font-weight: 300 !important }
-.page { padding-top: env(safe-area-inset-top,0px) !important }
+.page { padding-top: 0 !important }
 
 /* Badge suave */
 .nb-badge { background: rgba(255,59,48,.70) !important; box-shadow: 0 1px 4px rgba(255,59,48,.25) !important }
@@ -959,6 +966,15 @@ html:not([data-dark="1"]) body #nav-pill {
 <script>
 document.documentElement.setAttribute('data-dark','0');
 
+
+// Update theme-color to match app background
+function updateThemeColor(){
+  var meta = document.getElementById('theme-color-meta');
+  if(!meta) return;
+  var dark = document.documentElement.getAttribute('data-dark') === '1';
+  meta.content = dark ? '#1c1c1e' : '#e8effa';
+}
+updateThemeColor();
 </script>
 </head>
 <body>
@@ -1217,6 +1233,7 @@ function toggleDark(){
   document.documentElement.setAttribute('data-dark',next);
   document.documentElement.style.colorScheme=next==='1'?'dark':'light';
   updateDarkIcon();
+  updateThemeColor();
 }
 function updateDarkIcon(){
   var cur=document.documentElement.getAttribute('data-dark');
