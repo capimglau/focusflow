@@ -44,10 +44,10 @@
    BASE
 ══════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+html,body{height:100svh;overflow:hidden;overscroll-behavior:none}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--fg);
   -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;transition:background .25s,color .25s;
-  min-height:100%;}
+  min-height:100svh;}
 
 /* ══════════════════════════════════════
    PAGES + TRANSITIONS
@@ -432,7 +432,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
 /* Fundo — gradient claro: azul tênue esquerda-topo → branco direita */
 html:not([data-dark="1"]) {
-  min-height: 100vh;
+  min-height: 100svh;
   background-color: #e8effa;
   background:
     linear-gradient(125deg,
