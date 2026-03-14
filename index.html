@@ -6,8 +6,22 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="color-scheme" content="light dark">
+<script>
+// Aplica dark mode ANTES do CSS carregar (evita flash branco no iOS)
+(function(){
+  var s=localStorage.getItem('ff-dark');
+  var sys=window.matchMedia('(prefers-color-scheme:dark)').matches;
+  var dark=(s==='1')||(s===null&&sys);
+  if(dark){
+    document.documentElement.setAttribute('data-dark','1');
+    document.documentElement.style.cssText='background-color:#000000;color-scheme:dark';
+  }
+})();
+</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="data:application/json,{%22name%22:%22FocusFlow%22,%22short_name%22:%22FocusFlow%22,%22display%22:%22standalone%22,%22background_color%22:%22%23F2F2F7%22,%22theme_color%22:%22%23007AFF%22,%22icons%22:[{%22src%22:%22https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Check%20mark%20button/3D/check_mark_button_3d.png%22,%22sizes%22:%22192x192%22,%22type%22:%22image/png%22}]}">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="FocusFlow">
 <meta name="theme-color" content="#007AFF" id="theme-color-meta">
@@ -31,7 +45,11 @@
   --sep:rgba(255,255,255,.08);--line:rgba(255,255,255,.12);--shadow:rgba(0,0,0,.3);
   --nb-bg:#1C1C1E;--nb-sep:rgba(255,255,255,.12);--nb-ic:#636366;--nb-ic-on:#FF453A;--nb-pill:rgba(255,255,255,.10);
   --chk:#48484A;--nav-bg:rgba(28,28,30,.85);--nav-active:rgba(58,58,60,.95);
-}
+}[data-dark="1"] html{background-color:#000000 !important}
+[data-dark="1"] body{background-color:#000000 !important}
+[data-dark="1"] .pages{background:#000000 !important}
+[data-dark="1"] .page{background:#000000 !important}
+
 
 [data-dark="1"] html,
 [data-dark="1"] body {
@@ -48,7 +66,8 @@
    BASE
 ══════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;overscroll-behavior:none}
+html,body{margin:0;padding:0;overscroll-behavior:none;background:var(--bg)}
+html{background-color:var(--bg)}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--fg);
   -webkit-font-smoothing:antialiased;transition:background .25s,color .25s;
   min-height:100vh;}
@@ -56,7 +75,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 /* ══════════════════════════════════════
    PAGES + TRANSITIONS
 ══════════════════════════════════════ */
-.pages{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden}
+.pages{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;background:var(--bg)}
 .page{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;overflow-y:auto;padding-bottom:84px;display:none;
   overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
   padding-top:0}
@@ -458,7 +477,7 @@ html:not([data-dark="1"]) .card {
 html:not([data-dark="1"]) .irow { background: transparent !important }
 html:not([data-dark="1"]) .irow { border-bottom: .5px solid rgba(0,0,0,.055) !important }
 .irow:last-child { border-bottom: none !important }
-html:not([data-dark="1"]) .date-banner { color: #8e8e93 !important }
+html:not([data-dark="1"]) .date-banner { color: #8e8e93 !important; padding-left: 20px !important }
 
 /* Header */
 #hdr-dt { display: none !important }
@@ -948,6 +967,32 @@ html:not([data-dark="1"]) body #nav-pill {
   box-shadow: 0 1px 0 rgba(255,255,255,.07) inset,
               0 6px 24px rgba(0,0,0,.35) !important;
 }
+
+/* SW/install banner */
+#pwa-banner{display:none;position:fixed;bottom:calc(var(--sb)+80px);left:16px;right:16px;
+  background:#1C1C1E;color:#fff;border-radius:16px;padding:14px 16px;z-index:950;
+  font-size:13px;line-height:1.5;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+#pwa-banner.on{display:block}
+#pwa-banner strong{color:#64D2FF}
+#pwa-banner button{border:none;background:rgba(255,255,255,.15);color:#fff;
+  border-radius:10px;padding:6px 14px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px}
+
+/* ══ Project Cards ══ */
+.proj-card{background:#fff;border-radius:16px;overflow:hidden;cursor:pointer;
+  margin:0 16px;border:.5px solid rgba(0,0,0,.06);}
+[data-dark="1"] .proj-card{background:#2C2C2E;border-color:rgba(255,255,255,.08)}
+.proj-hdr{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.proj-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.proj-info{flex:1;min-width:0}
+.proj-name{font-size:16px;font-weight:600;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proj-desc{font-size:13px;color:var(--sub);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proj-foot{padding:0 14px 14px}
+.prog-bar{height:5px;background:rgba(0,0,0,.07);border-radius:99px;overflow:hidden;margin-bottom:6px}
+[data-dark="1"] .prog-bar{background:rgba(255,255,255,.1)}
+.prog-fill{height:100%;border-radius:99px;transition:width .4s ease}
+.prog-meta{display:flex;justify-content:space-between;align-items:center}
+.prog-meta span:first-child{font-size:12px;color:var(--sub)}
+.prog-meta span:last-child{font-size:13px;font-weight:700}
 </style>
 <script>
 document.documentElement.setAttribute('data-dark','0');
@@ -1098,6 +1143,17 @@ updateThemeColor();
     <input type="text" id="ne-title" placeholder="Título" style="width:100%;border:none;font-family:inherit;font-size:22px;font-weight:600;padding:14px 18px 6px;outline:none;color:var(--fg);background:transparent">
     <textarea id="ne-body" placeholder="Escreva sua nota…" style="width:100%;min-height:220px;border:none;background:transparent;font-family:inherit;font-size:16px;color:var(--fg);outline:none;padding:8px 18px;resize:none;line-height:1.7"></textarea>
     <div class="msec" style="margin:8px 16px">
+      <div class="mrow">
+        <span style="font-size:18px">🔗</span>
+        <input type="url" id="ne-link" placeholder="Adicionar link…" style="flex:1;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--blue);outline:none">
+      </div>
+      <div class="mrow" style="border-top:.5px solid rgba(0,0,0,.06)">
+        <span style="font-size:18px">📍</span>
+        <input type="text" id="ne-loc" placeholder="Adicionar local…" style="flex:1;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--fg);outline:none">
+        <button onclick="getNoteGPS()" style="border:none;background:transparent;font-size:16px;cursor:pointer;padding:0 4px">📡</button>
+      </div>
+    </div>
+    <div class="msec" style="margin:8px 16px">
       <div class="mrow"><span class="mlbl">Anexar arquivo</span>
         <label style="color:var(--blue);font-size:14px;cursor:pointer">+ Adicionar
           <input type="file" id="ne-file" multiple style="display:none">
@@ -1212,17 +1268,34 @@ try{
 // ╔══════════════════════════════════════╗
 //  DARK MODE
 // ╚══════════════════════════════════════╝
-/* sempre abre no modo claro */
-document.documentElement.setAttribute('data-dark','0');
-function toggleDark(){
-  var cur=document.documentElement.getAttribute('data-dark');
-  var isDark=(cur==='1');
-  var next=isDark?'0':'1';
-  document.documentElement.setAttribute('data-dark',next);
-  document.documentElement.style.colorScheme=next==='1'?'dark':'light';
+/* Dark mode: respeita sistema iOS + salva preferência do usuário */
+(function(){
+  var saved=localStorage.getItem('ff-dark');
+  var sysDark=window.matchMedia('(prefers-color-scheme:dark)').matches;
+  var isDark=(saved==='1')||(saved===null&&sysDark);
+  document.documentElement.setAttribute('data-dark',isDark?'1':'0');
+  document.documentElement.style.colorScheme=isDark?'dark':'light';
+  // Aplica fundo imediatamente para evitar flash branco no iOS
+  document.documentElement.style.backgroundColor=isDark?'#000000':'#F2F2F7';
+  document.body&&(document.body.style.backgroundColor=isDark?'#000000':'#F2F2F7');
+})();
+function applyDark(isDark){
+  document.documentElement.setAttribute('data-dark',isDark?'1':'0');
+  document.documentElement.style.colorScheme=isDark?'dark':'light';
+  document.documentElement.style.backgroundColor=isDark?'#000000':'#F2F2F7';
+  document.body.style.backgroundColor=isDark?'#000000':'#F2F2F7';
+  localStorage.setItem('ff-dark',isDark?'1':'0');
   updateDarkIcon();
   updateThemeColor();
 }
+function toggleDark(){
+  var cur=document.documentElement.getAttribute('data-dark');
+  applyDark(cur!=='1');
+}
+// Escuta mudanças do sistema iOS em tempo real
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',function(e){
+  if(localStorage.getItem('ff-dark')===null) applyDark(e.matches);
+});
 function updateDarkIcon(){
   var cur=document.documentElement.getAttribute('data-dark');
   var isDark=(cur==='1')||(!cur&&window.matchMedia('(prefers-color-scheme:dark)').matches);
@@ -1247,7 +1320,7 @@ function showNotif(icon,title,body){
   document.getElementById('nb-body').textContent=body;
   document.getElementById('notif-bar').classList.add('on');
   if('Notification'in window&&Notification.permission==='granted')
-    try{new Notification(title,{body:body})}catch(e){}
+    try{new Notification(title,{body:body,icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="%23007AFF"/><text y="46" x="12" font-size="40">✓</text></svg>'})}catch(e){}
   setTimeout(closeNotif,6000);
 }
 function closeNotif(){document.getElementById('notif-bar').classList.remove('on')}
@@ -1255,6 +1328,7 @@ function scheduleNotif(title,body,at){
   if(!at)return;var ms=new Date(at)-Date.now();if(ms<0||ms>86400000*7)return;
   var id=setTimeout(function(){showNotif('🔔',title,body);haiku([30,10,30])},ms);
   _notifIds.push(id);
+  swSchedule(title,body,new Date(at).getTime());
 }
 function rescheduleAll(){
   _notifIds.forEach(clearTimeout);_notifIds=[];
@@ -1262,6 +1336,80 @@ function rescheduleAll(){
   D.reminders.forEach(function(r){if(r.datetime&&!r.done)scheduleNotif(r.title,'Lembrete',r.datetime)});
   D.events.forEach(function(e){if(e.notifyAt)scheduleNotif(e.title,'Evento',e.notifyAt)});
 }
+
+// ── Service Worker push (background / tela bloqueada) ──
+var _swReg=null;
+var SW_CODE=[
+  "self.addEventListener('install',function(e){self.skipWaiting()});",
+  "self.addEventListener('activate',function(e){e.waitUntil(self.clients.claim())});",
+  "var _pending=[];",
+  "self.addEventListener('message',function(e){",
+  "  if(!e.data)return;",
+  "  if(e.data.type==='SCHEDULE'){_pending=_pending.filter(function(n){return n.id!==e.data.id});_pending.push(e.data);}",
+  "  if(e.data.type==='CANCEL'){_pending=_pending.filter(function(n){return n.id!==e.data.id});}",
+  "  if(e.data.type==='SYNC'){_pending=e.data.items||[];}",
+  "});",
+  "setInterval(function(){",
+  "  var now=Date.now();",
+  "  _pending=_pending.filter(function(n){",
+  "    if(n.at<=now){",
+  "      self.registration.showNotification(n.title,{body:n.body||'FocusFlow',icon:'https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Bell/3D/bell_3d.png',badge:'https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Bell/3D/bell_3d.png',tag:n.id,renotify:true});",
+  "      return false;",
+  "    }return true;",
+  "  });",
+  "},20000);"
+].join('\n');
+(function initSW(){
+  if(!('serviceWorker'in navigator))return;
+  try{
+    var blob=new Blob([SW_CODE],{type:'application/javascript'});
+    var url=URL.createObjectURL(blob);
+    navigator.serviceWorker.register(url).then(function(reg){
+      _swReg=reg;
+      console.log('🔔 SW registrado');
+      if(Notification.permission==='default')
+        Notification.requestPermission().then(function(p){if(p==='granted')toast('🔔 Notificações ativadas!');});
+    }).catch(function(e){console.warn('SW blob falhou, tentando fallback:',e);});
+  }catch(e){console.warn('SW não suportado:',e);}
+})();
+function swSchedule(title,body,atMs){
+  if(!_swReg||!_swReg.active)return;
+  var id='n'+atMs+Math.random().toString(36).slice(2);
+  try{_swReg.active.postMessage({type:'SCHEDULE',id:id,title:title,body:body,at:atMs});}catch(e){}
+}
+function swSync(){
+  if(!_swReg||!_swReg.active)return;
+  var items=[];
+  var now=Date.now();
+  D.tasks.forEach(function(t){
+    if(t.done||!t.dueDate||!t.dueTime)return;
+    var base=new Date(t.dueDate+'T'+t.dueTime).getTime();
+    (t.notifyOffsets||[]).forEach(function(mins){
+      var at=base-mins*60000;
+      if(at>now)items.push({id:t.id+'_'+mins,title:t.title,body:mins===0?'Vencimento agora':mins<60?(mins+' min antes'):(mins/60)+'h antes',at:at});
+    });
+  });
+  D.reminders.forEach(function(r){
+    if(r.done||!r.datetime)return;
+    var at=new Date(r.datetime).getTime();
+    if(at>now)items.push({id:r.id,title:r.title,body:'Lembrete',at:at});
+  });
+  try{_swReg.active.postMessage({type:'SYNC',items:items});}catch(e){}
+}
+// Sync SW when app gains focus (captura notificações perdidas ao reabrir)
+document.addEventListener('visibilitychange',function(){
+  if(!document.hidden){swSync();checkMissedNotifs();}
+});
+function checkMissedNotifs(){
+  var missed=[];var now=Date.now();
+  D.tasks.forEach(function(t){
+    if(t.done||!t.dueDate||!t.dueTime)return;
+    var base=new Date(t.dueDate+'T'+t.dueTime).getTime();
+    if(base<now&&base>now-3600000)missed.push(t.title);
+  });
+  if(missed.length)toast('⏰ '+missed.length+' tarefa(s) vencida(s)');
+}
+
 function scheduleTaskNotifs(task){
   if(!task.dueDate||!task.dueTime)return;
   var base=new Date(task.dueDate+'T'+task.dueTime);
@@ -1567,7 +1715,7 @@ function buildRow(item,showDrag){
       +'<div class="chk'+(t.done?' done':'')+'"></div>'
       +'<div class="ibody">'
         +'<div class="ititle'+(t.done?' done':'')+'">'+esc(t.title)+'</div>'
-        +(t.notes?'<div class="inotes">'+esc(t.notes)+'</div>':'')
+        +(t.notes?'<div class="inotes">'+esc(t.notes)+'</div>':'')+(t.location?'<div class="imeta" style="margin-top:2px"><a href="'+(t.locationCoords?'https://maps.apple.com/?q='+t.locationCoords.lat+','+t.locationCoords.lng:'https://maps.apple.com/?q='+encodeURIComponent(t.location))+'" onclick="event.stopPropagation()" target="_blank" style="font-size:12px;color:var(--blue);text-decoration:none;display:inline-flex;align-items:center;gap:3px">📍 '+esc(t.location)+'</a></div>':'')+(t.link?'<div class="imeta" style="margin-top:1px"><a href="'+esc(t.link)+'" onclick="event.stopPropagation()" target="_blank" style="font-size:12px;color:var(--blue);text-decoration:none;display:inline-flex;align-items:center;gap:3px">🔗 '+esc(t.link.replace(/^https?:\/\//,'').split('/')[0])+'</a></div>':'')
         +(tot>0?'<div class="sub-prog"><div class="sub-fill" style="width:'+pct+'%"></div></div>':'')
         +'<div class="imeta">'
           +(t.dueDate&&!isToday(t.dueDate)?'<span class="idate'+(late?' late':isTom(t.dueDate)?' today-c':'')+'">'+(late?'⚠ ':'')+fmtD(t.dueDate)+(t.dueTime?' · '+t.dueTime:'')+'</span>':'')
@@ -1707,11 +1855,11 @@ function renderInicio(){
     D.projects.slice(0,3).forEach(function(p){
       var tot=(p.tasks||[]).length,dn=(p.tasks||[]).filter(function(t){return t.done}).length;
       var pct=tot>0?Math.round(dn/tot*100):0;
-      var pc=document.createElement('div');pc.className='proj-card';pc.style.marginBottom='10px';
+      var pc=document.createElement('div');pc.className='proj-card';pc.style.marginBottom='8px';
       pc.innerHTML='<div class="proj-hdr"><div class="proj-dot" style="background:'+(p.color||'var(--blue)')+'"></div>'
         +'<div class="proj-info"><div class="proj-name">'+esc(p.title)+'</div>'+(p.notes?'<div class="proj-desc">'+esc(p.notes)+'</div>':'')+'</div>'
         +'<svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="var(--chk)" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l5 5-5 5"/></svg></div>'
-        +(tot>0?'<div class="proj-foot"><div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%;background:'+(p.color||'var(--blue)')+'"></div></div><div class="prog-meta"><span>'+dn+'/'+tot+' tarefas</span><span style="font-weight:700;color:'+(p.color||'var(--blue)')+'">'+pct+'%</span></div></div>':'');
+        +(tot>0?'<div class="proj-foot"><div class="prog-bar" style="margin-bottom:5px"><div class="prog-fill" style="width:'+pct+'%;background:'+(p.color||'var(--blue)')+'"></div></div><div class="prog-meta" style="display:flex;justify-content:space-between;align-items:center"><span style="color:var(--sub);font-size:12px">'+dn+'/'+tot+' tarefas</span><span style="font-weight:700;font-size:13px;color:'+(p.color||'var(--blue)')+'">'+pct+'%</span></div></div>':'');
       pc.addEventListener('click',function(){openProjEd(p)});el.appendChild(pc);
     });
   }
@@ -1855,11 +2003,11 @@ function renderProjetos(){
     D.projects.forEach(function(p){
       var tot=(p.tasks||[]).length,dn=(p.tasks||[]).filter(function(t){return t.done}).length;
       var pct=tot>0?Math.round(dn/tot*100):0;
-      var pc=document.createElement('div');pc.className='proj-card';pc.style.marginBottom='10px';
+      var pc=document.createElement('div');pc.className='proj-card';pc.style.marginBottom='8px';
       pc.innerHTML='<div class="proj-hdr"><div class="proj-dot" style="background:'+(p.color||'var(--blue)')+'"></div>'
         +'<div class="proj-info"><div class="proj-name">'+esc(p.title)+'</div>'+(p.notes?'<div class="proj-desc">'+esc(p.notes)+'</div>':'')+'</div>'
         +'<svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="var(--chk)" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l5 5-5 5"/></svg></div>'
-        +'<div class="proj-foot"><div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%;background:'+(p.color||'var(--blue)')+'"></div></div><div class="prog-meta"><span>'+dn+'/'+tot+' tarefas</span><span style="font-weight:700;color:'+(p.color||'var(--blue)')+'">'+pct+'%</span></div></div>';
+        +'<div class="proj-foot"><div class="prog-bar" style="margin-bottom:5px"><div class="prog-fill" style="width:'+pct+'%;background:'+(p.color||'var(--blue)')+'"></div></div><div class="prog-meta" style="display:flex;justify-content:space-between;align-items:center"><span style="color:var(--sub);font-size:12px">'+dn+'/'+tot+' tarefas</span><span style="font-weight:700;font-size:13px;color:'+(p.color||'var(--blue)')+'">'+pct+'%</span></div></div>';
       pc.addEventListener('click',function(){openProjEd(p)});el.appendChild(pc);
     });
   }
@@ -2018,6 +2166,7 @@ function openTaskModal(task,defaults){
       +'<div class="msec"><div class="sub-add-row"><input class="sub-inp" id="sub-i" placeholder="+ Subtarefa…"><input type="date" id="sub-dt" style="border:none;background:transparent;font-family:inherit;font-size:12px;color:var(--sub);outline:none;max-width:110px"><button onclick="addSub()" style="border:none;background:transparent;color:var(--blue);font-size:22px;cursor:pointer;padding:0 4px;line-height:1;font-weight:500">+</button></div></div>'
       +(attHtml?'<div class="msec"><div class="attach-list">'+attHtml+'</div></div>':'')
       +'<div class="msec"><div class="mrow"><span class="mlbl">Anexo</span><label style="color:var(--blue);font-size:14px;cursor:pointer">+ Adicionar<input type="file" multiple style="display:none" onchange="addAtt(this)"></label></div></div>'
+      +'<div class="msec"><div class=\"mrow\"><span class=\"mlbl\">🔗 Link</span><input class=\"minp\" type=\"url\" id=\"t-lk\" placeholder=\"https://…\" value=\"'+esc(_curT.link||'')+'\" style=\"text-align:left;font-size:14px\"></div><div class=\"mrow\"><span class=\"mlbl\">📍 Local</span><input class=\"minp\" type=\"text\" id=\"t-loc\" placeholder=\"Endereço ou local…\" value=\"'+esc(_curT.location||'')+'\" style=\"text-align:left;font-size:14px\"><button onclick=\"getGPS()\" style=\"border:none;background:transparent;font-size:18px;cursor:pointer;padding:0 6px;flex-shrink:0\">📡</button></div>'+(_curT.locationCoords?'<div class=\"mrow\"><a href=\"https://maps.apple.com/?q='+_curT.locationCoords.lat+','+_curT.locationCoords.lng+'\" target=\"_blank\" style=\"font-size:13px;color:var(--blue);text-decoration:none;display:flex;align-items:center;gap:4px\">🗺 Ver no mapa</a></div>':'')+'</div>'
       +'<div class="msec"><button class="mact pri" onclick="saveTask()">Salvar tarefa</button></div>'
       +(S.eTask?'<div class="msec"><button class="mact del" onclick="deleteTask()">Excluir tarefa</button></div>':'')
       +'<div class="msec"><button class="mact" onclick="closeModal()">Cancelar</button></div>';
@@ -2043,8 +2192,9 @@ function addSub(){
 function addAtt(inp){syncTaskFields();for(var i=0;i<inp.files.length;i++)_curT.attachments.push(inp.files[i].name);window._taskRender&&window._taskRender()}
 function delAtt(i){syncTaskFields();_curT.attachments.splice(i,1);window._taskRender&&window._taskRender()}
 function syncTaskFields(){
-  var ti=document.getElementById('t-ti'),no=document.getElementById('t-no'),dt=document.getElementById('t-dt'),hr=document.getElementById('t-hr'),rc=document.getElementById('t-rc'),ntf=document.getElementById('t-notif');
+  var ti=document.getElementById('t-ti'),no=document.getElementById('t-no'),dt=document.getElementById('t-dt'),hr=document.getElementById('t-hr'),rc=document.getElementById('t-rc'),ntf=document.getElementById('t-notif'),lk=document.getElementById('t-lk'),loc=document.getElementById('t-loc');
   if(ti)_curT.title=ti.value;if(no)_curT.notes=no.value;if(dt)_curT.dueDate=dt.value;if(hr)_curT.dueTime=hr.value;if(rc)_curT.recurrence=rc.value;
+  if(lk)_curT.link=lk.value.trim();if(loc)_curT.location=loc.value.trim();
   _curT.notifyOffsets=syncNotifChecks();
 }
 function saveTask(){
@@ -2054,7 +2204,7 @@ function saveTask(){
   if(obj.notifyOffsets&&obj.notifyOffsets.length)scheduleTaskNotifs(obj);
   if(S.eTask)Object.assign(S.eTask,obj);
   else{obj.id=uid();obj.done=false;obj.createdAt=new Date().toISOString();D.tasks.unshift(obj)}
-  save();closeModal();render(S.page);toast('Salvo ✓');
+  save();swSync();closeModal();render(S.page);toast('Salvo ✓');
 }
 function deleteTask(){if(!S.eTask)return;D.tasks=D.tasks.filter(function(t){return t.id!==S.eTask.id});save();closeModal();render(S.page);toast('Excluído')}
 
@@ -2073,6 +2223,20 @@ function openReminderModal(rem){
   openModal(h);
   setTimeout(function(){var rc=document.getElementById('r-rc');if(rc)rc.value=r.recurrence||'none'},20);
 }
+function getGPS(){
+  if(!navigator.geolocation){toast('GPS indisponível');return;}
+  toast('📡 Capturando localização…');
+  navigator.geolocation.getCurrentPosition(function(p){
+    syncTaskFields();
+    _curT.locationCoords={lat:p.coords.latitude.toFixed(6),lng:p.coords.longitude.toFixed(6)};
+    var loc=document.getElementById('t-loc');
+    if(loc&&!loc.value.trim())loc.value='Minha localização';
+    if(loc)_curT.location=loc.value;
+    toast('📍 Localização capturada!');
+    window._taskRender&&window._taskRender();
+  },function(){toast('Acesso ao GPS negado');});
+}
+
 function saveReminder(){
   var ti=document.getElementById('r-ti');if(!ti||!ti.value.trim())return;
   var obj={title:ti.value.trim(),notes:document.getElementById('r-no').value,datetime:document.getElementById('r-dt').value,recurrence:document.getElementById('r-rc').value};
@@ -2159,10 +2323,22 @@ function closeNoteEd(){document.getElementById('ned').classList.remove('on');ren
 function saveNote(){
   var ti=document.getElementById('ne-title').value.trim()||'Sem título';
   var bo=document.getElementById('ne-body').value;
-  if(_ned.id){var n=D.notes.find(function(x){return x.id===_ned.id});if(n){n.title=ti;n.body=bo;n.attachments=_ned.attach.slice();n.updatedAt=td0()}}
-  else D.notes.unshift({id:uid(),title:ti,body:bo,attachments:_ned.attach.slice(),createdAt:td0(),updatedAt:td0()});
+  var lk=(document.getElementById('ne-link')||{}).value||'';
+  var lo=(document.getElementById('ne-loc')||{}).value||'';
+  if(_ned.id){var n=D.notes.find(function(x){return x.id===_ned.id});if(n){n.title=ti;n.body=bo;n.link=lk;n.location=lo;n.attachments=_ned.attach.slice();n.updatedAt=td0()}}
+  else D.notes.unshift({id:uid(),title:ti,body:bo,link:lk,location:lo,attachments:_ned.attach.slice(),createdAt:td0(),updatedAt:td0()});
   save();closeNoteEd();toast('Nota salva ✓');
 }
+function getNoteGPS(){
+  if(!navigator.geolocation){toast('GPS indisponível');return;}
+  toast('📡 Capturando…');
+  navigator.geolocation.getCurrentPosition(function(p){
+    var loc=document.getElementById('ne-loc');
+    if(loc){if(!loc.value.trim())loc.value='Minha localização';}
+    toast('📍 Localização capturada!');
+  },function(){toast('Acesso ao GPS negado');});
+}
+
 
 // ╔══════════════════════════════════════╗
 //  PROJECT EDITOR
@@ -2536,6 +2712,14 @@ document.addEventListener('touchend', function(e){
   var el = e.target.closest('button,.nb,.irow');
   if(el) setTimeout(function(){ el.classList.remove('tapped'); }, 60);
 }, {passive:true});
+
+// Show install banner if not PWA
+if(!window.navigator.standalone&&!window.matchMedia('(display-mode: standalone)').matches){
+  setTimeout(function(){
+    if(Notification.permission==='default')
+      document.getElementById('pwa-banner').classList.add('on');
+  },4000);
+}
 </script>
 
 <!-- Settings template -->
@@ -2685,6 +2869,13 @@ document.addEventListener('touchend', function(e){
     <div style="height:24px"></div>
   </div>
 </div>
+</div>
+
+<div id="pwa-banner">
+  <strong>🔔 Ativar notificações em background</strong><br>
+  Para receber alertas com o iPhone bloqueado:<br>
+  Toque em <strong>Compartilhar</strong> → <strong>"Adicionar à Tela de Início"</strong><br>
+  <button onclick="document.getElementById('pwa-banner').classList.remove('on')">Entendi</button>
 </div>
 </body>
 </html>
