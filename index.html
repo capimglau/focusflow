@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="light dark">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="FocusFlow">
@@ -44,9 +44,10 @@
    BASE
 ══════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100dvh;min-height:-webkit-fill-available;overflow:hidden;overscroll-behavior:none}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--fg);
-  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;transition:background .25s,color .25s}
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;transition:background .25s,color .25s;
+  min-height:100%;}
 
 /* ══════════════════════════════════════
    PAGES + TRANSITIONS
@@ -337,7 +338,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .fp{position:fixed;inset:0;z-index:850;background:var(--bg);display:none;flex-direction:column}
 .fp.on{display:flex;animation:sheetUp .26s cubic-bezier(.25,1,.5,1)}
 .fp-hdr{display:flex;align-items:center;
-  padding:calc(var(--st)+12px) 16px 11px;
+  padding:12px 16px 11px;
   border-bottom:.5px solid var(--line);flex-shrink:0;gap:8px}
 .fp-back{border:none;background:transparent;color:var(--blue);font-family:inherit;
   font-size:17px;cursor:pointer;display:flex;align-items:center;gap:3px}
@@ -360,7 +361,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 /* ══════════════════════════════════════
    NOTIFICATION BANNER
 ══════════════════════════════════════ */
-#notif-bar{position:fixed;top:calc(var(--st)+10px);left:14px;right:14px;z-index:9999;
+#notif-bar{position:fixed;top:10px;left:14px;right:14px;z-index:9999;
   background:var(--card);border-radius:16px;padding:12px 14px;
   box-shadow:0 4px 28px rgba(0,0,0,.18);display:none;align-items:center;gap:10px;
   border-left:4px solid var(--blue);animation:slideDown .3s ease}
@@ -372,7 +373,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 ══════════════════════════════════════ */
 #search{position:fixed;inset:0;z-index:870;background:var(--bg);
   backdrop-filter:blur(50px);-webkit-backdrop-filter:blur(50px);
-  display:none;flex-direction:column;padding:calc(var(--st)+10px) 16px 0;
+  display:none;flex-direction:column;padding:10px 16px 0;
   padding-bottom:calc(var(--sb)+100px)}
 #search.on{display:flex;animation:fadeIn .18s ease}
 .s-bar{display:flex;align-items:center;gap:9px;background:var(--card2);
@@ -442,10 +443,7 @@ html:not([data-dark="1"]) {
       #ffffff 100%
     ) fixed !important;
 }
-html:not([data-dark="1"]) body {
-  background: transparent;
-  transition: background .25s, color .25s;
-}
+/* body uses html background gradient */
 html:not([data-dark="1"]) .pages,
 html:not([data-dark="1"]) .page {
   background: transparent !important;
@@ -873,7 +871,7 @@ body #nav-out {
   display: flex !important;
   justify-content: center !important;
   align-items: flex-end !important;
-  padding: 0 14px calc(env(safe-area-inset-bottom,0px) + 10px) 14px !important;
+  padding: 0 14px 28px 14px !important;
   padding-top: 0 !important;
   background: none !important;
   pointer-events: none !important;
