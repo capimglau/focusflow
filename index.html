@@ -104,7 +104,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   transition:background .1s;position:relative;overflow:hidden;
   background:var(--card);touch-action:pan-y;}
 .irow:last-child{border-bottom:none}
-.irow:active{background:var(--sep)}
+.irow:active{background:rgba(0,0,0,.04)}
 /* Swipe backgrounds */
 .irow .swipe-bg-l,.irow .swipe-bg-r{position:absolute;top:0;bottom:0;width:100%;
   display:flex;align-items:center;padding:0 22px;font-size:13px;font-weight:700;
@@ -413,6 +413,293 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   border-bottom:.5px solid var(--sep);cursor:pointer}
 .backup-row:last-child{border-bottom:none}
 .backup-row:active{background:var(--sep)}
+
+/* ──────────────────────────────────────
+   LIQUID GLASS SUAVE — SAFE OVERRIDES
+────────────────────────────────────── */
+
+/* Fundo quase branco com reflexo pastel */
+html { background: #f2f2f7 }
+body {
+  background: #f2f2f7 !important;
+  transition: none !important;
+}
+
+/* Texto escuro em qualquer modo */
+body, .pages, .page,
+.hdr-left h1, .hdr-left small,
+.wday-n, .wday-l, .sec-t, .sec-t b,
+.irow, .nb span, .et, .empty-state,
+.t-title, .t-sub, .t-meta { color: #1c1c1e !important }
+.sub, .t-sub, .t-meta, .wday-l,
+.nb:not(.on) span { color: #6e6e73 !important }
+
+/* Cards — branco do nav Apple Music */
+.card {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 14px rgba(0,0,0,.05) !important;
+  border-radius: 14px !important;
+}
+.irow { background: transparent !important }
+.irow { border-bottom: .5px solid rgba(0,0,0,.055) !important }
+.irow:last-child { border-bottom: none !important }
+.date-banner { color: #8e8e93 !important }
+
+/* Header */
+#hdr-dt { display: none !important }
+.hdr { padding: 6px 20px 4px !important }
+.sec-t { font-size: 12px !important; font-weight: 300 !important }
+.page { padding-top: calc(var(--st) + 20px) !important }
+
+/* Badge suave */
+.nb-badge { background: rgba(255,59,48,.70) !important; box-shadow: 0 1px 4px rgba(255,59,48,.25) !important }
+.wday.is-today .wday-n { background: rgba(255,59,48,.82) !important; box-shadow: 0 2px 8px rgba(255,59,48,.22) !important }
+
+
+
+
+
+/* ── DATE BANNERS ── */
+.date-banner {
+  padding: 14px 20px 5px;
+  font-size: 11px; font-weight: 600;
+  color: #6e6e73 !important;
+  text-transform: uppercase; letter-spacing: .6px;
+  display: flex; align-items: center; gap: 6px;
+}
+.date-banner::before {
+  content: '';
+  display: inline-block;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: #007AFF;
+  flex-shrink: 0;
+}
+
+/* ── FADE-IN ESCALONADO ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px) }
+  to   { opacity: 1; transform: translateY(0)    }
+}
+.fade-in {
+  animation: fadeUp .32s cubic-bezier(.25,1,.5,1) both;
+}
+
+/* ── CHECKMARK ANIMADO ── */
+@keyframes chkPop {
+  0%   { transform: scale(1)    }
+  40%  { transform: scale(1.35) }
+  70%  { transform: scale(.88)  }
+  100% { transform: scale(1)    }
+}
+.chk-pop { animation: chkPop .28s cubic-bezier(.25,1,.5,1) }
+
+/* ── TAGS REFINADAS ── */
+.tag {
+  border-radius: 8px !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  padding: 2px 7px !important;
+  letter-spacing: .1px !important;
+}
+
+/* ══════════════════════════════════════════
+   BOTTOM NAV — estilo Perplexity
+══════════════════════════════════════════ */
+#nav-out {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0 0 calc(var(--sb) + 12px) 0 !important;
+  background: none !important; gap: 0 !important;
+}
+#nav-add { display: none !important }
+
+#nav-pill {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: calc(100vw - 36px) !important;
+  overflow-x: auto !important;
+  scroll-snap-type: x mandatory !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  padding: 4px !important;
+  border-radius: 28px !important;
+}
+#nav-pill::-webkit-scrollbar { display: none !important }
+
+.nb {
+  height: 58px !important; min-width: 60px !important; max-width: 74px !important;
+  padding: 0 9px !important; border-radius: 22px !important;
+  gap: 3px !important; scroll-snap-align: start !important; flex: 0 0 auto !important;
+}
+.nb svg  { width: 25px !important; height: 25px !important }
+.nb span { font-size: 10px !important; font-weight: 500 !important; letter-spacing: .1px !important }
+.nb:not(.on) svg  { color: #8e8e93 !important }
+.nb:not(.on) span { color: #8e8e93 !important }
+.nb.on {
+  background: rgba(255,255,255,.72) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.80) inset, 0 2px 10px rgba(0,0,0,.07) !important;
+}
+.nb.on svg, .nb.on span { color: #1c1c1e !important }
+.nb.on { background: rgba(0,0,0,.05) !important; box-shadow: none !important }
+
+/* ── Calendário igual à referência ── */
+.week-wrap { padding: 2px 16px 10px !important; gap: 0 !important }
+.wdays     { gap: 0 !important; justify-content: space-between !important }
+.wday      { padding: 4px 2px 2px !important; gap: 4px !important }
+.wday-l {
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  color: #8e8e93 !important;
+  letter-spacing: .2px !important;
+  text-transform: uppercase !important;
+}
+.wday-n {
+  font-size: 17px !important;
+  font-weight: 300 !important;
+  width: 34px !important;
+  height: 34px !important;
+  color: #1c1c1e !important;
+}
+.wday.is-today .wday-n {
+  background: #e03120 !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+.wday.is-sel:not(.is-today) .wday-n {
+  background: rgba(0,122,255,.10) !important;
+  color: #007AFF !important;
+}
+.wday-dot { width: 4px !important; height: 4px !important; opacity: .4 !important }
+
+
+/* ── Liquid Glass vars compartilhadas ── */
+:root {
+  --lg-bg:     rgba(255,255,255,.72);
+  --lg-blur:   blur(50px) saturate(2.5) brightness(1.08);
+  --lg-border: rgba(0,0,0,.06);
+  --lg-shine:  rgba(255,255,255,.80);
+}
+
+/* ── Header right pill (calendário + lua) ── */
+.hdr-act {
+  background: var(--lg-bg) !important;
+  backdrop-filter: var(--lg-blur) !important;
+  -webkit-backdrop-filter: var(--lg-blur) !important;
+  border: .5px solid var(--lg-border) !important;
+  box-shadow: 0 1.5px 0 var(--lg-shine) inset, 0 2px 12px rgba(0,0,0,.05) !important;
+  border-radius: 50px !important;
+  padding: 3px 6px !important;
+  gap: 0 !important;
+}
+.hdr-btn, .hdr-btn.blue { color: #8e8e93 !important }
+.hdr-btn:active { background: rgba(0,0,0,.05) !important }
+
+/* ── Header left — Quick Add pill ── */
+.hdr-left { display: flex !important; align-items: center !important; gap: 8px !important }
+
+.qadd-pill {
+  position: relative;
+}
+.qadd-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px;
+  border-radius: 50px;
+  border: .5px solid var(--lg-border);
+  background: var(--lg-bg);
+  backdrop-filter: var(--lg-blur);
+  -webkit-backdrop-filter: var(--lg-blur);
+  box-shadow: 0 1.5px 0 var(--lg-shine) inset, 0 2px 12px rgba(0,0,0,.05);
+  cursor: pointer;
+  color: #8e8e93;
+  transition: transform .15s, background .15s;
+}
+.qadd-btn.active, .qadd-btn:active {
+  background: rgba(255,255,255,.18) !important;
+  transform: scale(.92);
+  color: #1c1c1e !important;
+}
+
+/* Dropdown menu */
+.qadd-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 950;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 18px;
+  min-width: 160px;
+  background: rgba(255,255,255,.14);
+  backdrop-filter: blur(90px) saturate(4) brightness(1.22);
+  -webkit-backdrop-filter: blur(90px) saturate(4) brightness(1.22);
+  border: .5px solid rgba(255,255,255,.38);
+  box-shadow: 0 1.5px 0 rgba(255,255,255,.42) inset,
+              0 8px 32px rgba(0,0,0,.10);
+}
+.qadd-menu.open { display: flex }
+
+.qadd-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  border: none; background: transparent;
+  border-radius: 12px;
+  font-family: inherit; font-size: 14px; font-weight: 400;
+  color: #1c1c1e !important;
+  cursor: pointer; text-align: left;
+  transition: background .12s;
+}
+.qadd-item:active { background: rgba(0,0,0,.05) !important }
+.qadd-item svg { color: #8e8e93; flex-shrink: 0 }
+.qadd-item { color: #1c1c1e !important }
+
+/* ── Nav — Apple Music style: white pill clean ── */
+#nav-pill {
+  background: rgba(255,255,255,.92) !important;
+  backdrop-filter: blur(40px) saturate(2) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(2) !important;
+  border: .5px solid rgba(0,0,0,.06) !important;
+  box-shadow: 0 2px 16px rgba(0,0,0,.10), 0 1px 3px rgba(0,0,0,.06) !important;
+}
+
+
+/* ── qadd-pill agora tem 2 botões: + e lupa ── */
+.qadd-pill {
+  display: flex !important;
+  align-items: center !important;
+  background: var(--lg-bg) !important;
+  backdrop-filter: var(--lg-blur) !important;
+  -webkit-backdrop-filter: var(--lg-blur) !important;
+  border: .5px solid var(--lg-border) !important;
+  box-shadow: 0 1.5px 0 var(--lg-shine) inset, 0 2px 12px rgba(0,0,0,.05) !important;
+  border-radius: 50px !important;
+  padding: 3px 4px !important;
+  gap: 0 !important;
+}
+.qadd-btn {
+  border-radius: 50px !important;
+  border: none !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  width: 34px !important; height: 34px !important;
+}
+.qadd-sep {
+  width: .5px; height: 16px;
+  background: rgba(0,0,0,.12);
+  flex-shrink: 0; margin: 0 1px;
+}
+
+/* ── END ── */
+
 </style>
 </head>
 <body>
@@ -421,7 +708,38 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   <!-- INÍCIO -->
   <div class="page active" id="p-inicio">
     <div class="hdr">
-      <div class="hdr-left"><h1 id="hdr-dt"></h1></div>
+      <div class="hdr-left">
+        <h1 id="hdr-dt"></h1>
+        <!-- Quick Add Pill -->
+        <div class="qadd-pill" id="qadd-pill">
+          <button class="qadd-btn" id="qadd-trigger" title="Adicionar" onclick="document.getElementById('qadd-menu').classList.toggle('open');this.classList.toggle('active')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <div class="qadd-sep"></div>
+          <button class="qadd-btn" id="search-trigger" title="Buscar" onclick="goPage('navegar');closeQadd()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </button>
+        </div>
+        <!-- Dropdown menu -->
+        <div class="qadd-menu" id="qadd-menu">
+          <button class="qadd-item" onclick="openModalNew('task');closeQadd()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+            Tarefa
+          </button>
+          <button class="qadd-item" onclick="openModalNew('event');closeQadd()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            Evento
+          </button>
+          <button class="qadd-item" onclick="goPage('projetos');closeQadd()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
+            Projeto
+          </button>
+          <button class="qadd-item" onclick="openNoteEditor(null);closeQadd()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
+            Nota
+          </button>
+        </div>
+      </div>
       <div class="hdr-act">
         <button class="hdr-btn blue" id="cal-btn" title="Calendário">
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
@@ -497,10 +815,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
       <span>Notas</span>
     </button>
-    <button class="nb" data-p="navegar" data-i="5">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-      <span>Buscar</span>
-    </button>
+
   </div>
   <button id="nav-add">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
@@ -576,7 +891,7 @@ var S={
   eTask:null,eRem:null,eEv:null,searchTag:null
 };
 var PAGE_ORDER=['inicio','hoje','entrada','projetos','notas','navegar'];
-var WSHORT=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+var WSHORT=['D','S','T','Q','Q','S','S'];
 var WLONG=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 var MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 var MS=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
@@ -962,7 +1277,7 @@ function buildRow(item,showDrag){
         +'</div>'
       +'</div>';
     div.querySelector('.chk').addEventListener('click',function(e){
-      e.stopPropagation();haiku(12);t.done=!t.done;
+      e.stopPropagation();haiku(12);this.classList.add('chk-pop');t.done=!t.done;
       if(t.done)handleRecurrence(t);
       save();render(S.page);
     });
@@ -985,7 +1300,7 @@ function buildRow(item,showDrag){
     addSwipe(div,function(){r.done=true;save();render(S.page)},function(){if(confirm('Excluir?')){D.reminders=D.reminders.filter(function(x){return x.id!==r.id});save();render(S.page)}});
   } else if(item.kind==='ev'){
     var ev=item.data;
-    div.innerHTML='<div style="width:24px;height:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center"><div style="width:10px;height:10px;border-radius:50%;background:var(--green)"></div></div>'
+    div.innerHTML='<div style="width:24px;height:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center"><div style="width:10px;height:10px;border-radius:50%;background:var(--blue)"></div></div>'
       +'<div class="ibody">'
         +'<div class="ititle">'+esc(ev.title)+'</div>'
         +(ev.desc?'<div class="inotes">'+esc(ev.desc)+'</div>':'')
@@ -1041,23 +1356,28 @@ function renderInicio(){
     if(S.overdueOpen)el.appendChild(buildCard(overdue));
   }
 
-  // Em breve — ONE big card with inline date dividers
+  // Em breve — card separado por data
   if(upcoming.length){
     addSec(el,'<b>Em breve</b>','');
-    var bigCard=document.createElement('div');bigCard.className='card';
-    var lastD='';
+    var lastD='',curCard=null,cardIdx=0;
     upcoming.forEach(function(item){
       if(item.date!==lastD){
         lastD=item.date;
         var wd2=WSHORT[new Date(item.date+'T12:00').getDay()];
         var lbl=isToday(item.date)?'Hoje':isTom(item.date)?'Amanhã':fmtD(item.date);
-        var sep=document.createElement('div');
-        sep.style.cssText='padding:9px 14px 4px;font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;'+(bigCard.children.length?'border-top:.5px solid var(--sep)':'');
-        sep.textContent=lbl+' · '+wd2;bigCard.appendChild(sep);
+        var banner=document.createElement('div');
+        banner.className='date-banner fade-in';
+        banner.style.animationDelay=(cardIdx*60)+'ms';
+        banner.textContent=lbl+' · '+wd2;
+        el.appendChild(banner);
+        curCard=document.createElement('div');
+        curCard.className='card fade-in';
+        curCard.style.animationDelay=(cardIdx*60+20)+'ms';
+        el.appendChild(curCard);
+        cardIdx++;
       }
-      bigCard.appendChild(buildRow(item));
+      curCard.appendChild(buildRow(item));
     });
-    el.appendChild(bigCard);
   }
 
   if(!overdue.length&&!upcoming.length)
@@ -1754,6 +2074,15 @@ updateDarkIcon();
 rescheduleAll();
 renderInicio();
 updateBadges();
+
+function closeQadd(){
+  document.getElementById('qadd-menu').classList.remove('open');
+  document.getElementById('qadd-trigger').classList.remove('active');
+}
+document.addEventListener('click', function(e){
+  if(!e.target.closest('#qadd-pill') && !e.target.closest('#qadd-menu')) closeQadd();
+});
+
 </script>
 </body>
 </html>
