@@ -32,7 +32,7 @@
    VARIABLES — LIGHT
 ══════════════════════════════════════ */
 :root{
-  --bg:#F2F2F7;--card:#FFFFFF;--card2:#F2F2F7;--fg:#000000;--sub:#8E8E93;
+  --bg:transparent;--card:#FFFFFF;--card2:#F2F2F7;--fg:#000000;--sub:#8E8E93;
   --sep:rgba(0,0,0,.06);--line:rgba(0,0,0,.09);--shadow:rgba(0,0,0,.06);
   --blue:#007AFF;--red:#FF3B30;--green:#34C759;--orange:#FF9500;
   --purple:#AF52DE;--teal:#5AC8FA;--pink:#FF2D55;--yellow:#FFCC00;
@@ -66,17 +66,17 @@
    BASE
 ══════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;overscroll-behavior:none;background:var(--bg)}
+html,body{margin:0;padding:0;overscroll-behavior:none}
 html{background-color:var(--bg)}
-body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--fg);
+body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:var(--fg);
   -webkit-font-smoothing:antialiased;transition:background .25s,color .25s;
   min-height:100vh;}
 
 /* ══════════════════════════════════════
    PAGES + TRANSITIONS
 ══════════════════════════════════════ */
-.pages{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;background:var(--bg)}
-.page{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;overflow-y:auto;padding-bottom:84px;display:none;
+.pages{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;background:transparent}
+.page{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;overflow-y:auto;padding-bottom:84px;display:none;background:transparent;
   overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
   padding-top:0}
 .page.active{display:block}
@@ -322,13 +322,13 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
    FULL-PAGE EDITORS — iOS 26 Liquid Glass
 ══════════════════════════════════════ */
 .fp{position:fixed;inset:0;z-index:850;
-  background:#F2F2F7;
+  background:transparent;
   display:none;flex-direction:column}
 [data-dark="1"] .fp{background:#000000}
 .fp.on{display:flex;animation:sheetUp .26s cubic-bezier(.25,1,.5,1)}
 .fp-hdr{display:flex;align-items:center;
   padding:14px 16px 13px;
-  background:#F2F2F7;
+  background:rgba(210,228,250,.55);
   border-bottom:.5px solid rgba(0,0,0,.08);flex-shrink:0;gap:8px}
 [data-dark="1"] .fp-hdr{
   background:#000000;
@@ -374,7 +374,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 /* ══════════════════════════════════════
    SEARCH
 ══════════════════════════════════════ */
-#search{position:fixed;inset:0;z-index:870;background:var(--bg);
+#search{position:fixed;inset:0;z-index:870;background:transparent;
   backdrop-filter:blur(50px);-webkit-backdrop-filter:blur(50px);
   display:none;flex-direction:column;padding:10px 16px 0;
   padding-bottom:90px}
@@ -430,121 +430,125 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .backup-row:active{background:var(--sep)}
 
 /* ──────────────────────────────────────
-   LIQUID GLASS SUAVE — SAFE OVERRIDES
+   LIQUID GLASS — ENHANCED
 ────────────────────────────────────── */
 
-/* Fundo — gradient claro: azul tênue esquerda-topo → branco direita */
+/* ── FUNDO: ice-blue igual ao AutoGest Pro ── */
 html:not([data-dark="1"]) {
   min-height: 100svh;
-  background-color: #e8effa;
+  background-color: #bed4f0;
   background:
-    linear-gradient(125deg,
-      #e8effa 0%,
-      #edf2fb 15%,
-      #f4f6fb 35%,
-      #f8f9fc 55%,
-      #ffffff 100%
-    ) fixed !important;
+    radial-gradient(ellipse at 15% 0%,   #9dc0f0 0%,  transparent 50%),
+    radial-gradient(ellipse at 88% 8%,   #aecdf5 0%,  transparent 48%),
+    radial-gradient(ellipse at 40% 95%,  #b8d4f5 0%,  transparent 55%),
+    linear-gradient(160deg, #c2d8f5 0%, #cfe0f7 30%, #dceaf8 60%, #eaf2fc 85%, #f2f7ff 100%)
+    fixed !important;
+  background-attachment: fixed !important;
 }
-/* body uses html background gradient */
 html:not([data-dark="1"]) .pages,
-html:not([data-dark="1"]) .page {
-  background: transparent !important;
+html:not([data-dark="1"]) .page { background: transparent !important }
+
+/* ── CARDS — Liquid Glass máximo ── */
+html:not([data-dark="1"]) .card {
+  background: rgba(255,255,255,.76) !important;
+  backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  border-radius: 20px !important;
+  border: .5px solid rgba(255,255,255,.95) !important;
+  box-shadow:
+    0 2px 0 rgba(255,255,255,1) inset,
+    0 -1px 0 rgba(160,200,245,.5) inset,
+    0 8px 32px rgba(60,110,200,.13),
+    0 2px 8px  rgba(0,0,0,.06) !important;
+}
+html:not([data-dark="1"]) .irow { background: transparent !important }
+html:not([data-dark="1"]) .irow { border-bottom: .5px solid rgba(0,0,0,.05) !important }
+.irow:last-child { border-bottom: none !important }
+
+/* ── PROJ-CARD glass ── */
+html:not([data-dark="1"]) .proj-card {
+  background: rgba(255,255,255,.76) !important;
+  backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  border: .5px solid rgba(255,255,255,.95) !important;
+  box-shadow:
+    0 2px 0 rgba(255,255,255,1) inset,
+    0 8px 32px rgba(60,110,200,.13),
+    0 2px 8px rgba(0,0,0,.06) !important;
+  border-radius: 20px !important;
 }
 
-/* Texto escuro APENAS em modo claro */
+/* ── NAV BAR glass mais pronunciado ── */
+html:not([data-dark="1"]) #nav-pill {
+  background: rgba(255,255,255,.78) !important;
+  backdrop-filter: blur(50px) saturate(2.5) brightness(1.04) !important;
+  -webkit-backdrop-filter: blur(50px) saturate(2.5) brightness(1.04) !important;
+  border: .5px solid rgba(255,255,255,.92) !important;
+  box-shadow:
+    0 2px 0 rgba(255,255,255,.95) inset,
+    0 -8px 32px rgba(80,120,200,.12),
+    0 4px 24px rgba(0,0,0,.08) !important;
+}
+
+/* ── HEADER — transparente ── */
+html:not([data-dark="1"]) .hdr {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ── WEEK STRIP — sem fundo, transparente ── */
+html:not([data-dark="1"]) .week-wrap {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ── TEXTOS ── */
 html:not([data-dark="1"]) body,
 html:not([data-dark="1"]) .hdr-left h1,
 html:not([data-dark="1"]) .wday-n,
-html:not([data-dark="1"]) .wday-l,
-html:not([data-dark="1"]) .sec-t,
-html:not([data-dark="1"]) .sec-t b,
-html:not([data-dark="1"]) .irow,
-html:not([data-dark="1"]) .nb span,
-html:not([data-dark="1"]) .et,
-html:not([data-dark="1"]) .empty-state,
-html:not([data-dark="1"]) .t-title,
-html:not([data-dark="1"]) .t-sub,
-html:not([data-dark="1"]) .t-meta { color: #1c1c1e !important }
+html:not([data-dark="1"]) .ititle { color: #1c1c1e !important }
 html:not([data-dark="1"]) .sub,
-html:not([data-dark="1"]) .t-sub,
-html:not([data-dark="1"]) .t-meta,
 html:not([data-dark="1"]) .wday-l,
-html:not([data-dark="1"]) .nb:not(.on) span { color: #6e6e73 !important }
-
-/* Cards — Liquid Glass forte */
-html:not([data-dark="1"]) .card {
-  background: rgba(255,255,255,.78) !important;
-  backdrop-filter: blur(80px) saturate(2.5) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(80px) saturate(2.5) brightness(1.06) !important;
-  border: .5px solid rgba(255,255,255,.85) !important;
-  box-shadow:
-    0 1.5px 0 rgba(255,255,255,.98) inset,
-    0 4px 22px rgba(100,130,200,.08),
-    0 1px 3px rgba(0,0,0,.04) !important;
-  border-radius: 18px !important;
-}
-html:not([data-dark="1"]) .irow { background: transparent !important }
-html:not([data-dark="1"]) .irow { border-bottom: .5px solid rgba(0,0,0,.055) !important }
-.irow:last-child { border-bottom: none !important }
-html:not([data-dark="1"]) .date-banner { color: #8e8e93 !important; padding-left: 20px !important }
-
-/* Header */
-#hdr-dt { display: none !important }
-.sec-t { font-size: 12px !important; font-weight: 300 !important }
-.page { padding-top: 0 !important }
-
-/* Badge suave */
-.nb-badge { background: rgba(255,59,48,.70) !important; box-shadow: 0 1px 4px rgba(255,59,48,.25) !important }
-.wday.is-today .wday-n { background: rgba(255,59,48,.82) !important; box-shadow: 0 2px 8px rgba(255,59,48,.22) !important }
-
-
-
-
+html:not([data-dark="1"]) .sec-t { color: #6e6e73 !important }
 
 /* ── DATE BANNERS ── */
+html:not([data-dark="1"]) .date-banner { color: #6e6e73 !important }
 .date-banner {
-  padding: 14px 20px 5px;
-  font-size: 11px; font-weight: 600;
-  color: #6e6e73 !important;
+  padding: 16px 20px 5px;
+  font-size: 11px; font-weight: 700;
   text-transform: uppercase; letter-spacing: .6px;
   display: flex; align-items: center; gap: 6px;
 }
 .date-banner::before {
   content: '';
   display: inline-block;
-  width: 3px; height: 3px;
+  width: 4px; height: 4px;
   border-radius: 50%;
   background: #007AFF;
   flex-shrink: 0;
+  opacity: .7;
 }
 
-/* ── FADE-IN ESCALONADO ── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px) }
-  to   { opacity: 1; transform: translateY(0)    }
-}
-.fade-in {
-  animation: fadeUp .32s cubic-bezier(.25,1,.5,1) both;
-}
+/* ── BADGES ── */
+.nb-badge { background: rgba(255,59,48,.75) !important; box-shadow: 0 1px 6px rgba(255,59,48,.3) !important }
+.wday.is-today .wday-n { background: rgba(255,59,48,.85) !important; box-shadow: 0 2px 10px rgba(255,59,48,.28) !important }
 
-/* ── CHECKMARK ANIMADO ── */
-@keyframes chkPop {
-  0%   { transform: scale(1)    }
-  40%  { transform: scale(1.35) }
-  70%  { transform: scale(.88)  }
-  100% { transform: scale(1)    }
-}
+/* ── FADE-IN ── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.fade-in { animation: fadeUp .32s cubic-bezier(.25,1,.5,1) both }
+
+/* ── OUTROS ── */
+#hdr-dt { display: none !important }
+.sec-t { font-size: 12px !important; font-weight: 600 !important; letter-spacing: .3px }
+.page { padding-top: 0 !important }
+@keyframes chkPop { 0%{transform:scale(1)} 40%{transform:scale(1.35)} 70%{transform:scale(.88)} 100%{transform:scale(1)} }
 .chk-pop { animation: chkPop .28s cubic-bezier(.25,1,.5,1) }
+.tag { border-radius: 8px !important; font-size: 10px !important; font-weight: 500 !important; padding: 2px 7px !important }
 
-/* ── TAGS REFINADAS ── */
-.tag {
-  border-radius: 8px !important;
-  font-size: 10px !important;
-  font-weight: 500 !important;
-  padding: 2px 7px !important;
-  letter-spacing: .1px !important;
-}
 
 /* ══════════════════════════════════════════
    BOTTOM NAV — estilo Perplexity
@@ -1080,7 +1084,7 @@ html:not([data-dark="1"]) body #nav-pill {
 .hdr { padding: 6px 20px 2px !important }
 
 /* Week strip: desce — mais espaço acima do header, menos espaço abaixo (mais próximo das tarefas) */
-.week-wrap { padding: 10px 14px 4px !important }
+.week-wrap { padding: 6px 14px 6px !important; margin: 0 !important }
 
 /* Primeiro date-banner: cola nas tarefas logo abaixo do calendário */
 .date-banner:first-child { padding-top: 8px !important }
@@ -1107,6 +1111,60 @@ html:not([data-dark="1"]) body #nav-pill {
 /* Chips de filtro nas páginas também precisam de espaço */
 #hoje-feed .chips,
 #entrada-feed .chips { margin-top: 2px }
+
+/* ══ PÁGINAS INTERNAS — mesmo fundo ice-blue + glass ══ */
+
+/* .fp (Notas, detalhes) — transparente para mostrar o gradiente */
+html:not([data-dark="1"]) .fp {
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+html:not([data-dark="1"]) .fp-hdr {
+  background: rgba(210,228,250,.55) !important;
+  backdrop-filter: blur(40px) saturate(2.5) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(2.5) !important;
+  border-bottom: .5px solid rgba(255,255,255,.7) !important;
+}
+
+/* Busca — glass sobre o gradiente */
+html:not([data-dark="1"]) #search {
+  background: rgba(190,215,245,.55) !important;
+  backdrop-filter: blur(50px) saturate(2.8) !important;
+  -webkit-backdrop-filter: blur(50px) saturate(2.8) !important;
+}
+
+/* Modal de adicionar/editar — glass */
+html:not([data-dark="1"]) #modal-box {
+  background: rgba(235,245,255,.88) !important;
+  backdrop-filter: blur(60px) saturate(2.8) brightness(1.06) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(2.8) brightness(1.06) !important;
+  border: .5px solid rgba(255,255,255,.9) !important;
+}
+
+/* Move sheet — glass */
+html:not([data-dark="1"]) #move-sheet {
+  background: rgba(225,238,252,.88) !important;
+  backdrop-filter: blur(60px) saturate(2.5) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(2.5) !important;
+  border: .5px solid rgba(255,255,255,.8) !important;
+}
+html:not([data-dark="1"]) .mv-sec {
+  background: rgba(255,255,255,.72) !important;
+  backdrop-filter: blur(30px) !important;
+  -webkit-backdrop-filter: blur(30px) !important;
+  border: .5px solid rgba(255,255,255,.9) !important;
+}
+
+/* Chips de filtro — glass pill */
+html:not([data-dark="1"]) .chip:not(.on) {
+  background: rgba(255,255,255,.55) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: .5px solid rgba(255,255,255,.8) !important;
+}
+html:not([data-dark="1"]) .chip.on {
+  background: rgba(0,0,0,.75) !important;
+}
 </style>
 <script>
 document.documentElement.setAttribute('data-dark','0');
