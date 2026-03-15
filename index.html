@@ -491,7 +491,6 @@ html:not([data-dark="1"]) .date-banner { color: #8e8e93 !important; padding-left
 
 /* Header */
 #hdr-dt { display: none !important }
-.hdr { padding: 6px 20px 4px !important }
 .sec-t { font-size: 12px !important; font-weight: 300 !important }
 .page { padding-top: 0 !important }
 
@@ -553,7 +552,6 @@ html:not([data-dark="1"]) .date-banner { color: #8e8e93 !important; padding-left
 
 
 /* ── Calendário igual à referência ── */
-.week-wrap { padding: 2px 16px 10px !important; gap: 0 !important }
 .wdays     { gap: 0 !important; justify-content: space-between !important }
 .wday      { padding: 4px 2px 2px !important; gap: 4px !important }
 .wday-l {
@@ -1037,6 +1035,78 @@ html:not([data-dark="1"]) body #nav-pill {
   70%{box-shadow:0 0 0 10px rgba(0,122,255,0)}100%{box-shadow:0 0 0 0 rgba(0,122,255,0)}}
 .irow.lp-active{background:rgba(0,122,255,.07)!important;
   border-radius:4px;animation:lp-pulse .5s ease}
+
+/* ══ ESPAÇAMENTOS GLOBAIS ══ */
+
+/* Header com mais respiro */
+
+/* Week strip: mais espaço abaixo antes do conteúdo */
+
+/* Date banners: mais espaço acima, menos colado */
+.date-banner {
+  padding: 18px 20px 6px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: var(--sub) !important;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+}
+/* Primeiro date-banner logo após o header: menos espaço acima */
+.date-banner:first-child { padding-top: 10px !important }
+
+/* Cards com gap entre si */
+.card { margin: 0 16px 10px !important }
+
+/* Seções (títulos "Em breve", "Projetos", etc.) */
+.sec { padding: 18px 20px 8px !important }
+
+/* Linhas internas das rows: mais padding vertical */
+.irow { padding: 13px 15px !important }
+
+/* Proj-card gap */
+.proj-card { margin: 0 16px 10px !important }
+
+/* Chips de filtro: mais espaço */
+.chips { padding: 4px 16px 12px !important }
+
+/* Espaço inicial do feed nas páginas */
+
+
+/* Separador entre semana e feed */
+
+/* ══ HEADER + CALENDÁRIO + FEED SPACING ══ */
+
+/* Header: sobe — menos espaço embaixo */
+.hdr { padding: 6px 20px 2px !important }
+
+/* Week strip: desce — mais espaço acima do header, menos espaço abaixo (mais próximo das tarefas) */
+.week-wrap { padding: 10px 14px 4px !important }
+
+/* Primeiro date-banner: cola nas tarefas logo abaixo do calendário */
+.date-banner:first-child { padding-top: 8px !important }
+.date-banner { padding: 16px 20px 5px !important }
+
+/* Cards: gap entre si */
+.card { margin: 0 16px 10px !important }
+
+/* Seções */
+.sec { padding: 16px 20px 6px !important }
+
+/* ══ FEED SPACING POR PÁGINA ══ */
+
+/* Início: pouco espaço (tem calendário acima) */
+#inicio-feed { padding-top: 2px }
+
+/* Outras páginas: h1 direto no conteúdo — precisa de mais espaço */
+#hoje-feed,
+#entrada-feed,
+#projetos-feed,
+#notas-feed,
+#config-feed { padding-top: 14px }
+
+/* Chips de filtro nas páginas também precisam de espaço */
+#hoje-feed .chips,
+#entrada-feed .chips { margin-top: 2px }
 </style>
 <script>
 document.documentElement.setAttribute('data-dark','0');
