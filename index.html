@@ -354,12 +354,22 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 /* ══════════════════════════════════════
    NOTIFICATION BANNER
 ══════════════════════════════════════ */
-#notif-bar{position:fixed;top:10px;left:14px;right:14px;z-index:9999;
-  background:var(--card);border-radius:16px;padding:12px 14px;
-  box-shadow:0 4px 28px rgba(0,0,0,.18);display:none;align-items:center;gap:10px;
-  border-left:4px solid var(--blue);animation:slideDown .3s ease}
-@keyframes slideDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+#notif-bar{
+  position:fixed;top:12px;left:10px;right:10px;z-index:9999;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(40px) saturate(1.8);-webkit-backdrop-filter:blur(40px) saturate(1.8);
+  border-radius:20px;padding:13px 15px;
+  box-shadow:0 8px 40px rgba(0,0,0,.18),0 0 0 .5px rgba(0,0,0,.08);
+  display:none;align-items:center;gap:12px;
+  animation:slideDown .38s cubic-bezier(.25,1,.5,1)}
+[data-dark="1"] #notif-bar{
+  background:rgba(44,44,46,.95);
+  box-shadow:0 8px 40px rgba(0,0,0,.5),0 0 0 .5px rgba(255,255,255,.1)}
+@keyframes slideDown{from{opacity:0;transform:translateY(-60px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
 #notif-bar.on{display:flex}
+#nb-icon{font-size:28px;flex-shrink:0}
+#nb-title{font-size:14px;font-weight:700;color:var(--fg)}
+#nb-body{font-size:13px;color:var(--sub);margin-top:1px}
 
 /* ══════════════════════════════════════
    SEARCH
@@ -993,6 +1003,40 @@ html:not([data-dark="1"]) body #nav-pill {
 .prog-meta{display:flex;justify-content:space-between;align-items:center}
 .prog-meta span:first-child{font-size:12px;color:var(--sub)}
 .prog-meta span:last-child{font-size:13px;font-weight:700}
+
+/* ══ Long-press Move Sheet ══ */
+#move-sheet-bg{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.32);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  display:none;align-items:flex-end;justify-content:center}
+#move-sheet-bg.on{display:flex;animation:fadeIn .18s ease}
+#move-sheet{width:100%;max-width:600px;background:#F2F2F7;
+  border-radius:26px 26px 0 0;padding:0 0 40px;
+  animation:sheetUp .32s cubic-bezier(.25,1,.5,1)}
+[data-dark="1"] #move-sheet{background:#1C1C1E}
+.mv-handle{width:32px;height:4px;background:rgba(0,0,0,.18);
+  border-radius:2px;margin:10px auto 12px}
+[data-dark="1"] .mv-handle{background:rgba(255,255,255,.22)}
+.mv-title{font-size:12px;font-weight:700;color:var(--sub);
+  text-transform:uppercase;letter-spacing:.5px;padding:4px 18px 10px}
+.mv-sec{background:#fff;border-radius:16px;margin:0 16px 8px;overflow:hidden;
+  border:.5px solid rgba(0,0,0,.06)}
+[data-dark="1"] .mv-sec{background:#2C2C2E;border-color:rgba(255,255,255,.08)}
+.mv-dates{display:flex;gap:7px;padding:12px 14px;flex-wrap:wrap}
+.mv-date-btn{flex:1;min-width:64px;padding:9px 4px;border:none;border-radius:50px;
+  background:rgba(0,122,255,.1);color:var(--blue);font-family:inherit;
+  font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s}
+.mv-date-btn.on{background:var(--blue);color:#fff}
+.mv-date-btn:active{transform:scale(.93);opacity:.8}
+.mv-row{display:flex;align-items:center;gap:12px;padding:13px 16px;
+  border-bottom:.5px solid rgba(0,0,0,.06);cursor:pointer}
+[data-dark="1"] .mv-row{border-bottom-color:rgba(255,255,255,.07)}
+.mv-row:last-child{border-bottom:none}
+.mv-row:active{background:rgba(0,0,0,.04)}
+.mv-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+@keyframes lp-pulse{0%{box-shadow:0 0 0 0 rgba(0,122,255,.4)}
+  70%{box-shadow:0 0 0 10px rgba(0,122,255,0)}100%{box-shadow:0 0 0 0 rgba(0,122,255,0)}}
+.irow.lp-active{background:rgba(0,122,255,.07)!important;
+  border-radius:4px;animation:lp-pulse .5s ease}
 </style>
 <script>
 document.documentElement.setAttribute('data-dark','0');
@@ -1325,90 +1369,174 @@ function showNotif(icon,title,body){
 }
 function closeNotif(){document.getElementById('notif-bar').classList.remove('on')}
 function scheduleNotif(title,body,at){
-  if(!at)return;var ms=new Date(at)-Date.now();if(ms<0||ms>86400000*7)return;
-  var id=setTimeout(function(){showNotif('🔔',title,body);haiku([30,10,30])},ms);
+  if(!at)return;
+  var atMs=new Date(at).getTime();
+  var id='sn_'+atMs+'_'+Math.random().toString(36).slice(2);
+  scheduleSmartNotif(id, title, body, atMs);
   _notifIds.push(id);
-  swSchedule(title,body,new Date(at).getTime());
 }
 function rescheduleAll(){
-  _notifIds.forEach(clearTimeout);_notifIds=[];
+  _notifIds=[];
   D.tasks.forEach(function(t){if(t.notifyAt&&!t.done)scheduleNotif(t.title,'Tarefa',t.notifyAt)});
   D.reminders.forEach(function(r){if(r.datetime&&!r.done)scheduleNotif(r.title,'Lembrete',r.datetime)});
   D.events.forEach(function(e){if(e.notifyAt)scheduleNotif(e.title,'Evento',e.notifyAt)});
+  setTimeout(swSync, 500);
 }
 
-// ── Service Worker push (background / tela bloqueada) ──
-var _swReg=null;
-var SW_CODE=[
+// ══════════════════════════════════════
+//  SISTEMA DE NOTIFICAÇÕES REAL
+// ══════════════════════════════════════
+var _swReg = null;
+var _notifStore = JSON.parse(localStorage.getItem('ff-notifs') || '[]');
+
+// Salva notificações agendadas no localStorage para persistência
+function saveNotifStore(){
+  localStorage.setItem('ff-notifs', JSON.stringify(_notifStore));
+}
+
+// Agenda notificação com fallback em camadas
+function scheduleSmartNotif(id, title, body, atMs){
+  // Remove duplicatas
+  _notifStore = _notifStore.filter(function(n){ return n.id !== id; });
+  var now = Date.now();
+  var ms = atMs - now;
+  if(ms < 0 || ms > 86400000 * 14) return;
+
+  // Salva no store persistente
+  _notifStore.push({id:id, title:title, body:body, at:atMs});
+  saveNotifStore();
+
+  // Camada 1: setTimeout (funciona com app aberto)
+  if(ms < 3600000 * 8){ // até 8h
+    setTimeout(function(){
+      fireNotif(title, body);
+      _notifStore = _notifStore.filter(function(n){ return n.id !== id; });
+      saveNotifStore();
+    }, ms);
+  }
+
+  // Camada 2: Service Worker (Android/Desktop, app minimizado)
+  if(_swReg && _swReg.active){
+    try{ _swReg.active.postMessage({type:'SCHEDULE', id:id, title:title, body:body, at:atMs}); }catch(e){}
+  }
+}
+
+// Dispara notificação real do sistema
+function fireNotif(title, body){
+  // Sistema nativo iOS/Android (funciona com app em 2º plano, tela acesa)
+  if('Notification' in window && Notification.permission === 'granted'){
+    try{
+      // Usa SW showNotification se disponível (melhor no iOS PWA)
+      if(_swReg && _swReg.active){
+        _swReg.active.postMessage({type:'SHOW', title:title, body:body});
+      } else {
+        new Notification(title, {
+          body: body,
+          icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23007AFF"/><text y="46" x="10" font-size="42">✓</text></svg>',
+          badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="%23007AFF"/></svg>',
+          silent: false,
+          requireInteraction: false
+        });
+      }
+    }catch(e){}
+  }
+  // Sempre mostra banner interno + vibração
+  showNotif('🔔', title, body);
+  haiku([30,10,30]);
+}
+
+// Verifica notificações perdidas ao abrir o app
+function checkMissedNotifs(){
+  var now = Date.now();
+  var missed = _notifStore.filter(function(n){ return n.at <= now && n.at > now - 86400000; });
+  missed.forEach(function(n){
+    _notifStore = _notifStore.filter(function(x){ return x.id !== n.id; });
+    showNotif('⏰', n.title, n.body + ' (perdida)');
+  });
+  if(missed.length) saveNotifStore();
+}
+
+// Service Worker via Blob (funciona Android/Desktop, não iOS Safari)
+var SW_CODE = [
   "self.addEventListener('install',function(e){self.skipWaiting()});",
   "self.addEventListener('activate',function(e){e.waitUntil(self.clients.claim())});",
-  "var _pending=[];",
+  "var _p=[];",
   "self.addEventListener('message',function(e){",
   "  if(!e.data)return;",
-  "  if(e.data.type==='SCHEDULE'){_pending=_pending.filter(function(n){return n.id!==e.data.id});_pending.push(e.data);}",
-  "  if(e.data.type==='CANCEL'){_pending=_pending.filter(function(n){return n.id!==e.data.id});}",
-  "  if(e.data.type==='SYNC'){_pending=e.data.items||[];}",
+  "  if(e.data.type==='SCHEDULE'){_p=_p.filter(function(n){return n.id!==e.data.id});_p.push(e.data);}",
+  "  if(e.data.type==='SHOW'){self.registration.showNotification(e.data.title,{body:e.data.body,tag:'ff-now'});}",
+  "  if(e.data.type==='SYNC'){_p=e.data.items||[];}",
   "});",
   "setInterval(function(){",
   "  var now=Date.now();",
-  "  _pending=_pending.filter(function(n){",
+  "  _p=_p.filter(function(n){",
   "    if(n.at<=now){",
-  "      self.registration.showNotification(n.title,{body:n.body||'FocusFlow',icon:'https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Bell/3D/bell_3d.png',badge:'https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Bell/3D/bell_3d.png',tag:n.id,renotify:true});",
+  "      self.registration.showNotification(n.title,{",
+  "        body:n.body||'FocusFlow',",
+  "        icon:'data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><rect width=\"64\" height=\"64\" rx=\"16\" fill=\"%23007AFF\"/><text y=\"46\" x=\"10\" font-size=\"42\">✓</text></svg>',",
+  "        tag:n.id,renotify:true,requireInteraction:false",
+  "      });",
   "      return false;",
   "    }return true;",
   "  });",
-  "},20000);"
+  "},15000);"
 ].join('\n');
-(function initSW(){
-  if(!('serviceWorker'in navigator))return;
-  try{
-    var blob=new Blob([SW_CODE],{type:'application/javascript'});
-    var url=URL.createObjectURL(blob);
-    navigator.serviceWorker.register(url).then(function(reg){
-      _swReg=reg;
-      console.log('🔔 SW registrado');
-      if(Notification.permission==='default')
-        Notification.requestPermission().then(function(p){if(p==='granted')toast('🔔 Notificações ativadas!');});
-    }).catch(function(e){console.warn('SW blob falhou, tentando fallback:',e);});
-  }catch(e){console.warn('SW não suportado:',e);}
+
+(function initNotifSystem(){
+  // Pede permissão imediatamente (necessário para new Notification funcionar)
+  if('Notification' in window && Notification.permission === 'default'){
+    // iOS exige gesto do usuário para requestPermission
+    // Pedimos depois de 2s para não ser agressivo
+    setTimeout(function(){
+      Notification.requestPermission().then(function(p){
+        if(p === 'granted') toast('🔔 Notificações ativadas!');
+        else if(p === 'denied') toast('Notificações bloqueadas nas configurações');
+      });
+    }, 2000);
+  }
+
+  // Tenta registrar SW (funciona em Chrome/Android/Desktop)
+  if('serviceWorker' in navigator){
+    try{
+      var blob = new Blob([SW_CODE], {type:'application/javascript'});
+      var url = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(url).then(function(reg){
+        _swReg = reg;
+        swSync();
+      }).catch(function(){
+        // iOS Safari não aceita blob SW — silencia o erro
+      });
+    }catch(e){}
+  }
+
+  // Verifica notificações perdidas ao abrir
+  checkMissedNotifs();
 })();
-function swSchedule(title,body,atMs){
-  if(!_swReg||!_swReg.active)return;
-  var id='n'+atMs+Math.random().toString(36).slice(2);
-  try{_swReg.active.postMessage({type:'SCHEDULE',id:id,title:title,body:body,at:atMs});}catch(e){}
-}
+
 function swSync(){
-  if(!_swReg||!_swReg.active)return;
-  var items=[];
-  var now=Date.now();
+  if(!_swReg || !_swReg.active) return;
+  var items = [];
+  var now = Date.now();
   D.tasks.forEach(function(t){
-    if(t.done||!t.dueDate||!t.dueTime)return;
-    var base=new Date(t.dueDate+'T'+t.dueTime).getTime();
+    if(t.done || !t.dueDate || !t.dueTime) return;
+    var base = new Date(t.dueDate+'T'+t.dueTime).getTime();
     (t.notifyOffsets||[]).forEach(function(mins){
-      var at=base-mins*60000;
-      if(at>now)items.push({id:t.id+'_'+mins,title:t.title,body:mins===0?'Vencimento agora':mins<60?(mins+' min antes'):(mins/60)+'h antes',at:at});
+      var at = base - mins*60000;
+      if(at > now) items.push({id:t.id+'_'+mins, title:t.title, body:mins===0?'Vencimento agora':mins<60?(mins+' min antes'):(mins/60)+'h antes', at:at});
     });
   });
   D.reminders.forEach(function(r){
-    if(r.done||!r.datetime)return;
-    var at=new Date(r.datetime).getTime();
-    if(at>now)items.push({id:r.id,title:r.title,body:'Lembrete',at:at});
+    if(r.done || !r.datetime) return;
+    var at = new Date(r.datetime).getTime();
+    if(at > now) items.push({id:r.id, title:r.title, body:'Lembrete', at:at});
   });
-  try{_swReg.active.postMessage({type:'SYNC',items:items});}catch(e){}
+  try{ _swReg.active.postMessage({type:'SYNC', items:items}); }catch(e){}
 }
-// Sync SW when app gains focus (captura notificações perdidas ao reabrir)
-document.addEventListener('visibilitychange',function(){
-  if(!document.hidden){swSync();checkMissedNotifs();}
+
+document.addEventListener('visibilitychange', function(){
+  if(!document.hidden){ checkMissedNotifs(); swSync(); }
 });
-function checkMissedNotifs(){
-  var missed=[];var now=Date.now();
-  D.tasks.forEach(function(t){
-    if(t.done||!t.dueDate||!t.dueTime)return;
-    var base=new Date(t.dueDate+'T'+t.dueTime).getTime();
-    if(base<now&&base>now-3600000)missed.push(t.title);
-  });
-  if(missed.length)toast('⏰ '+missed.length+' tarefa(s) vencida(s)');
-}
+
 
 function scheduleTaskNotifs(task){
   if(!task.dueDate||!task.dueTime)return;
@@ -1769,6 +1897,7 @@ function buildRow(item,showDrag){
     div.querySelector('.ibody').addEventListener('click',function(){openProjEd(proj)});
     addSwipe(div,function(){pt.done=true;save();render(S.page)},function(){if(confirm('Excluir?')){proj.tasks=proj.tasks.filter(function(x){return x.id!==pt.id});save();render(S.page)}});
   }
+  addLongPress(div, item);
   return div;
 }
 
@@ -2167,7 +2296,7 @@ function openTaskModal(task,defaults){
       +(attHtml?'<div class="msec"><div class="attach-list">'+attHtml+'</div></div>':'')
       +'<div class="msec"><div class="mrow"><span class="mlbl">Anexo</span><label style="color:var(--blue);font-size:14px;cursor:pointer">+ Adicionar<input type="file" multiple style="display:none" onchange="addAtt(this)"></label></div></div>'
       +'<div class="msec"><div class=\"mrow\"><span class=\"mlbl\">🔗 Link</span><input class=\"minp\" type=\"url\" id=\"t-lk\" placeholder=\"https://…\" value=\"'+esc(_curT.link||'')+'\" style=\"text-align:left;font-size:14px\"></div><div class=\"mrow\"><span class=\"mlbl\">📍 Local</span><input class=\"minp\" type=\"text\" id=\"t-loc\" placeholder=\"Endereço ou local…\" value=\"'+esc(_curT.location||'')+'\" style=\"text-align:left;font-size:14px\"><button onclick=\"getGPS()\" style=\"border:none;background:transparent;font-size:18px;cursor:pointer;padding:0 6px;flex-shrink:0\">📡</button></div>'+(_curT.locationCoords?'<div class=\"mrow\"><a href=\"https://maps.apple.com/?q='+_curT.locationCoords.lat+','+_curT.locationCoords.lng+'\" target=\"_blank\" style=\"font-size:13px;color:var(--blue);text-decoration:none;display:flex;align-items:center;gap:4px\">🗺 Ver no mapa</a></div>':'')+'</div>'
-      +'<div class="msec"><button class="mact pri" onclick="saveTask()">Salvar tarefa</button></div>'
+      +'<div class="msec">'+'<button class="mact pri" onclick="saveTask()">Salvar tarefa</button>'+((_curT.dueDate&&(_curT.notifyOffsets&&_curT.notifyOffsets.length))?'<div style="border-top:.5px solid rgba(0,0,0,.06)"></div><button class="mact" onclick="syncTaskFields();exportTaskToCalendar(_curT)" style="color:var(--blue);font-size:15px">📅 Exportar p/ Calendário iOS <span style=\"font-size:11px;color:var(--sub)\">• notifica com tela bloqueada</span></button>':'')+'</div>'
       +(S.eTask?'<div class="msec"><button class="mact del" onclick="deleteTask()">Excluir tarefa</button></div>':'')
       +'<div class="msec"><button class="mact" onclick="closeModal()">Cancelar</button></div>';
     openModal(html);
@@ -2444,6 +2573,45 @@ function fmtICSDate(ds,time){
   if(time){var t=time.replace(':','');return d+'T'+t+'00';}
   return d;
 }
+
+// Exporta uma tarefa individual com VALARM para notificação nativa iOS
+function exportTaskToCalendar(task){
+  if(!task.dueDate){toast('Defina uma data para exportar');return;}
+  var lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//FocusFlow//PT','CALSCALE:GREGORIAN','METHOD:PUBLISH'];
+  var uid2=task.id+'@focusflow';
+  var hasTime=!!task.dueTime;
+  lines.push('BEGIN:VEVENT');
+  lines.push('UID:'+uid2);
+  lines.push('SUMMARY:'+task.title.replace(/\n/g,' '));
+  if(task.notes)lines.push('DESCRIPTION:'+task.notes.replace(/\n/g,'\\n'));
+  if(task.location)lines.push('LOCATION:'+task.location);
+  if(hasTime){
+    lines.push('DTSTART:'+fmtICSDate(task.dueDate,task.dueTime));
+    lines.push('DTEND:'+fmtICSDate(task.dueDate,task.dueTime));
+  } else {
+    lines.push('DTSTART;VALUE=DATE:'+task.dueDate.replace(/-/g,''));
+    lines.push('DTEND;VALUE=DATE:'+addDays(task.dueDate,1).replace(/-/g,''));
+  }
+  // VALARM — notificações nativas iOS Calendário
+  var offsets=task.notifyOffsets&&task.notifyOffsets.length?task.notifyOffsets:[0];
+  offsets.forEach(function(mins){
+    lines.push('BEGIN:VALARM');
+    lines.push('TRIGGER:-PT'+mins+'M');
+    lines.push('ACTION:DISPLAY');
+    lines.push('DESCRIPTION:'+(mins===0?'Vencimento agora':mins<60?(mins+' min para: '):((mins/60)+'h para: '))+task.title);
+    lines.push('END:VALARM');
+  });
+  lines.push('END:VEVENT');
+  lines.push('END:VCALENDAR');
+  var ics=lines.join('\r\n');
+  var blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;
+  a.download=task.title.slice(0,30).replace(/[^a-z0-9]/gi,'_')+'.ics';
+  a.click();URL.revokeObjectURL(url);
+  toast('📅 Abra o arquivo para adicionar ao Calendário iOS!');
+}
+
 function exportICS(){
   if(!D.events.length&&!D.tasks.filter(function(t){return t.dueDate&&!t.done}).length){
     toast('Nenhum evento para exportar');return;
@@ -2465,15 +2633,29 @@ function exportICS(){
     }
     lines.push('END:VEVENT');
   });
-  // Also add tasks with due dates as VTODO
+  // Tasks with due dates as VEVENT with VALARM (melhor suporte iOS)
   D.tasks.filter(function(t){return t.dueDate&&!t.done}).forEach(function(t){
-    lines.push('BEGIN:VTODO');
+    var hasTime=!!t.dueTime;
+    lines.push('BEGIN:VEVENT');
     lines.push('UID:'+t.id+'@focusflow');
-    lines.push('SUMMARY:'+t.title.replace(/\n/g,' '));
+    lines.push('SUMMARY:✓ '+t.title.replace(/\n/g,' '));
     if(t.notes)lines.push('DESCRIPTION:'+t.notes.replace(/\n/g,'\\n'));
-    lines.push('DUE;VALUE=DATE:'+t.dueDate.replace(/-/g,''));
-    lines.push('STATUS:'+(t.done?'COMPLETED':'NEEDS-ACTION'));
-    lines.push('END:VTODO');
+    if(hasTime){
+      lines.push('DTSTART:'+fmtICSDate(t.dueDate,t.dueTime));
+      lines.push('DTEND:'+fmtICSDate(t.dueDate,t.dueTime));
+    } else {
+      lines.push('DTSTART;VALUE=DATE:'+t.dueDate.replace(/-/g,''));
+      lines.push('DTEND;VALUE=DATE:'+addDays(t.dueDate,1).replace(/-/g,''));
+    }
+    var offs=t.notifyOffsets&&t.notifyOffsets.length?t.notifyOffsets:[0];
+    offs.forEach(function(mins){
+      lines.push('BEGIN:VALARM');
+      lines.push('TRIGGER:-PT'+mins+'M');
+      lines.push('ACTION:DISPLAY');
+      lines.push('DESCRIPTION:'+(mins===0?'Agora: ':mins<60?(mins+'min: '):(mins/60+'h: '))+t.title);
+      lines.push('END:VALARM');
+    });
+    lines.push('END:VEVENT');
   });
   lines.push('END:VCALENDAR');
   var ics=lines.join('\r\n');
@@ -2720,6 +2902,127 @@ if(!window.navigator.standalone&&!window.matchMedia('(display-mode: standalone)'
       document.getElementById('pwa-banner').classList.add('on');
   },4000);
 }
+
+// ══ LONG-PRESS: MOVER ITEM ══
+var _mv = null;
+
+function openMoveSheet(item) {
+  _mv = item;
+  var t = item.data;
+  var name = (t.title || t.name || 'Item').slice(0, 30);
+  var isTask = (item.kind === 'task');
+  var isEv   = (item.kind === 'ev');
+  var isRem  = (item.kind === 'rem');
+  var today  = td0();
+  var DATES  = [
+    ['Hoje',   today],
+    ['Amanha', addDays(today,1)],
+    ['+2d',    addDays(today,2)],
+    ['+1sem',  addDays(today,7)],
+    ['+2sem',  addDays(today,14)],
+    ['+1mes',  addDays(today,30)]
+  ];
+  var curDate = t.dueDate || t.date || (t.datetime ? t.datetime.slice(0,10) : '');
+  var html = '<div class="mv-title">Mover: ' + esc(name) + '</div>';
+  html += '<div class="mv-sec"><div class="mv-dates">';
+  for (var i=0; i<DATES.length; i++) {
+    var lbl = DATES[i][0], val = DATES[i][1];
+    var cls = (curDate === val) ? ' on' : '';
+    html += '<button class="mv-date-btn'+cls+'" onclick="mvDate(\'' + val + '\')">'+lbl+'</button>';
+  }
+  html += '</div>';
+  html += '<div class="mv-row"><span class="mlbl" style="font-size:13px">Outra data</span>'
+       +  '<input type="date" style="border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--blue);outline:none;text-align:right" onchange="mvDate(this.value)">'
+       +  '</div></div>';
+  if (isTask || isEv) {
+    var curTime = t.dueTime || t.time || '';
+    html += '<div class="mv-sec"><div class="mv-row">'
+         +  '<span class="mlbl" style="font-size:13px">Hora</span>'
+         +  '<input type="time" style="border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--blue);outline:none;text-align:right" value="'+curTime+'" onchange="mvTime(this.value)">'
+         +  '</div></div>';
+  }
+  if (isTask && D.projects.length) {
+    html += '<div class="mv-sec"><div class="mv-row" style="padding:8px 16px 4px"><span style="font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px">Projeto</span></div>';
+    for (var j=0; j<D.projects.length; j++) {
+      var p = D.projects[j];
+      var inP = (p.tasks||[]).some(function(x){return x.id===t.id;});
+      html += '<div class="mv-row" onclick="mvProject(\'' + p.id + '\')">'
+           +  '<div class="mv-dot" style="background:'+(p.color||'var(--blue)')+'"></div>'
+           +  '<span style="flex:1;font-size:15px">'+esc(p.title)+'</span>'
+           +  (inP ? '<span style="color:var(--blue);font-size:12px;font-weight:600">Atual</span>' : '')
+           +  '</div>';
+    }
+    html += '</div>';
+  }
+  if (isTask) {
+    html += '<div class="mv-sec"><div style="display:flex;flex-wrap:wrap;gap:7px;padding:10px 14px">';
+    TAG_PRESETS.forEach(function(tp) {
+      var on = (t.tags||[]).indexOf(tp.name) >= 0;
+      html += '<button onclick="mvTag(\'' + tp.name + '\')" style="border:none;padding:7px 14px;border-radius:50px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;background:'+(on?tp.color:'rgba(0,0,0,.07)')+';color:'+(on?'#fff':'var(--fg)')+'">'+tp.name+'</button>';
+    });
+    html += '</div></div>';
+  }
+  html += '<div class="mv-sec"><button class="mact" style="color:var(--sub)" onclick="closeMoveSheet()">Cancelar</button></div>';
+  document.getElementById('move-sheet-body').innerHTML = html;
+  document.getElementById('move-sheet-bg').classList.add('on');
+  haiku([10,5,10]);
+}
+
+function closeMoveSheet() {
+  document.getElementById('move-sheet-bg').classList.remove('on');
+  _mv = null;
+}
+
+function mvDate(val) {
+  if (!val || !_mv) return;
+  var t = _mv.data;
+  if (_mv.kind==='task')      { t.dueDate = val; }
+  else if (_mv.kind==='ev')   { t.date = val; }
+  else if (_mv.kind==='rem')  { var tm=(t.datetime||'T09:00').split('T')[1]||'09:00'; t.datetime=val+'T'+tm; }
+  save(); render(S.page); closeMoveSheet(); toast('Movido para '+fmtD(val));
+}
+
+function mvTime(val) {
+  if (!val || !_mv) return;
+  var t = _mv.data;
+  if (_mv.kind==='task')    t.dueTime = val;
+  else if (_mv.kind==='ev') t.time = val;
+  save(); render(S.page); toast('Hora: '+val);
+}
+
+function mvProject(pid) {
+  if (!_mv || _mv.kind!=='task') return;
+  var task = _mv.data;
+  D.projects.forEach(function(p){ p.tasks=(p.tasks||[]).filter(function(x){return x.id!==task.id;}); });
+  var proj = D.projects.find(function(p){return p.id===pid;});
+  if (proj) { proj.tasks=proj.tasks||[]; proj.tasks.push(task); save(); render(S.page); closeMoveSheet(); toast('Movido para '+proj.title); }
+}
+
+function mvTag(tagName) {
+  if (!_mv || _mv.kind!=='task') return;
+  var t = _mv.data; t.tags=t.tags||[];
+  var i = t.tags.indexOf(tagName);
+  if (i>=0) t.tags.splice(i,1); else t.tags.push(tagName);
+  save(); render(S.page); openMoveSheet(_mv);
+}
+
+function addLongPress(el, item) {
+  var timer, moved=false, sx=0, sy=0;
+  el.addEventListener('touchstart', function(e) {
+    moved=false; sx=e.touches[0].clientX; sy=e.touches[0].clientY;
+    timer = setTimeout(function() {
+      if (moved) return;
+      el.classList.add('lp-active');
+      haiku([20,10,20]);
+      setTimeout(function(){ el.classList.remove('lp-active'); openMoveSheet(item); }, 150);
+    }, 550);
+  }, {passive:true});
+  el.addEventListener('touchmove', function(e) {
+    if (Math.abs(e.touches[0].clientX-sx)>8||Math.abs(e.touches[0].clientY-sy)>8) { moved=true; clearTimeout(timer); }
+  }, {passive:true});
+  el.addEventListener('touchend',    function(){clearTimeout(timer);}, {passive:true});
+  el.addEventListener('touchcancel', function(){clearTimeout(timer);}, {passive:true});
+}
 </script>
 
 <!-- Settings template -->
@@ -2877,5 +3180,11 @@ if(!window.navigator.standalone&&!window.matchMedia('(display-mode: standalone)'
   Toque em <strong>Compartilhar</strong> → <strong>"Adicionar à Tela de Início"</strong><br>
   <button onclick="document.getElementById('pwa-banner').classList.remove('on')">Entendi</button>
 </div>
-</body>
+
+<div id="move-sheet-bg" onclick="if(event.target===this)closeMoveSheet()">
+  <div id="move-sheet">
+    <div class="mv-handle"></div>
+    <div id="move-sheet-body"></div>
+  </div>
+</div></body>
 </html>
