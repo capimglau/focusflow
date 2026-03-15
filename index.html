@@ -1165,6 +1165,43 @@ html:not([data-dark="1"]) .chip:not(.on) {
 html:not([data-dark="1"]) .chip.on {
   background: rgba(0,0,0,.75) !important;
 }
+
+/* ══ CALENDÁRIO — afastado dos botões, fonte menor/fina, divisor ══ */
+
+/* Mais espaço acima do calendário (afasta dos botões) */
+.week-wrap { padding: 14px 14px 10px !important; margin: 0 !important }
+
+/* Números menores e mais finos */
+html:not([data-dark="1"]) .wday-n {
+  font-size: 15px !important;
+  font-weight: 300 !important;
+  width: 30px !important;
+  height: 30px !important;
+}
+/* Dia atual — mantém destaque mas sem bold pesado */
+html:not([data-dark="1"]) .wday.is-today .wday-n {
+  font-weight: 500 !important;
+  font-size: 15px !important;
+}
+
+/* Letra do dia da semana menor */
+html:not([data-dark="1"]) .wday-l {
+  font-size: 10px !important;
+  font-weight: 300 !important;
+  letter-spacing: .2px !important;
+}
+
+/* Divisor fininho e clarinho entre calendário e tarefas */
+.week-divider {
+  height: .5px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(150,185,230,.45) 20%,
+    rgba(150,185,230,.45) 80%,
+    transparent 100%);
+  margin: 0 20px 4px;
+  flex-shrink: 0;
+}
 </style>
 <script>
 document.documentElement.setAttribute('data-dark','0');
@@ -1214,6 +1251,7 @@ updateThemeColor();
       <div class="wdays" id="wdays"></div>
       <button class="w-arr" id="w-next">›</button>
     </div>
+    <div class="week-divider"></div>
     <div id="inicio-feed"></div>
   </div>
 
