@@ -36,7 +36,7 @@
   --sep:rgba(0,0,0,.06);--line:rgba(0,0,0,.09);--shadow:rgba(0,0,0,.06);
   --blue:#007AFF;--red:#FF3B30;--green:#34C759;--orange:#FF9500;
   --purple:#AF52DE;--teal:#5AC8FA;--pink:#FF2D55;--yellow:#FFCC00;
-  --chk:#C7C7CC;--nav-bg:rgba(255,255,255,.72);--nav-active:rgba(255,255,255,.9);--nb-bg:#ffffff;--nb-sep:#E5E5EA;--nb-ic:#8E8E93;--nb-ic-on:#E5002A;--nb-pill:rgba(0,0,0,.06);
+  --chk:#C7C7CC;--nav-bg:rgba(255,255,255,.72);--nav-active:rgba(255,255,255,.9);--nb-bg:#ffffff;--nb-sep:#E5E5EA;--nb-ic:#8E8E93;--nb-ic-on:#007AFF;--nb-pill:rgba(0,122,255,.08);
   --sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px);
 }
 /* ── DARK MODE ── */
@@ -450,15 +450,15 @@ html:not([data-dark="1"]) .page { background: transparent !important }
 
 /* ── CARDS — Liquid Glass máximo ── */
 html:not([data-dark="1"]) .card {
-  background: rgba(255,255,255,.82) !important;
-  backdrop-filter: blur(60px) saturate(3.2) brightness(1.12) !important;
-  -webkit-backdrop-filter: blur(60px) saturate(3.2) brightness(1.12) !important;
+  background: rgba(255,255,255,.99) !important;
+  backdrop-filter: blur(60px) saturate(2.8) brightness(1.02) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(2.8) brightness(1.02) !important;
   border-radius: 20px !important;
   border: .5px solid rgba(255,255,255,.98) !important;
   box-shadow:
     0 2px 0 rgba(255,255,255,1) inset,
-    0 -1px 0 rgba(140,190,245,.6) inset,
-    0 10px 36px rgba(60,110,200,.14),
+    0 -1px 0 rgba(140,185,240,.35) inset,
+    0 10px 36px rgba(60,110,200,.10),
     0 2px 10px rgba(0,0,0,.07) !important;
 }
 html:not([data-dark="1"]) .irow { background: transparent !important }
@@ -539,7 +539,7 @@ html:not([data-dark="1"]) .date-banner { color: #6e6e73 !important }
 
 /* ── FADE-IN ── */
 @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-.fade-in { animation: fadeUp .32s cubic-bezier(.25,1,.5,1) both }
+/* .fade-in handled by specific rules below */
 
 /* ── OUTROS ── */
 #hdr-dt { display: none !important }
@@ -941,14 +941,13 @@ body .nb span { font-size: 10px !important; font-weight: 600 !important; white-s
 
 /* ── Selected state: gray bubble like iOS Files ── */
 html:not([data-dark="1"]) body .nb.on {
-  background: rgba(255,255,255,.9) !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 0 rgba(255,255,255,.8) inset !important;
-  border-radius: 22px !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 html:not([data-dark="1"]) body .nb:not(.on) svg,
 html:not([data-dark="1"]) body .nb:not(.on) span { color: #8e8e93 !important }
 html:not([data-dark="1"]) body .nb.on svg,
-html:not([data-dark="1"]) body .nb.on span { color: #1C1C1E !important }
+html:not([data-dark="1"]) body .nb.on span { color: var(--blue) !important }
 
 [data-dark="1"] body .nb.on {
   background: rgba(255,255,255,.18) !important;
@@ -1202,6 +1201,429 @@ html:not([data-dark="1"]) .wday-l {
   margin: 0 20px 4px;
   flex-shrink: 0;
 }
+
+
+/* ══ VER TUDO BUTTON ══ */
+.ver-tudo-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  width: calc(100% - 32px); margin: 10px 16px 4px;
+  padding: 14px 20px;
+  background: rgba(0,122,255,.08);
+  border: .5px solid rgba(0,122,255,.2);
+  border-radius: 16px;
+  color: var(--blue); font-family: inherit; font-size: 14px; font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  animation: cardSlideUp .4s cubic-bezier(.25,1,.5,1) both;
+}
+.ver-tudo-btn:active { transform: scale(.96); background: rgba(0,122,255,.15); }
+
+/* ══ KEYFRAMES ══ */
+@keyframes cardSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes bannerSlideIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes chkBounce {
+  0%  { transform: scale(1);   }
+  30% { transform: scale(1.4); }
+  60% { transform: scale(.82); }
+  80% { transform: scale(1.1); }
+  100%{ transform: scale(1);   }
+}
+@keyframes fabPulse {
+  0%,100% { box-shadow: 0 4px 16px rgba(0,122,255,.3); }
+  50%     { box-shadow: 0 4px 30px rgba(0,122,255,.6); }
+}
+@keyframes toastSpring {
+  from { opacity:0; transform: translateX(-50%) translateY(14px) scale(.9); }
+  to   { opacity:1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+@keyframes sheetSpring {
+  from { transform: translateY(100%); opacity:.5; }
+  to   { transform: translateY(0);    opacity:1;  }
+}
+
+/* ══ CARD ANIMATIONS ══ */
+.card.fade-in,
+.proj-card.fade-in {
+  animation: cardSlideUp .4s cubic-bezier(.25,1,.5,1) both !important;
+}
+.date-banner.fade-in {
+  animation: bannerSlideIn .3s cubic-bezier(.25,1,.5,1) both !important;
+}
+.empty-state {
+  animation: cardSlideUp .5s cubic-bezier(.25,1,.5,1) both;
+}
+
+/* ══ TAP FEEDBACK ══ */
+.irow { transition: background .1s, transform .08s; }
+.irow:active { transform: scale(.993) !important; background: rgba(0,0,0,.032) !important; }
+.nb { transition: transform .1s, opacity .1s; }
+.nb:active { transform: scale(.85) !important; opacity: .65 !important; }
+.hdr-btn { transition: transform .1s, background .1s; }
+.hdr-btn:active { transform: scale(.84) !important; }
+.wday { transition: transform .1s; }
+.wday:active { transform: scale(.84) !important; }
+.ver-tudo-btn { transition: transform .12s, background .12s; }
+
+/* ══ FAB PULSE ══ */
+.qadd-btn { animation: fabPulse 2.8s ease-in-out infinite !important; }
+.qadd-btn:active { transform: scale(.88) !important; animation: none !important; }
+
+/* ══ CHECKBOX ══ */
+.chk.done { animation: chkBounce .4s cubic-bezier(.25,1,.5,1) !important; }
+
+/* ══ TOAST ══ */
+#toast.on { animation: toastSpring .3s cubic-bezier(.25,1,.5,1) both !important; }
+
+/* ══ MOVE SHEET ══ */
+#move-sheet { animation: sheetSpring .38s cubic-bezier(.22,1,.36,1) !important; }
+
+/* ══ NAV SLIDING BUBBLE ══ */
+#nav-pill { position: relative; overflow: hidden; }
+
+/* Bolha interna — circulo líquido deslizante */
+#nav-bubble {
+  position: absolute;
+  top: 50%; left: 0;
+  width: calc(100vw / 4);
+  height: 42px;
+  transform: translateY(-50%);
+  background: radial-gradient(ellipse at 50% 60%,
+    rgba(0,122,255,.18) 0%,
+    rgba(0,122,255,.08) 55%,
+    transparent 100%);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: left .38s cubic-bezier(.25,1.4,.5,1);
+  z-index: 0;
+  will-change: transform;
+  filter: blur(2px);
+}
+[data-dark="1"] #nav-bubble {
+  background: radial-gradient(ellipse at 50% 60%,
+    rgba(0,122,255,.35) 0%,
+    rgba(0,122,255,.15) 55%,
+    transparent 100%);
+}
+.nb { position: relative; z-index: 1; user-select: none; -webkit-user-select: none; }
+/* Ícone ativo: ponto embaixo */
+.nb.on::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 50%;
+  transform: translateX(-50%) scale(1);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--blue);
+  transition: transform .2s cubic-bezier(.25,1,.5,1), opacity .2s;
+  opacity: 1;
+}
+.nb:not(.on)::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 50%;
+  transform: translateX(-50%) scale(0);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--blue);
+  opacity: 0;
+}
+.nb:active { transform: scale(.87) !important; }
+/* Sem seleção de texto em todo nav */
+#nav-pill, #nav-pill * { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+
+/* ══ FULL-PAGE EDITOR + MODAL — tema igual ao move-sheet da imagem ══ */
+
+html:not([data-dark="1"]) .fp {
+  background: linear-gradient(90deg, #f3f7fd 0%, #ffffff 100%) !important;
+}
+html:not([data-dark="1"]) .fp-hdr {
+  background: #e8eef8 !important;
+  border-bottom: .5px solid rgba(0,0,0,.06) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html:not([data-dark="1"]) .fp-scroll {
+  background: linear-gradient(90deg, #f3f7fd 0%, #ffffff 100%) !important;
+}
+/* Seções internas — branco puro */
+html:not([data-dark="1"]) .msec {
+  background: #ffffff !important;
+  border-radius: 14px !important;
+  border: none !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06) !important;
+  overflow: hidden !important;
+}
+/* Modal sheet — mesmo fundo */
+html:not([data-dark="1"]) #modal-box {
+  background: #e8eef8 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: 0 -4px 30px rgba(0,0,0,.12) !important;
+}
+/* Handle */
+html:not([data-dark="1"]) .mhandle {
+  background: rgba(0,0,0,.14) !important;
+}
+/* Labels de seção */
+html:not([data-dark="1"]) .mlabel,
+html:not([data-dark="1"]) .msec-label {
+  color: #6e6e73 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .4px !important;
+}
+/* Linhas internas do modal */
+html:not([data-dark="1"]) .mrow {
+  background: transparent !important;
+  border-bottom: .5px solid rgba(0,0,0,.07) !important;
+}
+html:not([data-dark="1"]) .mrow:last-child {
+  border-bottom: none !important;
+}
+/* Botões de ação (Hoje, Amanhã, +1sem) — pill azul */
+html:not([data-dark="1"]) .pri-btn {
+  background: rgba(0,122,255,.11) !important;
+  color: #007AFF !important;
+  border-radius: 50px !important;
+  font-weight: 600 !important;
+  border: none !important;
+}
+html:not([data-dark="1"]) .pri-btn.on {
+  background: #007AFF !important;
+  color: #fff !important;
+}
+/* Botão Cancelar / ação principal */
+html:not([data-dark="1"]) .mact {
+  background: #ffffff !important;
+  color: var(--fg) !important;
+}
+html:not([data-dark="1"]) .mact.pri {
+  color: #007AFF !important;
+}
+html:not([data-dark="1"]) .mact.del {
+  color: var(--red) !important;
+}
+/* Move sheet igual */
+html:not([data-dark="1"]) #move-sheet {
+  background: linear-gradient(90deg, #f3f7fd 0%, #ffffff 100%) !important;
+}
+html:not([data-dark="1"]) .mv-sec {
+  background: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06) !important;
+}
+/* Títulos de input transparentes sobre fundo azul */
+html:not([data-dark="1"]) .mtitle,
+html:not([data-dark="1"]) .mta {
+  background: transparent !important;
+}
+
+/* ══════════════════════════════════════
+   MODAL / FP — REDESIGN ESTÉTICO
+══════════════════════════════════════ */
+
+/* Título da tarefa */
+html:not([data-dark="1"]) .mtitle {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #1c1c1e !important;
+  padding: 16px 20px 8px !important;
+  line-height: 1.3 !important;
+}
+
+/* Descrição/body */
+html:not([data-dark="1"]) .mta {
+  font-size: 15px !important;
+  color: #3a3a3c !important;
+  padding: 0 20px 16px !important;
+  line-height: 1.5 !important;
+  min-height: 48px !important;
+}
+
+/* Seções com label uppercase */
+html:not([data-dark="1"]) .msec {
+  margin: 0 16px 10px !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07) !important;
+  border: none !important;
+}
+
+/* Rows: padding generoso e alinhamento */
+html:not([data-dark="1"]) .mrow {
+  padding: 13px 18px !important;
+  min-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+html:not([data-dark="1"]) .mrow:last-child {
+  border-bottom: none !important;
+}
+
+/* Label da row (DATA, HORA, REPETE...) */
+html:not([data-dark="1"]) .mlabel {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #8e8e93 !important;
+  letter-spacing: .5px !important;
+  text-transform: uppercase !important;
+  min-width: 60px !important;
+}
+
+/* Valor da row (data, hora selecionada) */
+html:not([data-dark="1"]) .minp,
+html:not([data-dark="1"]) .msel {
+  font-size: 15px !important;
+  color: #1c1c1e !important;
+  text-align: right !important;
+  flex: 1 !important;
+}
+
+/* Linha separadora interna */
+html:not([data-dark="1"]) .msep {
+  height: .5px !important;
+  background: rgba(0,0,0,.07) !important;
+  margin: 0 18px !important;
+}
+
+/* Quick date buttons — pill row com wrapping */
+html:not([data-dark="1"]) .pri-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 10px 18px 14px !important;
+}
+html:not([data-dark="1"]) .pri-btn {
+  padding: 7px 16px !important;
+  border-radius: 50px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  background: rgba(0,122,255,.1) !important;
+  color: #007AFF !important;
+  border: none !important;
+  white-space: nowrap !important;
+  transition: all .15s !important;
+}
+html:not([data-dark="1"]) .pri-btn.on,
+html:not([data-dark="1"]) .pri-btn:active {
+  background: #007AFF !important;
+  color: #fff !important;
+  transform: scale(.96) !important;
+}
+
+/* Notificações checkboxes */
+html:not([data-dark="1"]) .notif-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 8px 18px 14px !important;
+}
+
+/* Ações no fundo (Cancelar, Salvar) */
+html:not([data-dark="1"]) .mact {
+  padding: 15px 20px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  background: #ffffff !important;
+  margin: 0 16px 8px !important;
+  border-radius: 16px !important;
+  text-align: center !important;
+  width: calc(100% - 32px) !important;
+  display: block !important;
+}
+html:not([data-dark="1"]) .mact.pri {
+  color: #007AFF !important;
+  font-weight: 700 !important;
+}
+html:not([data-dark="1"]) .mact.del {
+  color: #ff3b30 !important;
+}
+
+/* Handle do sheet */
+html:not([data-dark="1"]) .mhandle {
+  width: 36px !important;
+  height: 4px !important;
+  border-radius: 2px !important;
+  background: rgba(0,0,0,.14) !important;
+  margin: 10px auto 12px !important;
+}
+
+/* Tags — pills com espaçamento */
+html:not([data-dark="1"]) .tag-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 10px 18px 14px !important;
+}
+html:not([data-dark="1"]) .tag-chip {
+  padding: 6px 14px !important;
+  border-radius: 50px !important;
+  font-size: 13px !important;
+  background: rgba(0,0,0,.06) !important;
+  color: #3a3a3c !important;
+  border: none !important;
+  font-weight: 500 !important;
+}
+html:not([data-dark="1"]) .tag-chip.on {
+  background: #007AFF !important;
+  color: #fff !important;
+}
+
+/* ══ DATE WHEEL PICKER ══ */
+.wheel-col::-webkit-scrollbar { display: none; }
+.wheel-item {
+  height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 400; color: #1c1c1e;
+  scroll-snap-align: center;
+  cursor: pointer;
+  transition: color .15s;
+  user-select: none; -webkit-user-select: none;
+}
+.wheel-item:first-child, .wheel-item:last-child { visibility: hidden; }
+.wheel-item:nth-child(2), .wheel-item:nth-last-child(2) { color: #8e8e93; font-size: 16px; }
+.wheel-col { padding: 88px 0; }
+#date-wheel-sheet { animation: sheetSpring .36s cubic-bezier(.22,1,.36,1); }
+
+/* ══ QUICK DATE BUTTONS ══ */
+.dshort {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 18px 14px;
+}
+.ds-btn {
+  padding: 7px 16px;
+  border-radius: 50px;
+  border: none;
+  background: rgba(0,122,255,.10);
+  color: #007AFF;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.ds-btn:active {
+  background: #007AFF;
+  color: #fff;
+  transform: scale(.95);
+}
+[data-dark="1"] .ds-btn {
+  background: rgba(0,122,255,.18);
+  color: #0A84FF;
+}
 </style>
 <script>
 document.documentElement.setAttribute('data-dark','0');
@@ -1289,7 +1711,7 @@ updateThemeColor();
 
 <!-- NAV -->
 <div id="nav-out">
-  <div id="nav-pill">
+  <div id="nav-pill"><div id="nav-bubble"></div>
     <button class="nb on" data-p="inicio" data-i="0">
       <div class="nb-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>
       <span class="nb-lbl">Início</span></div>
@@ -1402,7 +1824,7 @@ var D={tasks:[],reminders:[],events:[],notes:[],projects:[]};
 var S={
   page:'inicio',prevPage:'inicio',weekOff:0,selDate:td0(),
   calY:new Date().getFullYear(),calM:new Date().getMonth(),calSel:td0(),
-  calView:false,taskF:'todas',overdueOpen:true,
+  calView:false,taskF:'todas',overdueOpen:true,showAllUpcoming:false,
   eTask:null,eRem:null,eEv:null,searchTag:null
 };
 var PAGE_ORDER=['inicio','hoje','entrada','projetos','notas','navegar'];
@@ -1772,7 +2194,8 @@ function goPage(id){
   if(next>prev)el.classList.add('anim-r');
   else if(next<prev)el.classList.add('anim-l');
   else el.classList.add('anim-f');
-  document.querySelectorAll('.nb[data-p]').forEach(function(b){b.classList.toggle('on',b.dataset.p===id)});
+  document.querySelectorAll('.nb[data-p]').forEach(function(b){b.classList.toggle('on',b.dataset.p===id);});
+  updateNavBubble(PAGE_ORDER.indexOf(id));
   // Scroll pill back to start when switching to a main tab
   var pill=document.getElementById('nav-pill');
   if(pill)pill.scrollTo({left:0,behavior:'smooth'});
@@ -1905,7 +2328,27 @@ function renderWeek(){
     div.innerHTML='<div class="wday-l">'+WSHORT[d.getDay()].slice(0,3)+'</div>'
       +'<div class="wday-n">'+d.getDate()+'</div>'
       +(has?'<div class="wday-dot"></div>':'<div style="height:5px"></div>');
-    div.addEventListener('click',(function(ds2){return function(){S.selDate=ds2;S.calView=false;renderInicio()}})(ds));
+    div.addEventListener('click',(function(ds2){return function(){
+    S.selDate=ds2;S.calView=false;
+    if(S.page!=='inicio') { renderInicio(); return; }
+    renderInicio();
+    // After render, scroll to date banner or open add modal
+    setTimeout(function(){
+      var feed=document.getElementById('inicio-feed');
+      var banners=feed?feed.querySelectorAll('.date-banner[data-date]'):[];
+      var target=null;
+      for(var i=0;i<banners.length;i++){if(banners[i].dataset.date===ds2){target=banners[i];break;}}
+      if(target){
+        target.scrollIntoView({behavior:'smooth',block:'start'});
+        target.style.transition='color .3s';
+        target.style.color='var(--blue)';
+        setTimeout(function(){target.style.color='';},800);
+      } else {
+        // No items on this date — open add task with date pre-filled
+        openTaskModal(null,{dueDate:ds2});
+      }
+    },120);
+  }})(ds));
     el.appendChild(div);
   }
 }
@@ -2080,7 +2523,7 @@ function renderInicio(){
   var now=new Date();
   document.getElementById('hdr-dt').textContent=fmtD(td0())+' · '+WLONG[now.getDay()];
   document.getElementById('hoje-sub').textContent=fmtD(td0())+' · '+WSHORT[now.getDay()];
-  renderWeek();
+  renderWeek();initCalSwipe();
   var el=document.getElementById('inicio-feed');el.innerHTML='';
   if(S.calView){renderMiniCal(el);return}
 
@@ -2101,11 +2544,23 @@ function renderInicio(){
     if(S.overdueOpen)el.appendChild(buildCard(overdue));
   }
 
-  // Em breve — card separado por data
+  // Em breve — mostra semana atual do calendário
   if(upcoming.length){
-    addSec(el,'<b>Em breve</b>','');
+    var ws=iso(weekStart(S.weekOff));
+    var we=iso(new Date(weekStart(S.weekOff).getTime()+6*86400000));
+    var weekItems=upcoming.filter(function(x){return x.date>=ws&&x.date<=we;});
+    var futureItems=upcoming.filter(function(x){return x.date>we;});
+    var secLabel=S.weekOff===0?'<b>Em breve</b>':'<b>Semana '+(S.weekOff>0?'+'+S.weekOff:S.weekOff)+'</b>';
+    var verMaisBtn=(!S.showAllUpcoming&&futureItems.length)?'<button onclick="S.showAllUpcoming=true;renderInicio()" style="border:none;background:transparent;color:var(--red);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">Ver tudo</button>':'';
+    var recolherBtn=(S.showAllUpcoming&&futureItems.length===0&&S.weekOff===0)?'<button onclick="S.showAllUpcoming=false;renderInicio()" style="border:none;background:transparent;color:var(--sub);font-family:inherit;font-size:13px;cursor:pointer">Recolher</button>':'';
+    addSec(el,secLabel,verMaisBtn||recolherBtn);
+    var visible=S.showAllUpcoming?upcoming:(S.weekOff!==0?weekItems:(upcoming.filter(function(x){return x.date<=addDays(td0(),7);})));
+    var hidden=S.showAllUpcoming?[]:upcoming.filter(function(x){return x.date>addDays(td0(),7);});
+    if(!visible.length){
+      el.innerHTML+='<div style="padding:28px 20px;text-align:center"><span style="font-size:32px">🌿</span><div style="font-size:16px;font-weight:600;color:var(--fg);margin-top:8px">Semana Livre!</div><div style="font-size:13px;color:var(--sub);margin-top:4px">Nenhum item nessa semana</div></div>';
+    }
     var lastD='',curCard=null,cardIdx=0;
-    upcoming.forEach(function(item){
+    visible.forEach(function(item){
       if(item.date!==lastD){
         lastD=item.date;
         var wd2=WSHORT[new Date(item.date+'T12:00').getDay()];
@@ -2114,6 +2569,7 @@ function renderInicio(){
         banner.className='date-banner fade-in';
         banner.style.animationDelay=(cardIdx*60)+'ms';
         banner.textContent=lbl+' · '+wd2;
+        banner.dataset.date=item.date;
         el.appendChild(banner);
         curCard=document.createElement('div');
         curCard.className='card fade-in';
@@ -2123,6 +2579,7 @@ function renderInicio(){
       }
       curCard.appendChild(buildRow(item));
     });
+
   }
 
   if(!overdue.length&&!upcoming.length)
@@ -2159,8 +2616,9 @@ function renderInicio(){
     });
   }
 
-  var ar=makeAddBtn(openAddMenu);ar.style.marginTop='8px';el.appendChild(ar);
   updateBadges();
+
+  initScrollDateTracker();
 }
 
 function makeAddBtn(fn){
@@ -2202,10 +2660,27 @@ function renderMiniCal(el){
 // ╚══════════════════════════════════════╝
 function renderHoje(){
   var el=document.getElementById('hoje-feed');el.innerHTML='';
-  var items=getForDate(td0());
-  if(!items.length){
+  var t=td0(),all=getAllUpcoming(),overdue=[],today=[];
+  all.forEach(function(x){
+    if(x.date<t) overdue.push(x);
+    else if(x.date===t) today.push(x);
+  });
+  // Atrasados
+  if(overdue.length){
+    var sec=document.createElement('div');sec.className='sec';
+    sec.innerHTML='<div class="sec-t"><b>Atrasados</b> <span style="color:var(--red);font-size:11px;background:rgba(255,59,48,.12);padding:1px 7px;border-radius:6px;font-weight:700">'+overdue.length+'</span></div>'
+      +'<button onclick="openReagendarModal()" style="border:none;background:transparent;color:var(--red);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">Reagendar</button>';
+    el.appendChild(sec);
+    el.appendChild(buildCard(overdue));
+  }
+  // Hoje
+  if(today.length){
+    addSec(el,'<b>Hoje</b>','');
+    el.appendChild(buildCard(today));
+  }
+  if(!overdue.length&&!today.length){
     el.innerHTML='<div class="empty-state"><span class="ei">✅</span><div class="et">Dia livre!</div><div class="es">Nenhum item para hoje</div></div>';
-  } else el.appendChild(buildCard(items));
+  }
   var ar=makeAddBtn(function(){openTaskModal(null,{dueDate:td0()})});ar.style.marginTop='8px';el.appendChild(ar);
 }
 
@@ -2434,10 +2909,13 @@ function openTaskModal(task,defaults){
       +'<textarea class="mta" id="t-no" placeholder="Notas…">'+esc(_curT.notes||'')+'</textarea>'
       +'</div>'
       +'<div class="msec">'
-      +'<div class="mrow"><span class="mlbl">Data</span>'
-      +'<div style="display:flex;gap:0;align-items:center">'
-      +'<input class="minp" type="date" id="t-dt" value="'+(_curT.dueDate||'')+'">'
-      +'</div></div>'
+      +'<div class="mrow" onclick="openDateWheelPicker()" style="cursor:pointer">'
+      +'<span class="mlbl">Data</span>'
+      +'<span class="minp" id="t-dt-lbl" style="text-align:right;color:var(--blue);font-weight:500">'
+      +((_curT.dueDate)?fmtD(_curT.dueDate):'Selecionar')+'</span>'
+      +'<input type="hidden" id="t-dt" value="'+(_curT.dueDate||'')+'">'
+      +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="2.2" stroke-linecap="round" style="margin-left:4px"><polyline points="9 18 15 12 9 6"/></svg>'
+      +'</div>'
       +'<div class="dshort"><button class="ds-btn" onclick="setDate(td0())">Hoje</button><button class="ds-btn" onclick="setDate(addDays(td0(),1))">Amanhã</button><button class="ds-btn" onclick="setDate(addDays(td0(),7))">+1 sem</button><button class="ds-btn" onclick="setDate(addDays(td0(),30))">+1 mês</button></div>'
       +'<div class="mrow"><span class="mlbl">Hora</span><input class="minp" type="time" id="t-hr" value="'+(_curT.dueTime||'')+'"></div>'
       +(function(){
@@ -2471,7 +2949,7 @@ function openTaskModal(task,defaults){
   render2();
   window._taskRender=render2;
 }
-function setDate(ds){var f=document.getElementById('t-dt');if(f)f.value=ds;_curT.dueDate=ds}
+function setDate(ds){var f=document.getElementById('t-dt');if(f)f.value=ds;var lbl=document.getElementById('t-dt-lbl');if(lbl)lbl.textContent=ds?fmtD(ds):'Selecionar';_curT.dueDate=ds;}
 function setPri(p){_curT.priority=p;syncTaskFields();window._taskRender&&window._taskRender()}
 function toggleTag(name){var tags=_curT.tags||[];var i=tags.indexOf(name);if(i>=0)tags.splice(i,1);else tags.push(name);_curT.tags=tags;syncTaskFields();window._taskRender&&window._taskRender()}
 function toggleSub(i){syncTaskFields();_curT.subtasks[i].done=!_curT.subtasks[i].done;window._taskRender&&window._taskRender()}
@@ -3189,6 +3667,156 @@ function addLongPress(el, item) {
   el.addEventListener('touchend',    function(){clearTimeout(timer);}, {passive:true});
   el.addEventListener('touchcancel', function(){clearTimeout(timer);}, {passive:true});
 }
+
+// ══ SCROLL → UPDATE WEEK HIGHLIGHT ══
+function initScrollDateTracker() {
+  var feed = document.getElementById('inicio-feed');
+  if (!feed) return;
+  if (feed._scrollTracker) feed.removeEventListener('scroll', feed._scrollTracker);
+
+  feed._scrollTracker = function() {
+    var banners = feed.querySelectorAll('.date-banner[data-date]');
+    if (!banners.length) return;
+    var feedTop = feed.getBoundingClientRect().top;
+    var best = null;
+    for (var i = banners.length - 1; i >= 0; i--) {
+      var rect = banners[i].getBoundingClientRect();
+      if (rect.top - feedTop <= 8) { best = banners[i]; break; }
+    }
+    if (!best) best = banners[0];
+    var d = best.dataset.date;
+    if (d && d !== S.selDate) {
+      // Check if date is in current week strip
+      var ws = weekStart(S.weekOff);
+      var we = new Date(ws); we.setDate(ws.getDate() + 6);
+      var dd = new Date(d + 'T12:00');
+      if (dd >= ws && dd <= we) {
+        S.selDate = d;
+        renderWeek();
+      } else {
+        // Shift week if needed
+        var diff = Math.round((dd - ws) / 86400000);
+        S.weekOff += Math.floor(diff / 7);
+        S.selDate = d;
+        renderWeek();
+      }
+    }
+  };
+  feed.addEventListener('scroll', feed._scrollTracker, {passive: true});
+}
+
+// ══ NAV BUBBLE ══
+function updateNavBubble(idx) {
+  var bubble = document.getElementById('nav-bubble');
+  if (!bubble) return;
+  var w = window.innerWidth / 4;
+  // Use left so we don't override the CSS translateY(-50%)
+  bubble.style.left = (idx * w) + 'px';
+}
+
+// ══ CALENDÁRIO — SWIPE SEMANAL ══
+function initCalSwipe() {
+  var wrap = document.querySelector('.week-wrap');
+  if (!wrap || wrap._swipeInit) return;
+  wrap._swipeInit = true;
+  var sx = 0, sy = 0, moved = false;
+
+  wrap.addEventListener('touchstart', function(e) {
+    sx = e.touches[0].clientX;
+    sy = e.touches[0].clientY;
+    moved = false;
+  }, {passive: true});
+
+  wrap.addEventListener('touchmove', function(e) {
+    var dx = e.touches[0].clientX - sx;
+    var dy = Math.abs(e.touches[0].clientY - sy);
+    if (dy > Math.abs(dx)) return; // vertical scroll takes priority
+    if (Math.abs(dx) > 8) moved = true;
+    // Live drag feedback
+    var wdays = document.getElementById('wdays');
+    if (wdays && Math.abs(dx) > 6) {
+      wdays.style.transform = 'translateX(' + (dx * 0.25) + 'px)';
+      wdays.style.opacity = String(1 - Math.abs(dx) / 500);
+    }
+  }, {passive: true});
+
+  wrap.addEventListener('touchend', function(e) {
+    var dx = e.changedTouches[0].clientX - sx;
+    var wdays = document.getElementById('wdays');
+    if (wdays) {
+      wdays.style.transition = 'transform .28s cubic-bezier(.25,1,.5,1), opacity .28s';
+      wdays.style.transform = '';
+      wdays.style.opacity = '';
+      setTimeout(function(){ wdays.style.transition = ''; }, 300);
+    }
+    if (!moved || Math.abs(dx) < 40) return;
+    if (dx < 0) {
+      S.weekOff++; haiku(8);
+    } else {
+      S.weekOff--; haiku(8);
+    }
+    S.selDate = iso(weekStart(S.weekOff));
+    S.showAllUpcoming = false;
+    renderInicio();
+  }, {passive: true});
+}
+
+// ══ DATE WHEEL PICKER ══
+var _wheelDate = {d:1, m:0, y:2026};
+var MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+function openDateWheelPicker() {
+  var cur = document.getElementById('t-dt').value || td0();
+  var parts = cur.split('-');
+  _wheelDate = {d:parseInt(parts[2]||1), m:parseInt(parts[1]||1)-1, y:parseInt(parts[0]||2026)};
+  buildWheels();
+  document.getElementById('date-wheel-bg').style.display = 'block';
+  document.getElementById('date-wheel-sheet').style.display = 'block';
+}
+function closeDateWheel() {
+  document.getElementById('date-wheel-bg').style.display = 'none';
+  document.getElementById('date-wheel-sheet').style.display = 'none';
+}
+function confirmDateWheel() {
+  var d = getWheelVal('wh-day', getDays());
+  var m = getWheelVal('wh-month', MONTHS_PT);
+  var y = getWheelVal('wh-year', getYears());
+  var mi = MONTHS_PT.indexOf(m);
+  var ds = y + '-' + String(mi+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+  setDate(ds);
+  closeDateWheel();
+}
+function getDays() {
+  var d = []; for(var i=1;i<=31;i++) d.push(i); return d;
+}
+function getYears() {
+  var y = []; for(var i=2024;i<=2030;i++) y.push(i); return y;
+}
+function buildWheels() {
+  buildWheelCol('wh-day', getDays(), _wheelDate.d);
+  buildWheelCol('wh-month', MONTHS_PT, MONTHS_PT[_wheelDate.m]);
+  buildWheelCol('wh-year', getYears(), _wheelDate.y);
+}
+function buildWheelCol(id, items, selected) {
+  var el = document.getElementById(id);
+  el.innerHTML = '<div class="wheel-item"></div>';
+  items.forEach(function(v) {
+    var div = document.createElement('div');
+    div.className = 'wheel-item';
+    div.textContent = v;
+    el.appendChild(div);
+  });
+  el.innerHTML += '<div class="wheel-item"></div>';
+  // Scroll to selected
+  var idx = items.indexOf ? items.indexOf(selected) : items.findIndex ? items.findIndex(function(x){return x==selected;}) : -1;
+  if (idx < 0) idx = 0;
+  setTimeout(function() { el.scrollTop = idx * 44; }, 30);
+}
+function getWheelVal(id, items) {
+  var el = document.getElementById(id);
+  var idx = Math.round(el.scrollTop / 44);
+  return items[Math.max(0, Math.min(idx, items.length-1))];
+}
 </script>
 
 <!-- Settings template -->
@@ -3352,5 +3980,32 @@ function addLongPress(el, item) {
     <div class="mv-handle"></div>
     <div id="move-sheet-body"></div>
   </div>
-</div></body>
+</div>
+<!-- DATE WHEEL PICKER -->
+<div id="date-wheel-bg" onclick="closeDateWheel()" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.35);backdrop-filter:blur(4px)"></div>
+<div id="date-wheel-sheet" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:2001;background:linear-gradient(90deg,#f3f7fd,#fff);border-radius:24px 24px 0 0;padding-bottom:env(safe-area-inset-bottom,20px);box-shadow:0 -4px 40px rgba(0,0,0,.15)">
+  <div style="width:36px;height:4px;background:rgba(0,0,0,.14);border-radius:2px;margin:10px auto 4px"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 20px 6px">
+    <button onclick="closeDateWheel()" style="border:none;background:transparent;color:#8e8e93;font-size:16px;cursor:pointer;padding:4px 0">Cancelar</button>
+    <span style="font-size:16px;font-weight:700;color:#1c1c1e">Selecionar Data</span>
+    <button onclick="confirmDateWheel()" style="border:none;background:transparent;color:#007AFF;font-size:16px;font-weight:700;cursor:pointer;padding:4px 0">OK</button>
+  </div>
+  <div style="display:flex;justify-content:center;gap:4px;padding:0 20px 20px;position:relative">
+    <!-- Selection highlight bar -->
+    <div style="position:absolute;top:50%;left:20px;right:20px;height:44px;transform:translateY(-50%);background:rgba(0,0,0,.06);border-radius:12px;pointer-events:none;z-index:0"></div>
+    <!-- Day -->
+    <div style="flex:1;position:relative;overflow:hidden;height:220px">
+      <div id="wh-day" class="wheel-col" style="overflow-y:scroll;height:220px;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:1"></div>
+    </div>
+    <!-- Month -->
+    <div style="flex:2;position:relative;overflow:hidden;height:220px">
+      <div id="wh-month" class="wheel-col" style="overflow-y:scroll;height:220px;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:1"></div>
+    </div>
+    <!-- Year -->
+    <div style="flex:1.5;position:relative;overflow:hidden;height:220px">
+      <div id="wh-year" class="wheel-col" style="overflow-y:scroll;height:220px;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:1"></div>
+    </div>
+  </div>
+</div>
+</body>
 </html>
