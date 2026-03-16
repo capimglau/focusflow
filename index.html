@@ -28,7 +28,7 @@ updateThemeColor();
 html,body{overscroll-behavior:none;}
 body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:var(--fg);-webkit-font-smoothing:antialiased;min-height:100vh;}
 .pages{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;background:transparent}
-.page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;padding-bottom:84px;display:none;background:transparent;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
+.page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;padding-bottom:88px;display:none;background:transparent;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
 .page.active{display:block}
 @keyframes slideInR{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes slideInL{from{transform:translateX(-40px);opacity:0}to{transform:translateX(0);opacity:1}}
@@ -44,12 +44,12 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 .page.anim-r{animation:slideInR .22s cubic-bezier(.25,1,.5,1)}
 .page.anim-l{animation:slideInL .22s cubic-bezier(.25,1,.5,1)}
 .page.anim-f{animation:fadeIn .18s ease}
-.hdr{padding:14px 18px 8px;display:flex;align-items:center;justify-content:space-between}
+.hdr{padding:12px 18px 8px;display:flex;align-items:center;justify-content:space-between}
 .hdr-left{display:flex;align-items:center}
 .hdr-left small{display:none}
-.hdr-act{display:flex;gap:0;align-items:center;background:rgba(255,255,255,.7);backdrop-filter:blur(80px) saturate(4) brightness(1.14);-webkit-backdrop-filter:blur(80px) saturate(4) brightness(1.14);border:.5px solid rgba(255,255,255,.88);box-shadow:0 1.5px 0 rgba(255,255,255,.96) inset,0 4px 20px rgba(80,100,180,.12);border-radius:50px;padding:3px 4px;}
+.hdr-act{display:flex;gap:2px;align-items:center;background:rgba(255,255,255,.7);backdrop-filter:blur(80px) saturate(4) brightness(1.14);-webkit-backdrop-filter:blur(80px) saturate(4) brightness(1.14);border:.5px solid rgba(255,255,255,.88);box-shadow:0 1.5px 0 rgba(255,255,255,.96) inset,0 4px 20px rgba(80,100,180,.12);border-radius:50px;padding:4px 6px;}
 [data-dark="1"] .hdr-act{background:rgba(44,44,46,.88);border-color:rgba(255,255,255,.12);box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 4px 16px rgba(0,0,0,.35)}
-.hdr-btn{border:none;background:transparent;cursor:pointer;padding:0;width:32px;height:32px;border-radius:50px;display:flex;align-items:center;justify-content:center;transition:all .12s;color:var(--sub)}
+.hdr-btn{border:none;background:transparent;cursor:pointer;padding:0;width:38px;height:38px;border-radius:50px;display:flex;align-items:center;justify-content:center;transition:all .12s;color:var(--sub)}
 .hdr-btn:active{background:var(--sep)}
 .week-wrap{display:flex;align-items:center;padding:14px 14px 10px;gap:0}
 .w-arr{border:none;background:transparent;cursor:pointer;color:var(--sub);font-size:24px;padding:2px 6px;line-height:1;flex-shrink:0}
@@ -204,14 +204,40 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 .es{font-size:14px;color:var(--sub);margin-top:6px;line-height:1.5}
 .card.fade-in,.proj-card.fade-in{animation:cardSlideUp .4s cubic-bezier(.25,1,.5,1) both}
 .date-banner.fade-in{animation:bannerSlideIn .3s cubic-bezier(.25,1,.5,1) both}
-body #nav-out{position:fixed;bottom:0;left:0;right:0;z-index:900;display:flex;justify-content:center;align-items:flex-end;padding:0 16px 20px;background:none;border-top:none;pointer-events:none}
-body #nav-add{display:none!important}
-body #nav-pill{pointer-events:auto;display:flex;align-items:center;width:calc(100vw - 32px);max-width:calc(100vw - 32px);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding:4px;border-radius:26px;background:rgba(255,255,255,.82);backdrop-filter:blur(60px) saturate(2.5) brightness(1.08);-webkit-backdrop-filter:blur(60px) saturate(2.5) brightness(1.08);border:.5px solid rgba(255,255,255,.82);box-shadow:0 1.5px 0 rgba(255,255,255,.90) inset,0 6px 24px rgba(0,0,0,.12),0 1px 4px rgba(0,0,0,.08);position:relative}
+body #nav-out{position:fixed;bottom:0;left:0;right:0;z-index:900;display:flex;justify-content:center;align-items:flex-end;padding:0 16px calc(env(safe-area-inset-bottom,16px) + 8px);background:none;border-top:none;pointer-events:none;gap:10px;justify-content:center;align-items:center}
+body #nav-add{
+  display:flex!important;
+  align-items:center;justify-content:center;
+  width:55px;height:55px;
+  border-radius:50%;
+  border:none;
+  cursor:pointer;
+  flex-shrink:0;
+  pointer-events:auto;
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(72px) saturate(3.5) brightness(1.14);
+  -webkit-backdrop-filter:blur(72px) saturate(3.5) brightness(1.14);
+  border:.5px solid rgba(255,255,255,.90);
+  box-shadow:0 1.5px 0 rgba(255,255,255,.96) inset,
+             0 -1px 0 rgba(150,185,240,.22) inset,
+             0 6px 24px rgba(70,110,200,.13),
+             0 2px 8px rgba(0,0,0,.06);
+  color:#1c1c1e;
+  transition:transform .12s,opacity .12s;
+}
+[data-dark="1"] #nav-add{
+  background:rgba(44,44,46,.90);
+  border:.5px solid rgba(255,255,255,.14);
+  box-shadow:0 1px 0 rgba(255,255,255,.09) inset,0 6px 22px rgba(0,0,0,.38);
+  color:#fff;
+}
+#nav-add:active{transform:scale(.93);opacity:.78;}
+body #nav-pill{pointer-events:auto;display:flex;align-items:center;width:calc(100vw - 120px);max-width:calc(100vw - 120px);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding:5px;border-radius:26px;background:rgba(255,255,255,.82);backdrop-filter:blur(60px) saturate(2.5) brightness(1.08);-webkit-backdrop-filter:blur(60px) saturate(2.5) brightness(1.08);border:.5px solid rgba(255,255,255,.82);box-shadow:0 1.5px 0 rgba(255,255,255,.90) inset,0 6px 24px rgba(0,0,0,.12),0 1px 4px rgba(0,0,0,.08);position:relative}
 [data-dark="1"] body #nav-pill{background:rgba(28,28,30,.88);border-color:rgba(255,255,255,.15);box-shadow:0 1px 0 rgba(255,255,255,.1) inset,0 8px 28px rgba(0,0,0,.4)}
 body #nav-pill::-webkit-scrollbar{display:none}
-body .nb{flex:0 0 calc((100vw - 40px) / 4);width:calc((100vw - 40px) / 4);max-width:calc((100vw - 40px) / 4);min-width:0;height:52px;padding:0;border-radius:0;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;scroll-snap-align:start;cursor:pointer;flex-shrink:0;position:relative;z-index:1;user-select:none;-webkit-user-select:none}
-body .nb svg{width:22px;height:22px;flex-shrink:0}
-body .nb span{font-size:10px;font-weight:600;white-space:nowrap;letter-spacing:.2px}
+body .nb{flex:0 0 33.333%;min-width:0;height:50px;padding:0;border-radius:0;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;scroll-snap-align:start;cursor:pointer;flex-shrink:0;position:relative;z-index:1;user-select:none;-webkit-user-select:none}
+body .nb svg{width:26px;height:26px;flex-shrink:0}
+body .nb span{font-size:10px;font-weight:500;white-space:nowrap;letter-spacing:.1px}
 body .nb:not(.on) svg,body .nb:not(.on) span{color:#8e8e93}
 body .nb.on svg,body .nb.on span{color:var(--blue)}
 [data-dark="1"] body .nb:not(.on) svg,[data-dark="1"] body .nb:not(.on) span{color:rgba(255,255,255,.45)}
@@ -219,7 +245,7 @@ body .nb.on svg,body .nb.on span{color:var(--blue)}
 .nb.on::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%) scale(1);width:4px;height:4px;border-radius:50%;background:var(--blue);opacity:1}
 .nb:not(.on)::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%) scale(0);width:4px;height:4px;border-radius:50%;background:var(--blue);opacity:0}
 .nb:active{transform:scale(.87)!important}
-#nav-bubble{position:absolute;top:50%;left:0;width:calc((100vw - 40px) / 4);height:42px;transform:translateY(-50%);background:radial-gradient(ellipse at 50% 60%,rgba(0,122,255,.18) 0%,rgba(0,122,255,.08) 55%,transparent 100%);border-radius:50%;pointer-events:none;transition:left .38s cubic-bezier(.25,1.4,.5,1);z-index:0;filter:blur(2px)}
+#nav-bubble{position:absolute;top:50%;left:0;width:calc(100% / 3);height:42px;transform:translateY(-50%);background:radial-gradient(ellipse at 50% 60%,rgba(0,122,255,.18) 0%,rgba(0,122,255,.08) 55%,transparent 100%);border-radius:50%;pointer-events:none;transition:left .38s cubic-bezier(.25,1.4,.5,1);z-index:0;filter:blur(2px)}
 [data-dark="1"] #nav-bubble{background:radial-gradient(ellipse at 50% 60%,rgba(0,122,255,.35) 0%,rgba(0,122,255,.15) 55%,transparent 100%)}
 .nb-badge{position:absolute;top:5px;right:calc(50% - 22px);width:8px;height:8px;border-radius:50%;background:rgba(255,59,48,.75);display:none;border:1.5px solid rgba(255,255,255,.9);box-shadow:0 1px 6px rgba(255,59,48,.3)}
 .nb-badge.on{display:block}
@@ -245,16 +271,13 @@ button:active,.nb:active{transform:scale(.88)!important;opacity:.58!important}
 .irow:active{background:rgba(120,120,128,.08)!important}
 html:not([data-dark="1"]){
   min-height:100svh;
-  background:#fafdff;
+  background:#e8f0fe;
   background:
-    radial-gradient(ellipse at 10% 0%,#f1f7fd 0%,transparent 36%),
-    radial-gradient(ellipse at 92% 5%,#f2f8fd 0%,transparent 32%),
-    radial-gradient(ellipse at 50% 100%,#f3f8fc 0%,transparent 38%),
-    linear-gradient(170deg,#fafdff 0%,#fbfeff 40%,#fdffff 70%,#ffffff 100%) fixed !important;
-  background-attachment:fixed !important;
-  /* Extend into safe areas */
-  padding-top:env(safe-area-inset-top,0px);
-  padding-top:0; /* override - let content handle it */
+    radial-gradient(ellipse at 20% 0%, #ddeeff 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 8%, #e8f4fd 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 110%, #e0ecfa 0%, transparent 50%),
+    linear-gradient(160deg, #eaf3ff 0%, #f0f7ff 35%, #f8fbff 65%, #ffffff 100%);
+  background-attachment: fixed;
 }
 html:not([data-dark="1"]) .pages,html:not([data-dark="1"]) 
 #dashboard-feed,.sec{padding-bottom:4px}
@@ -298,11 +321,14 @@ html:not([data-dark="1"]) .pages,html:not([data-dark="1"])
 /* ── Cards de conteúdo ── */
 html:not([data-dark="1"]) .card,
 html:not([data-dark="1"]) .proj-card {
-  background: var(--lg) !important;
-  backdrop-filter: var(--lg-blur) !important;
-  -webkit-backdrop-filter: var(--lg-blur) !important;
-  border: .5px solid var(--lg-border) !important;
-  box-shadow: var(--lg-shadow) !important;
+  background: rgba(255,255,255,.72) !important;
+  backdrop-filter: blur(60px) saturate(2.5) brightness(1.04) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(2.5) brightness(1.04) !important;
+  border: .5px solid rgba(255,255,255,.85) !important;
+  box-shadow: 0 2px 0 rgba(255,255,255,.90) inset,
+              0 -1px 0 rgba(160,195,240,.18) inset,
+              0 8px 32px rgba(80,120,200,.08),
+              0 2px 8px rgba(0,0,0,.05) !important;
   border-radius: 18px !important;
 }
 
@@ -359,24 +385,24 @@ html:not([data-dark="1"]) .pri-btn:not(.on) {
 
 /* ── Nav pill ── */
 html:not([data-dark="1"]) #nav-pill {
-  background: rgba(255,255,255,.72) !important;
-  backdrop-filter: blur(72px) saturate(3.5) brightness(1.12) !important;
-  -webkit-backdrop-filter: blur(72px) saturate(3.5) brightness(1.12) !important;
+  background: rgba(255,255,255,.75) !important;
+  backdrop-filter: blur(72px) saturate(3) brightness(1.08) !important;
+  -webkit-backdrop-filter: blur(72px) saturate(3) brightness(1.08) !important;
   border: .5px solid rgba(255,255,255,.88) !important;
-  box-shadow: 0 1.5px 0 rgba(255,255,255,.96) inset,
-              0 -1px 0 rgba(160,190,240,.22) inset,
+  box-shadow: 0 2px 0 rgba(255,255,255,.92) inset,
+              0 -1px 0 rgba(150,190,240,.20) inset,
               0 8px 32px rgba(70,110,200,.12),
-              0 2px 8px rgba(0,0,0,.07) !important;
+              0 2px 8px rgba(0,0,0,.06) !important;
 }
 
 /* ── Header pills (qadd + hdr-act) ── */
 html:not([data-dark="1"]) .qadd-pill,
 html:not([data-dark="1"]) .hdr-act {
-  background: rgba(255,255,255,.72) !important;
-  backdrop-filter: blur(72px) saturate(3.5) brightness(1.12) !important;
-  -webkit-backdrop-filter: blur(72px) saturate(3.5) brightness(1.12) !important;
+  background: rgba(255,255,255,.75) !important;
+  backdrop-filter: blur(72px) saturate(3) brightness(1.08) !important;
+  -webkit-backdrop-filter: blur(72px) saturate(3) brightness(1.08) !important;
   border: .5px solid rgba(255,255,255,.88) !important;
-  box-shadow: 0 1.5px 0 rgba(255,255,255,.96) inset,
+  box-shadow: 0 2px 0 rgba(255,255,255,.92) inset,
               0 4px 18px rgba(70,110,200,.10) !important;
 }
 
@@ -527,6 +553,25 @@ body {
 [data-dark="1"] body {
   background-color: #000000;
 }
+
+#hdr-date .hdr-day{font-size:15px;font-weight:700;color:var(--fg);line-height:1.25;letter-spacing:-.2px}
+#hdr-date .hdr-month{font-size:11px;font-weight:400;color:var(--sub);letter-spacing:.0px}
+
+/* Claude AI Panel */
+#claude-panel.on{display:flex!important}
+.claude-msg{display:flex;flex-direction:column;gap:3px;max-width:88%}
+.claude-msg.user{align-self:flex-end;align-items:flex-end}
+.claude-msg.ai{align-self:flex-start;align-items:flex-start}
+.claude-bubble{padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.55;word-break:break-word}
+.claude-msg.user .claude-bubble{background:var(--blue);color:#fff;border-bottom-right-radius:5px}
+.claude-msg.ai .claude-bubble{background:rgba(255,255,255,.75);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:.5px solid rgba(255,255,255,.85);box-shadow:0 2px 8px rgba(80,120,200,.08);color:var(--fg);border-bottom-left-radius:5px}
+.claude-msg.ai .claude-lbl{font-size:11px;font-weight:600;color:var(--blue);margin-bottom:2px;padding-left:2px}
+.claude-typing span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--sub);animation:typingDot 1.2s infinite}
+.claude-typing span:nth-child(2){animation-delay:.2s}
+.claude-typing span:nth-child(3){animation-delay:.4s}
+@keyframes typingDot{0%,60%,100%{opacity:.2;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
+[data-dark="1"] #claude-input-wrap{background:rgba(44,44,46,.82);border-color:rgba(255,255,255,.12)}
+[data-dark="1"] .claude-msg.ai .claude-bubble{background:rgba(44,44,46,.85);border-color:rgba(255,255,255,.1)}
 </style>
 </head>
 <body>
@@ -534,23 +579,13 @@ body {
   <di<!-- dashboard removed -->
   <div class="page" id="p-inicio">
     <div class="hdr">
-      <div class="hdr-left">
-        <div class="qadd-pill" id="qadd-pill">
-          <button class="qadd-btn" id="qadd-trigger" title="Adicionar" onclick="openAddMenu()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          </button>
-          <div class="qadd-sep"></div>
-          <button class="qadd-btn" id="search-trigger" title="Buscar" onclick="document.getElementById('search').classList.add('on');setTimeout(function(){document.getElementById('s-inp').focus()},50)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-          </button>
-        </div>
-      </div>
+      <div class="hdr-left"><div id="hdr-date" style="display:flex;flex-direction:column;gap:1px;padding-left:2px"></div></div>
       <div class="hdr-act">
         <button class="hdr-btn" id="cal-btn" title="Calendário">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         </button>
         <button class="hdr-btn" id="dark-btn" title="Modo escuro">
-          <svg id="dark-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+          <svg id="dark-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
         </button>
       </div>
     </div>
@@ -588,6 +623,27 @@ body {
       <div class="hdr-act"><button class="hdr-btn" onclick="goPage('inicio')" title="Início"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg></button></div></div>
     <div id="navegar-body"></div>
   </div>
+
+<!-- Claude AI Panel -->
+<div id="claude-panel" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:1100;display:none;flex-direction:column;background:var(--bg)">
+  <div class="fp-hdr" style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px">
+    <button onclick="closeClaude()" style="display:flex;align-items:center;gap:6px;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--sub);cursor:pointer">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+      Fechar
+    </button>
+    <span style="font-size:16px;font-weight:600;color:var(--fg)">✦ Claude</span>
+    <button onclick="clearClaude()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:var(--sub);cursor:pointer">Limpar</button>
+  </div>
+  <div id="claude-msgs" style="flex:1;overflow-y:auto;padding:12px 16px 8px;display:flex;flex-direction:column;gap:10px"></div>
+  <div style="padding:10px 16px calc(env(safe-area-inset-bottom,16px)+10px);display:flex;gap:8px;align-items:flex-end">
+    <div id="claude-input-wrap" style="flex:1;background:rgba(255,255,255,.7);backdrop-filter:blur(60px) saturate(3);-webkit-backdrop-filter:blur(60px) saturate(3);border:.5px solid rgba(255,255,255,.88);border-radius:20px;padding:10px 14px;box-shadow:0 2px 0 rgba(255,255,255,.9) inset,0 4px 16px rgba(80,120,200,.08)">
+      <textarea id="claude-inp" placeholder="Pergunte ao Claude…" rows="1" style="width:100%;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--fg);outline:none;resize:none;line-height:1.5;max-height:120px;overflow-y:auto" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+    </div>
+    <button id="claude-send" onclick="sendToClaude()" style="width:40px;height:40px;border-radius:50%;border:none;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:opacity .15s">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+    </button>
+  </div>
+</div>
 </div>
 
 <div id="nav-out">
@@ -613,12 +669,16 @@ body {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
       <span>Notas</span>
     </button>
+    <button class="nb" id="nb-claude" onclick="openClaude()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="3" fill="currentColor" stroke="none"/></svg>
+      <span>IA</span>
+    </button>
     <button class="nb" id="nb-config" data-i="5" onclick="openSettings()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       <span>Config</span>
     </button>
   </div>
-  <button id="nav-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+  <button id="nav-add" onclick="openAddMenu()" title="Adicionar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
 </div>
 
 <div id="search">
@@ -836,7 +896,12 @@ function updateNavBubble(idx){
 // ═══════════════════════════════════════
 //  MODAL
 // ═══════════════════════════════════════
-function openModal(html){document.getElementById('modal-body').innerHTML=html;document.getElementById('modal-bg').classList.add('on')}
+function openModal(html){
+  var body=document.getElementById('modal-body');
+  if(!body)return;
+  body.innerHTML='<button onclick="closeModal()" style="position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;border:none;background:rgba(120,120,128,.15);color:var(--sub);font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:99">×</button>'+html;
+  document.getElementById('modal-bg').classList.add('on');
+}
 function closeModal(){document.getElementById('modal-bg').classList.remove('on');S.eTask=S.eRem=S.eEv=null;_curT=null}
 document.getElementById('modal-bg').addEventListener('click',function(e){if(e.target===this)closeModal()});
 function openAddMenu(){
@@ -1002,8 +1067,18 @@ function addSec(parent,left,right){var s=document.createElement('div');s.classNa
 //  INÍCIO
 // ═══════════════════════════════════════
 document.getElementById('cal-btn').addEventListener('click',function(){S.calView=!S.calView;renderInicio()});
+
+function updateHdrDate(){
+  var el=document.getElementById('hdr-date');
+  if(!el)return;
+  var now=new Date();
+  var months=['jan.','fev.','mar.','abr.','mai.','jun.','jul.','ago.','set.','out.','nov.','dez.'];
+  el.innerHTML=
+    '<span class="hdr-day">'+now.getDate()+' '+months[now.getMonth()]+'</span>'
+   +'<span class="hdr-month">de '+now.getFullYear()+'</span>';
+}
 function renderInicio(){
-  renderWeek();initCalSwipe();
+  updateHdrDate();renderWeek();initCalSwipe();
   var el=document.getElementById('inicio-feed');el.innerHTML='';
   if(S.calView){renderMiniCal(el);return}
   var t=td0(),all=getAllUpcoming(),overdue=[],upcoming=[];
@@ -1389,32 +1464,29 @@ function fmtBRL(v){return'R$\u00a0'+parseFloat(v||0).toLocaleString('pt-BR',{min
 
 function loadAutoGestData(cb){
   if(AG_DATA.loading)return;
-  // Verifica se está rodando num domínio que o Supabase aceita
   var origin=window.location.origin||'';
-  var isLocal=(origin==='null'||origin===''||origin.indexOf('claude.ai')>=0||origin.indexOf('blob:')>=0||origin.indexOf('localhost')<0&&origin.indexOf('github.io')<0&&origin.indexOf('netlify')>=0===false&&origin.indexOf('focusflow')<0);
-  var isGitHub=origin.indexOf('github.io')>=0||origin.indexOf('netlify')>=0||origin.indexOf('capimglau')>=0;
-  if(!isGitHub&&origin!=='http://localhost:3000'){
+  var isGitHub=origin.indexOf('github.io')>=0||origin.indexOf('netlify')>=0||origin.indexOf('capimglau')>=0||origin.indexOf('localhost')>=0;
+  if(!isGitHub){
     AG_DATA.loaded=true;AG_DATA.loading=false;
     AG_DATA._blockedOrigin=origin;
-    console.warn('[AG] Bloqueado — abra em: capimglau.github.io/focusflow | Origin:',origin);
     if(cb)cb();
     return;
   }
   AG_DATA.loading=true;
-  // Queries idênticas ao AutoGest Pro original (que funcionam com o RLS do Supabase)
   Promise.all([
     AG.get('despesas',''),
-    AG.get('orcamentopessoal','tipo=eq.despesa'),
-    AG.get('orcamentopessoal','tipo=eq.despesa&status=eq.previsto'),
-    AG.get('orcamentopessoal','tipo=eq.despesa&status=eq.atrasado'),
+    AG.get('orcamentopessoal',''),
     AG.get('contas','tipo=eq.pagar')
   ]).then(function(res){
     var rawDesp   = res[0]||[];
-    // Combina todas as queries de orcamento para pegar previsto + atrasado
-    var orcAll={};
-    (res[1]||[]).concat(res[2]||[]).concat(res[3]||[]).forEach(function(o){orcAll[o.id]=o;});
-    var rawOrc    = Object.values(orcAll);
-    var rawContas = res[4]||[];
+    var rawOrc    = res[1]||[];
+    var rawContas = res[2]||[];
+    // Guarda raw para diagnóstico
+    AG_DATA._rawOrc=rawOrc;
+    AG_DATA._rawDesp=rawDesp;
+    console.log('[AG] raw desp='+rawDesp.length+' orc='+rawOrc.length+' contas='+rawContas.length);
+    if(rawOrc.length>0)console.log('[AG] ORC[0]='+JSON.stringify(rawOrc[0]));
+    if(rawDesp.length>0)console.log('[AG] DESP[0]='+JSON.stringify(rawDesp[0]));
     console.log('[AG] raw: desp='+rawDesp.length+' orc='+rawOrc.length+' contas='+rawContas.length);
     // Log first orc record to see ALL fields
     if(rawOrc.length>0){
@@ -1581,6 +1653,17 @@ function syncAutoGest(){
 }
 
 
+
+function agShowRaw(){
+  var orc=AG_DATA._rawOrc||[];
+  var desp=AG_DATA._rawDesp||[];
+  var msg='DESPESAS ('+desp.length+')\n';
+  if(desp[0])msg+=JSON.stringify(desp[0],null,2).slice(0,300)+'\n\n';
+  msg+='ORÇAMENTO ('+orc.length+')\n';
+  if(orc[0])msg+=JSON.stringify(orc[0],null,2).slice(0,400);
+  else msg+='(vazio)';
+  alert(msg);
+}
 function renderDashboard(){
   var now=new Date();
   var el=document.getElementById('dashboard-feed');if(!el)return;el.innerHTML='';
@@ -1692,9 +1775,18 @@ function buildDashFinanceiro(el){
     el.appendChild(warn);return;
   }
   if(!AG_DATA.despesas.length&&!AG_DATA.orcamento.length&&!(AG_DATA.contas&&AG_DATA.contas.length)){
+    var rawOrcLen=(AG_DATA._rawOrc||[]).length;
+    var rawDespLen=(AG_DATA._rawDesp||[]).length;
     var vazio=document.createElement('div');vazio.className='card';vazio.style.margin='0 16px';
-    vazio.innerHTML='<div style="padding:16px"><div style="font-size:13px;color:var(--sub);margin-bottom:8px">Nenhuma despesa pendente encontrada.</div>'
-      +'<button onclick="syncAutoGest()" style="font-size:12px;padding:6px 14px;border-radius:8px;background:rgba(0,122,255,.1);color:var(--blue);border:none;cursor:pointer;font-family:inherit;font-weight:600">🔄 Tentar novamente</button></div>';
+    vazio.innerHTML='<div style="padding:16px">'
+      +'<div style="font-size:13px;font-weight:600;color:var(--fg);margin-bottom:6px">Nenhuma despesa pendente</div>'
+      +'<div style="font-size:12px;color:var(--sub);margin-bottom:10px">'
+      +'Supabase retornou: '+rawDespLen+' despesas, '+rawOrcLen+' orçamento pessoal<br>'
+      +(rawOrcLen>0?'<span style="color:var(--orange)">⚠ Filtro excluiu todos os '+rawOrcLen+' registros de orçamento</span>':'')
+      +'</div>'
+      +'<button onclick="agShowRaw()" style="font-size:12px;padding:6px 14px;border-radius:8px;background:rgba(255,149,0,.12);color:var(--orange);border:none;cursor:pointer;font-family:inherit;font-weight:600;margin-right:8px">🔍 Ver dados brutos</button>'
+      +'<button onclick="syncAutoGest()" style="font-size:12px;padding:6px 14px;border-radius:8px;background:rgba(0,122,255,.1);color:var(--blue);border:none;cursor:pointer;font-family:inherit;font-weight:600">🔄 Sync</button>'
+      +'</div>';
     el.appendChild(vazio);return;
   }
 
@@ -1755,6 +1847,147 @@ function buildAgCard(items,tipo){
 // Auto-sync ao carregar
 setTimeout(function(){loadAutoGestData(function(){if(S.page==='dashboard')render('dashboard');});},800);
 
+
+// ═══════════════════════════════════════════════════════════
+//  CLAUDE AI INTEGRATION
+// ═══════════════════════════════════════════════════════════
+var _claudeHistory = [];
+
+function openClaude(){
+  document.getElementById('claude-panel').classList.add('on');
+  // Show welcome if empty
+  var msgs = document.getElementById('claude-msgs');
+  if(!msgs.children.length){
+    _addClaudeMsg('ai','Olá! Sou o Claude. Posso ajudar a criar tarefas, buscar compromissos, resumir suas notas ou responder perguntas. Como posso ajudar?');
+  }
+  setTimeout(function(){document.getElementById('claude-inp').focus();},200);
+}
+
+function closeClaude(){
+  document.getElementById('claude-panel').classList.remove('on');
+}
+
+function clearClaude(){
+  _claudeHistory=[];
+  document.getElementById('claude-msgs').innerHTML='';
+  _addClaudeMsg('ai','Conversa limpa! Como posso ajudar?');
+}
+
+function _addClaudeMsg(role, text){
+  var msgs = document.getElementById('claude-msgs');
+  var wrap = document.createElement('div');
+  wrap.className = 'claude-msg '+(role==='user'?'user':'ai');
+  if(role==='ai'){
+    var lbl = document.createElement('div');
+    lbl.className = 'claude-lbl';
+    lbl.textContent = '✦ Claude';
+    wrap.appendChild(lbl);
+  }
+  var bubble = document.createElement('div');
+  bubble.className = 'claude-bubble';
+  // Render markdown-lite: **bold**, bullet lists, line breaks
+  bubble.innerHTML = text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')
+    .replace(/^[•\-] (.+)$/gm,'<div style="padding-left:12px">• $1</div>')
+    .replace(/\n/g,'<br>');
+  wrap.appendChild(bubble);
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+  return wrap;
+}
+
+function _addTyping(){
+  var msgs = document.getElementById('claude-msgs');
+  var wrap = document.createElement('div');
+  wrap.className = 'claude-msg ai';
+  var lbl = document.createElement('div');
+  lbl.className = 'claude-lbl';
+  lbl.textContent = '✦ Claude';
+  wrap.appendChild(lbl);
+  var bubble = document.createElement('div');
+  bubble.className = 'claude-bubble claude-typing';
+  bubble.innerHTML = '<span></span><span></span><span></span>';
+  wrap.appendChild(bubble);
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+  return wrap;
+}
+
+function sendToClaude(){
+  var inp = document.getElementById('claude-inp');
+  var text = (inp.value||'').trim();
+  if(!text) return;
+  inp.value = ''; inp.style.height = 'auto';
+
+  // Add user message
+  _addClaudeMsg('user', text);
+  _claudeHistory.push({role:'user', content:text});
+
+  // Show typing
+  var typingEl = _addTyping();
+  document.getElementById('claude-send').style.opacity = '.4';
+
+  // Build context about user's data
+  var today = td0();
+  var overdueTasks = D.tasks.filter(function(t){return !t.done&&t.dueDate&&t.dueDate<today;});
+  var todayTasks = D.tasks.filter(function(t){return !t.done&&t.dueDate===today;});
+  var upcoming = D.tasks.filter(function(t){return !t.done&&t.dueDate&&t.dueDate>today;}).slice(0,10);
+  var recentNotes = D.notes.slice(0,5);
+
+  var context = 'Contexto do usuário (FocusFlow App):\n'
+    + '- Data hoje: ' + today + '\n'
+    + '- Tarefas atrasadas (' + overdueTasks.length + '): ' + overdueTasks.slice(0,5).map(function(t){return t.title + (t.dueDate?' ('+t.dueDate+')':'');}).join(', ') + '\n'
+    + '- Tarefas de hoje (' + todayTasks.length + '): ' + todayTasks.map(function(t){return t.title;}).join(', ') + '\n'
+    + '- Próximas tarefas: ' + upcoming.map(function(t){return t.title + ' (' + t.dueDate + ')';}).join(', ') + '\n'
+    + '- Total tarefas: ' + D.tasks.filter(function(t){return !t.done;}).length + '\n'
+    + '- Projetos: ' + D.projects.map(function(p){return p.title;}).join(', ') + '\n'
+    + '- Notas recentes: ' + recentNotes.map(function(n){return n.title;}).join(', ') + '\n'
+    + '\nResponda em português. Seja conciso e direto. Quando criar tarefas ou lembretes, informe que o usuário pode adicioná-los manualmente. Não use markdown excessivo.';
+
+  // Build messages for API
+  var messages = [{role:'user', content: context + '\n\n---\nUsuário: ' + text}];
+  // Include recent history (last 6 turns)
+  if(_claudeHistory.length > 2){
+    messages = _claudeHistory.slice(-7, -1).concat([{
+      role: 'user',
+      content: context + '\n\n---\n' + _claudeHistory[_claudeHistory.length-1].content
+    }]);
+  }
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system: 'Você é um assistente de produtividade integrado ao FocusFlow, app de tarefas e agenda. Ajude o usuário a organizar compromissos, criar tarefas, buscar informações nas suas notas e projetos, e responder perguntas gerais. Seja conciso, amigável e prático. Responda sempre em português.',
+      messages: messages
+    })
+  }).then(function(r){return r.json();})
+  .then(function(data){
+    typingEl.remove();
+    var reply = (data.content&&data.content[0]&&data.content[0].text) || 'Desculpe, não consegui processar.';
+    _addClaudeMsg('ai', reply);
+    _claudeHistory.push({role:'assistant', content: reply});
+    document.getElementById('claude-send').style.opacity = '1';
+  }).catch(function(e){
+    typingEl.remove();
+    _addClaudeMsg('ai', 'Erro de conexão. Verifique sua internet e tente novamente.');
+    document.getElementById('claude-send').style.opacity = '1';
+  });
+}
+
+// Send on Enter (not Shift+Enter)
+document.addEventListener('DOMContentLoaded', function(){
+  var inp = document.getElementById('claude-inp');
+  if(inp){
+    inp.addEventListener('keydown', function(e){
+      if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendToClaude();}
+    });
+  }
+});
+
 // ═══════════════════════════════════════
 //  INIT + SEED DATA
 // ═══════════════════════════════════════
@@ -1774,7 +2007,7 @@ if(!D.tasks.length&&!D.projects.length){
 }
 S.calSel=td0();S.selDate=td0();
 updateDarkIcon();
-S.page='inicio';
+S.page='inicio';updateHdrDate();
 document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
 var dpEl=document.getElementById('p-inicio');if(dpEl)dpEl.classList.add('active');
 document.querySelectorAll('.nb[data-p]').forEach(function(b){b.classList.toggle('on',b.dataset.p==='inicio');});
@@ -1787,6 +2020,41 @@ document.addEventListener('touchstart',function(e){var el=e.target.closest('butt
 // Swipe down to close modal
 (function(){var box,startY2=0,isDragging=false;document.addEventListener('touchstart',function(e){box=document.getElementById('modal-box');if(!box)return;var mb=document.getElementById('modal-bg');if(!mb||!mb.classList.contains('on'))return;if(box.contains(e.target)&&box.scrollTop===0){startY2=e.touches[0].clientY;isDragging=true;}},{passive:true});document.addEventListener('touchmove',function(e){if(!isDragging||!box)return;var dy=e.touches[0].clientY-startY2;if(dy>0)box.style.transform='translateY('+(dy*0.5)+'px)';},{passive:true});document.addEventListener('touchend',function(e){if(!isDragging||!box)return;var dy=e.changedTouches[0].clientY-startY2;box.style.transition='transform .3s cubic-bezier(.25,1,.5,1)';if(dy>80){closeModal();}else{box.style.transform='';}setTimeout(function(){if(box)box.style.transition='';},320);isDragging=false;startY2=0;},{passive:true});})();
 
+
+// ── Edge swipe back (≤30px from left) ──────────────────────
+(function(){
+  var startX=0,startY=0,tracking=false,overlay=null;
+  document.addEventListener('touchstart',function(e){
+    startX=e.touches[0].clientX;
+    startY=e.touches[0].clientY;
+    tracking=startX<=30; // only track from left edge
+  },{passive:true});
+  document.addEventListener('touchmove',function(e){
+    if(!tracking)return;
+    var dx=e.touches[0].clientX-startX;
+    var dy=Math.abs(e.touches[0].clientY-startY);
+    if(dy>dx){tracking=false;return;} // vertical — cancel
+  },{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(!tracking)return;
+    tracking=false;
+    var dx=e.changedTouches[0].clientX-startX;
+    if(dx>60){ // swiped right > 60px from left edge
+      // Close modal if open
+      var bg=document.getElementById('modal-bg');
+      if(bg&&bg.classList.contains('on')){closeModal();return;}
+      // Close note editor if open
+      var ned=document.getElementById('ned');
+      if(ned&&ned.classList.contains('on')){closeNoteEd();return;}
+      // Close project editor if open
+      var ped=document.getElementById('ped');
+      if(ped&&ped.classList.contains('on')){closeProjEd();return;}
+      // Go back to previous page or inicio
+      if(S.prevPage&&S.prevPage!==S.page)goPage(S.prevPage);
+      else goPage('inicio');
+    }
+  },{passive:true});
+})();
 // PWA banner
 if(!window.navigator.standalone&&!window.matchMedia('(display-mode: standalone)').matches){
   setTimeout(function(){document.getElementById('pwa-banner').classList.add('on');},6000);
