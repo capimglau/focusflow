@@ -549,7 +549,7 @@ input, textarea {
 /* ── FULLSCREEN iOS PWA ── */
 body {
   background-color: transparent;
-  padding-top: calc(env(safe-area-inset-top, 44px) + 16px);
+  padding-top: calc(env(safe-area-inset-top, 59px) + 80px);
   box-sizing: border-box;
 }
 [data-dark="1"] body {
@@ -667,22 +667,26 @@ body {
 </div>
 
 <!-- Claude AI Panel -->
-<div id="claude-panel" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:1100;display:none;flex-direction:column;background:rgba(235,243,255,0.92);backdrop-filter:blur(40px) saturate(2.5);-webkit-backdrop-filter:blur(40px) saturate(2.5);padding-top:calc(env(safe-area-inset-top,44px) + 8px)">
-  <div class="fp-hdr" style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px">
-    <button onclick="closeClaude()" style="display:flex;align-items:center;gap:6px;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--sub);cursor:pointer">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
-      Fechar
+<div id="claude-panel" style="position:fixed;inset:0;z-index:2000;display:none;flex-direction:column;background:rgba(235,243,255,.94);backdrop-filter:blur(50px) saturate(2.8);-webkit-backdrop-filter:blur(50px) saturate(2.8)">
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,59px)+12px) 18px 12px;border-bottom:.5px solid rgba(0,0,0,.06);background:rgba(255,255,255,.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);flex-shrink:0">
+    <button onclick="closeClaude()" style="display:flex;align-items:center;gap:6px;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--sub);cursor:pointer;padding:4px 0">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Voltar
     </button>
-    <span style="font-size:16px;font-weight:600;color:var(--fg)">✦ Claude</span>
-    <button onclick="clearClaude()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:var(--sub);cursor:pointer">Limpar</button>
+    <span style="font-size:16px;font-weight:700;color:var(--fg)">✦ Claude IA</span>
+    <button onclick="clearClaude()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:var(--blue);cursor:pointer;padding:4px 0">Limpar</button>
   </div>
-  <div id="claude-msgs" style="flex:1;overflow-y:auto;padding:12px 16px 8px;display:flex;flex-direction:column;gap:10px"></div>
-  <div style="padding:10px 16px calc(env(safe-area-inset-bottom,16px)+10px);display:flex;gap:8px;align-items:flex-end">
-    <div id="claude-input-wrap" style="flex:1;background:rgba(255,255,255,.7);backdrop-filter:blur(60px) saturate(3);-webkit-backdrop-filter:blur(60px) saturate(3);border:.5px solid rgba(255,255,255,.88);border-radius:20px;padding:10px 14px;box-shadow:0 2px 0 rgba(255,255,255,.9) inset,0 4px 16px rgba(80,120,200,.08)">
-      <textarea id="claude-inp" placeholder="Pergunte ao Claude…" rows="1" style="width:100%;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--fg);outline:none;resize:none;line-height:1.5;max-height:120px;overflow-y:auto" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-    </div>
-    <button id="claude-send" onclick="sendToClaude()" style="width:40px;height:40px;border-radius:50%;border:none;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:opacity .15s">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+  <!-- Messages -->
+  <div id="claude-msgs" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 8px;display:flex;flex-direction:column;gap:12px"></div>
+  <!-- Input bar -->
+  <div style="flex-shrink:0;padding:10px 14px calc(env(safe-area-inset-bottom,20px)+10px);background:rgba(255,255,255,.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:.5px solid rgba(0,0,0,.06);display:flex;gap:10px;align-items:flex-end">
+    <textarea id="claude-inp" placeholder="Pergunte ao Claude…" rows="1"
+      style="flex:1;border:.5px solid rgba(0,0,0,.12);background:rgba(255,255,255,.8);border-radius:18px;padding:10px 14px;font-family:inherit;font-size:15px;color:var(--fg);outline:none;resize:none;line-height:1.5;max-height:100px;overflow-y:auto;box-sizing:border-box"
+      oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+    <button id="claude-send" onclick="sendToClaude()"
+      style="width:38px;height:38px;border-radius:50%;border:none;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9z"/></svg>
     </button>
   </div>
 </div>
@@ -1510,74 +1514,55 @@ function loadAutoGestData(cb){
     if(rawOrc.length>0)   console.log('[AG] campos orc:',      Object.keys(rawOrc[0]).join(','));
     if(rawContas.length>0)console.log('[AG] campos contas:',   Object.keys(rawContas[0]).join(','));
 
-    // Normaliza o campo de data — tenta TODOS os campos possíveis
+    // Normaliza data de qualquer campo
     function norm(arr){
       return arr.map(function(item){
-        // Tenta todos os campos de data conhecidos do AutoGest
-        var d = item.dataprevista||item.vencimento||item.data||item.dt||
-                item.date||item.dueDate||item.due_date||item.data_vencimento||
-                item.data_prevista||item.competencia||item.mes||'';
-        // Handle YYYY-MM format → use last day of month
-        if(d&&/^\d{4}-\d{2}$/.test(d))d=d+'-28';
-        // Normaliza para YYYY-MM-DD
+        var d=item.dataprevista||item.vencimento||item.data||item.dt||
+              item.date||item.data_vencimento||item.competencia||item.mes||'';
         if(d&&d.length>10)d=d.slice(0,10);
-        // Aceita qualquer coisa que comece com YYYY-MM-DD (sem rejeitar)
-        if(d&&d.length<10)d='';
+        if(d&&d.length===7)d=d+'-28'; // YYYY-MM → YYYY-MM-28
         item._data=d;
         return item;
       });
     }
 
-    // Despesas financeiro — inclui atrasadas e pendentes
-    if(rawDesp.length>0){
-      rawDesp.forEach(function(d,i){
-        if(i<3)console.log('[AG] desp['+i+']',JSON.stringify(d).slice(0,200));
-      });
-    }
-    AG_DATA.despesas = norm(rawDesp).filter(function(d){
-      var pgto=d.datapagamento||d.data_pagamento||d.dataPagamento||'';
-      if(pgto&&String(pgto).trim()!=='')return false;
+    // DESPESAS: exclui apenas se tem datapagamento preenchido ou status=pago
+    AG_DATA.despesas=norm(rawDesp).filter(function(d){
+      if(d.datapagamento&&String(d.datapagamento).trim()!='')return false;
       var s=String(d.status||'').toLowerCase();
-      return s!=='pago'&&s!=='baixado'&&s!=='recebido'&&s!=='quitado'&&s!=='cancelado';
+      return s!='pago'&&s!='baixado'&&s!='recebido'&&s!='quitado'&&s!='cancelado';
     });
+    console.log('[AG] despesas filtradas:',AG_DATA.despesas.length,'de',rawDesp.length);
 
-    // Orçamento pessoal — diagnóstico completo
-    console.log('[AG] ORC bruto:',rawOrc.length);
-    if(rawOrc.length>0){
-      var s0=rawOrc[0];
-      console.log('[AG] ORC[0]:',JSON.stringify(s0));
-      console.log('[AG] ORC tipos:',rawOrc.map(function(o){return o.tipo;}).join(','));
-      console.log('[AG] ORC status:',rawOrc.map(function(o){return o.status;}).join(','));
-    }
-    // Filtra despesas não pagas do orçamento pessoal
-    var orcFiltrado = norm(rawOrc).filter(function(o){
-      // Só aceita tipo=despesa (ou vazio/null)
-      var tp=String(o.tipo||'').toLowerCase().trim();
-      if(tp==='receita'||tp==='r')return false;
-      // Exclui se tem databaixa preenchida
+    // ORÇAMENTO: mostra TUDO que não tem databaixa preenchida
+    // Se o filtro zerar, exibe tudo sem filtro (fallback)
+    var orcTemp=norm(rawOrc).filter(function(o){
+      // Exclui receitas
+      if(String(o.tipo||'').toLowerCase()==='receita')return false;
+      // Exclui se databaixa preenchida (qualquer valor não nulo)
       var bx=o.databaixa;
-      if(bx!==null&&bx!==undefined&&String(bx).trim()!==''&&String(bx)!=='null')return false;
+      if(bx&&String(bx).trim()!==''&&String(bx)!=='null'&&bx!==null)return false;
       // Exclui status de pago
-      var st=String(o.status||'').toLowerCase().trim();
-      if(st==='pago'||st==='baixado'||st==='recebido'||st==='quitado'||st==='cancelado')return false;
+      var s=String(o.status||'').toLowerCase();
+      if(s==='pago'||s==='baixado'||s==='recebido'||s==='quitado'||s==='cancelado')return false;
       return true;
     });
-    // SE filtro retornou 0 mas havia dados, mostra tudo (fallback de emergência)
-    if(orcFiltrado.length===0&&rawOrc.length>0){
-      console.warn('[AG] FALLBACK: filtro zerou '+rawOrc.length+' registros — mostrando todos');
-      orcFiltrado=norm(rawOrc);
-    }
-    AG_DATA.orcamento=orcFiltrado;
-    console.log('[AG] ORC final:',AG_DATA.orcamento.length,'de',rawOrc.length);
+    // Fallback: se nada passou, mostra tudo que não é receita
+    AG_DATA.orcamento = orcTemp.length>0 ? orcTemp :
+      norm(rawOrc).filter(function(o){
+        return String(o.tipo||'').toLowerCase()!=='receita';
+      });
+    console.log('[AG] orcamento:',AG_DATA.orcamento.length,'de',rawOrc.length,
+                orcTemp.length===0&&rawOrc.length>0?'(FALLBACK)':'');
 
-    // Contas a pagar — inclui pendentes e atrasadas
-    AG_DATA.contas = norm(rawContas).filter(function(c){
-      if(c.datapagamento&&String(c.datapagamento).trim()!=='')return false;
+    // CONTAS
+    AG_DATA.contas=norm(rawContas).filter(function(c){
+      if(c.datapagamento&&String(c.datapagamento).trim()!='')return false;
       var s=String(c.status||'').toLowerCase();
-      return s!=='pago'&&s!=='baixado'&&s!=='quitado'&&s!=='cancelado';
+      return s!='pago'&&s!='baixado'&&s!='quitado'&&s!='cancelado';
     });
+    console.log('[AG] contas:',AG_DATA.contas.length,'de',rawContas.length);
 
-    console.log('[AG] filtrado: desp='+AG_DATA.despesas.length+' orc='+AG_DATA.orcamento.length+' contas='+AG_DATA.contas.length);
     AG_DATA.loaded=true; AG_DATA.loading=false; AG_DATA.lastSync=new Date();
     _autoImportar();
     if(cb)cb();
