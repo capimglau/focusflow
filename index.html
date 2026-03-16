@@ -221,7 +221,7 @@ body .nb.on svg,body .nb.on span{color:var(--blue)}
 .nb.on::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%) scale(1);width:4px;height:4px;border-radius:50%;background:var(--blue);opacity:1}
 .nb:not(.on)::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%) scale(0);width:4px;height:4px;border-radius:50%;background:var(--blue);opacity:0}
 .nb:active{transform:scale(.87)!important}
-#nav-bubble{position:absolute;top:50%;left:0;width:calc(100vw / 4);height:42px;transform:translateY(-50%);background:radial-gradient(ellipse at 50% 60%,rgba(0,122,255,.18) 0%,rgba(0,122,255,.08) 55%,transparent 100%);border-radius:50%;pointer-events:none;transition:left .38s cubic-bezier(.25,1.4,.5,1);z-index:0;filter:blur(2px)}
+#nav-bubble{position:absolute;top:50%;left:0;width:calc((100vw - 40px) / 4);height:42px;transform:translateY(-50%);background:radial-gradient(ellipse at 50% 60%,rgba(0,122,255,.18) 0%,rgba(0,122,255,.08) 55%,transparent 100%);border-radius:50%;pointer-events:none;transition:left .38s cubic-bezier(.25,1.4,.5,1);z-index:0;filter:blur(2px)}
 [data-dark="1"] #nav-bubble{background:radial-gradient(ellipse at 50% 60%,rgba(0,122,255,.35) 0%,rgba(0,122,255,.15) 55%,transparent 100%)}
 .nb-badge{position:absolute;top:5px;right:calc(50% - 22px);width:8px;height:8px;border-radius:50%;background:rgba(255,59,48,.75);display:none;border:1.5px solid rgba(255,255,255,.9);box-shadow:0 1px 6px rgba(255,59,48,.3)}
 .nb-badge.on{display:block}
@@ -531,10 +531,7 @@ input, textarea {
 </head>
 <body>
 <div class="pages">
-  <div class="page active" id="p-dashboard">
-    <div class="hdr"><div class="hdr-left"><small id="dash-sub"></small><h1>Dashboard</h1></div></div>
-    <div id="dashboard-feed"></div>
-  </div>
+  <di<!-- dashboard removed -->
   <div class="page" id="p-inicio">
     <div class="hdr">
       <div class="hdr-left">
@@ -566,55 +563,57 @@ input, textarea {
     <div id="inicio-feed" style="position:relative"><div id="ptr-indicator" style="position:absolute;top:-48px;left:50%;transform:translateX(-50%);width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="2.5" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.18-4.18"/></svg></div></div>
   </div>
   <div class="page" id="p-hoje">
-    <div class="hdr"><div class="hdr-left"><small id="hoje-sub"></small><h1>Hoje</h1></div></div>
+    <div class="hdr"><div class="hdr-left"><h1>Hoje</h1></div>
+      <div class="hdr-act"><button class="hdr-btn" onclick="goPage('inicio')" title="Início"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg></button></div></div>
     <div id="hoje-feed"></div>
   </div>
   <div class="page" id="p-entrada">
-    <div class="hdr"><div class="hdr-left"><h1>Entrada</h1></div></div>
+    <div class="hdr"><div class="hdr-left"><h1>Entrada</h1></div>
+      <div class="hdr-act"><button class="hdr-btn" onclick="goPage('inicio')" title="Início"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg></button></div></div>
     <div class="chips" id="entrada-chips"></div>
     <div id="entrada-feed"></div>
   </div>
   <div class="page" id="p-projetos">
-    <div class="hdr"><div class="hdr-left"><h1>Projetos</h1></div></div>
+    <div class="hdr"><div class="hdr-left"><h1>Projetos</h1></div>
+      <div class="hdr-act"><button class="hdr-btn" onclick="goPage('inicio')" title="Início"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg></button></div></div>
     <div id="projetos-feed"></div>
   </div>
   <div class="page" id="p-notas">
-    <div class="hdr"><div class="hdr-left"><h1>Notas</h1></div></div>
+    <div class="hdr"><div class="hdr-left"><h1>Notas</h1></div>
+      <div class="hdr-act"><button class="hdr-btn" onclick="goPage('inicio')" title="Início"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg></button></div></div>
     <div id="notas-feed"></div>
   </div>
   <div class="page" id="p-navegar">
-    <div class="hdr"><div class="hdr-left"><h1>Navegar</h1></div></div>
+    <div class="hdr"><div class="hdr-left"><h1>Navegar</h1></div>
+      <div class="hdr-act"><button class="hdr-btn" onclick="goPage('inicio')" title="Início"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg></button></div></div>
     <div id="navegar-body"></div>
   </div>
 </div>
 
 <div id="nav-out">
   <div id="nav-pill"><div id="nav-bubble"></div>
-    <button class="nb on" data-p="dashboard" data-i="0">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-      <span>Dashboard</span><span class="nb-badge" id="bdg-dashboard"></span>
-    </button>
-    <button class="nb" data-p="inicio" data-i="1">
+
+    <button class="nb on" data-p="inicio" data-i="0">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>
       <span>Em Breve</span><span class="nb-badge" id="bdg-inicio"></span>
     </button>
-    <button class="nb" data-p="hoje" data-i="2">
+    <button class="nb" data-p="hoje" data-i="1">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01"/></svg>
       <span>Hoje</span><span class="nb-badge" id="bdg-hoje"></span>
     </button>
-    <button class="nb" data-p="entrada" data-i="3">
+    <button class="nb" data-p="entrada" data-i="2">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
       <span>Entrada</span><span class="nb-badge" id="bdg-entrada"></span>
     </button>
-    <button class="nb" data-p="projetos" data-i="4">
+    <button class="nb" data-p="projetos" data-i="3">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
       <span>Projetos</span>
     </button>
-    <button class="nb" data-p="notas" data-i="5">
+    <button class="nb" data-p="notas" data-i="4">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
       <span>Notas</span>
     </button>
-    <button class="nb" id="nb-config" data-i="6" onclick="openSettings()">
+    <button class="nb" id="nb-config" data-i="5" onclick="openSettings()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       <span>Config</span>
     </button>
@@ -638,7 +637,7 @@ input, textarea {
 
 <div class="fp" id="ned">
   <div class="fp-hdr">
-    <button class="fp-back" id="ne-back"><svg width="9" height="15" viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 1L1 7.5L8 14"/></svg>&nbsp;Notas</button>
+    <button class="fp-back" id="ne-back" style="display:flex;align-items:center;gap:6px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><span style="font-size:15px">Fechar</span></button>
     <span class="fp-title2">Nova nota</span>
     <button class="fp-save" id="ne-save">Salvar</button>
   </div>
@@ -662,7 +661,7 @@ input, textarea {
 
 <div class="fp" id="ped">
   <div class="fp-hdr">
-    <button class="fp-back" id="pe-back"><svg width="9" height="15" viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 1L1 7.5L8 14"/></svg>&nbsp;Projetos</button>
+    <button class="fp-back" id="pe-back" style="display:flex;align-items:center;gap:6px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><span style="font-size:15px">Fechar</span></button>
     <span class="fp-title2" id="pe-ttl">Novo projeto</span>
     <button class="fp-save" id="pe-save">Salvar</button>
   </div>
@@ -709,7 +708,7 @@ input, textarea {
 // ═══════════════════════════════════════
 var D={tasks:[],reminders:[],events:[],notes:[],projects:[]};
 var S={page:'dashboard',prevPage:'dashboard',weekOff:0,selDate:td0(),calY:new Date().getFullYear(),calM:new Date().getMonth(),calSel:td0(),calView:false,taskF:'todas',overdueOpen:true,showAllUpcoming:false,eTask:null,eRem:null,eEv:null};
-var PAGE_ORDER=['dashboard','inicio','hoje','entrada','projetos','notas','navegar'];
+var PAGE_ORDER=['inicio','hoje','entrada','projetos','notas','navegar'];
 var WSHORT=['D','S','T','Q','Q','S','S'];
 var WLONG=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 var MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -820,15 +819,20 @@ function goPage(id){
   render(id);
 }
 function render(id){
-  if(id==='dashboard')renderDashboard();
-  else if(id==='inicio')renderInicio();
+  if(id==='inicio')renderInicio();
   else if(id==='hoje')renderHoje();
   else if(id==='entrada')renderEntrada();
   else if(id==='projetos')renderProjetos();
   else if(id==='notas')renderNotas();
   else if(id==='navegar')renderNavegar();
 }
-function updateNavBubble(idx){var b=document.getElementById('nav-bubble');if(!b)return;b.style.left=(idx*(window.innerWidth/4))+'px';}
+function updateNavBubble(idx){
+  var b=document.getElementById('nav-bubble');if(!b)return;
+  var pill=document.getElementById('nav-pill');
+  var nbs=pill?pill.querySelectorAll('.nb[data-p]'):[];
+  var w=nbs.length>0?pill.offsetWidth/nbs.length:window.innerWidth/4;
+  b.style.left=(idx*w)+'px';
+}
 // ═══════════════════════════════════════
 //  MODAL
 // ═══════════════════════════════════════
@@ -1035,6 +1039,12 @@ function renderInicio(){
     });
   }
   if(!overdue.length&&!upcoming.length)el.innerHTML+='<div class="empty-state"><span class="ei">🎉</span><div class="et">Tudo em dia!</div><div class="es">Nenhum item programado</div></div>';
+  // AutoGest Financeiro — despesas pendentes
+  if(AG_DATA.loaded&&!AG_DATA._blockedOrigin){
+    var agEl=document.createElement('div');
+    buildDashFinanceiro(agEl);
+    if(agEl.children.length>1)el.appendChild(agEl); // só mostra se há dados
+  }
   updateBadges();initScrollDateTracker();initPullToRefresh();
 }
 function renderMiniCal(el){var y=S.calY,m=S.calM,t=td0();var nav=document.createElement('div');nav.className='cal-nav';nav.innerHTML='<button class="w-arr" id="cprev">‹</button><span style="font-size:16px;font-weight:700">'+MONTHS[m]+' '+y+'</span><button class="w-arr" id="cnext">›</button>';el.appendChild(nav);document.getElementById('cprev').addEventListener('click',function(){S.calM--;if(S.calM<0){S.calM=11;S.calY--}renderInicio()});document.getElementById('cnext').addEventListener('click',function(){S.calM++;if(S.calM>11){S.calM=0;S.calY++}renderInicio()});var wds=document.createElement('div');wds.className='cal-grid';['D','S','T','Q','Q','S','S'].forEach(function(w){var d=document.createElement('div');d.className='cal-wd';d.textContent=w;wds.appendChild(d)});el.appendChild(wds);var g=document.createElement('div');g.className='cal-grid';var fd=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate();for(var i=0;i<fd;i++)g.appendChild(document.createElement('div'));for(var d2=1;d2<=days;d2++){var ds=y+'-'+p2(m+1)+'-'+p2(d2);var isT=ds===t,isSel=ds===S.calSel,has=getForDate(ds).length>0;var cell=document.createElement('div');cell.className='cal-cell'+(isT?' is-today':'')+(isSel&&!isT?' is-sel':'');cell.innerHTML='<div class="cal-num">'+d2+'</div>'+(has?'<div class="wday-dot"></div>':'');cell.addEventListener('click',(function(ds2){return function(){S.calSel=ds2;S.calView=false;S.selDate=ds2;renderInicio()}})(ds));g.appendChild(cell);}el.appendChild(g);var items=getForDate(S.calSel);addSec(el,'<b>'+fmtDFull(S.calSel)+'</b>','');if(items.length)el.appendChild(buildCard(items));else{var ep=document.createElement('div');ep.style.padding='18px 20px 8px';ep.innerHTML='<div style="font-size:13px;color:var(--sub)">Nenhum item nesta data</div>';el.appendChild(ep)}}
@@ -1399,6 +1409,18 @@ function loadAutoGestData(cb){
     var rawOrc    = res[1]||[];
     var rawContas = res[2]||[];
     console.log('[AG] raw: desp='+rawDesp.length+' orc='+rawOrc.length+' contas='+rawContas.length);
+    // Log first orc record to see ALL fields
+    if(rawOrc.length>0){
+      console.log('[AG] ORC SAMPLE:',JSON.stringify(rawOrc[0]));
+      // Check which field has the date
+      var sample=rawOrc[0];
+      var dateFields=['data','dataprevista','vencimento','competencia','dt','mes','periodo','data_vencimento'];
+      dateFields.forEach(function(f){if(sample[f]!==undefined)console.log('[AG] orc.'+f+'=',sample[f]);});
+      // Check status field
+      if(sample.status!==undefined)console.log('[AG] orc.status=',sample.status);
+      if(sample.databaixa!==undefined)console.log('[AG] orc.databaixa=',sample.databaixa);
+      if(sample.tipo!==undefined)console.log('[AG] orc.tipo=',sample.tipo);
+    }
     if(rawDesp.length>0)  console.log('[AG] campos despesa:',  Object.keys(rawDesp[0]).join(','));
     if(rawOrc.length>0)   console.log('[AG] campos orc:',      Object.keys(rawOrc[0]).join(','));
     if(rawContas.length>0)console.log('[AG] campos contas:',   Object.keys(rawContas[0]).join(','));
@@ -1409,7 +1431,9 @@ function loadAutoGestData(cb){
         // Tenta todos os campos de data conhecidos do AutoGest
         var d = item.dataprevista||item.vencimento||item.data||item.dt||
                 item.date||item.dueDate||item.due_date||item.data_vencimento||
-                item.data_prevista||item.competencia||'';
+                item.data_prevista||item.competencia||item.mes||'';
+        // Handle YYYY-MM format → use last day of month
+        if(d&&/^\d{4}-\d{2}$/.test(d))d=d+'-28';
         // Normaliza para YYYY-MM-DD
         if(d&&d.length>10)d=d.slice(0,10);
         // Valida formato
@@ -1742,11 +1766,11 @@ if(!D.tasks.length&&!D.projects.length){
 }
 S.calSel=td0();S.selDate=td0();
 updateDarkIcon();
-S.page='dashboard';
+S.page='inicio';
 document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
-var dpEl=document.getElementById('p-dashboard');if(dpEl)dpEl.classList.add('active');
-document.querySelectorAll('.nb[data-p]').forEach(function(b){b.classList.toggle('on',b.dataset.p==='dashboard');});
-renderDashboard();
+var dpEl=document.getElementById('p-inicio');if(dpEl)dpEl.classList.add('active');
+document.querySelectorAll('.nb[data-p]').forEach(function(b){b.classList.toggle('on',b.dataset.p==='inicio');});
+renderInicio();
 updateBadges();
 
 // Tap feedback
