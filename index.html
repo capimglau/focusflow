@@ -95,7 +95,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 .tag-opt.on{color:#fff;border-color:transparent}
 #modal-bg{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.32);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:none;align-items:flex-end;justify-content:center}
 #modal-bg.on{display:flex}
-#modal-box{width:100%;max-width:600px;max-height:93vh;overflow-y:auto;background:#f4f8ff;border-radius:26px 26px 0 0;padding:0 0 40px;animation:sheetUp .32s cubic-bezier(.25,1,.5,1)}
+#modal-box{width:100%;max-width:600px;max-height:93vh;overflow-y:auto;background:linear-gradient(135deg, #ebebee 0%, #f0f0f3 30%, #f6f6f8 60%, #ffffff 100%);border-radius:26px 26px 0 0;padding:0 0 40px;animation:sheetUp .32s cubic-bezier(.25,1,.5,1)}
 [data-dark="1"] #modal-box{background:#1C1C1E}
 .mhandle{width:36px;height:4px;background:rgba(0,0,0,.14);border-radius:2px;margin:10px auto 12px}
 [data-dark="1"] .mhandle{background:rgba(255,255,255,.22)}
@@ -266,12 +266,7 @@ button:active,.nb:active{transform:scale(.88)!important;opacity:.58!important}
 .irow:active{background:rgba(120,120,128,.08)!important}
 html:not([data-dark="1"]){
   min-height:100svh;
-  background:#e8f0fe;
-  background:
-    radial-gradient(ellipse at 20% 0%, #ddeeff 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 8%, #e8f4fd 0%, transparent 45%),
-    radial-gradient(ellipse at 50% 110%, #e0ecfa 0%, transparent 50%),
-    linear-gradient(160deg, #eaf3ff 0%, #f0f7ff 35%, #f8fbff 65%, #ffffff 100%);
+  background:linear-gradient(135deg, #ebebee 0%, #f0f0f3 30%, #f6f6f8 60%, #ffffff 100%);
  ixed;
 }
 html:not([data-dark="1"]) .pages,html:not([data-dark="1"]) 
@@ -561,8 +556,33 @@ body {
 [data-dark="1"] #claude-input-wrap{background:rgba(44,44,46,.82);border-color:rgba(255,255,255,.12)}
 [data-dark="1"] #claude-panel{background:rgba(0,0,0,.88)!important;backdrop-filter:blur(40px) saturate(1.8);-webkit-backdrop-filter:blur(40px) saturate(1.8)}
 [data-dark="1"] .claude-msg.ai .claude-bubble{background:rgba(44,44,46,.85);border-color:rgba(255,255,255,.1)}
-[data-dark="1"] #modal-box{background:linear-gradient(175deg,#1a1f2e 0%,#1c1c1e 60%,#18181a 100%)}
+[data-dark="1"] #modal-box{background:linear-gradient(135deg,#1a1d24 0%,#1c1e26 40%,#1e2028 100%)}
 [data-dark="1"] .msec{background:rgba(36,36,42,.80)!important;border-color:rgba(255,255,255,.09)!important}
+
+/* Dark mode surfaces fix */
+[data-dark="1"] html, [data-dark="1"] body { background:#000000 !important; }
+[data-dark="1"] .card, [data-dark="1"] .proj-card { background:#1c1c1e !important; border-color:rgba(255,255,255,.08) !important; }
+[data-dark="1"] .msec { background:#1c1c1e !important; border-color:rgba(255,255,255,.07) !important; }
+[data-dark="1"] #modal-box { background:#111113 !important; }
+[data-dark="1"] #modal-body { background:#111113 !important; }
+[data-dark="1"] .mact { background:#1c1c1e !important; border-color:rgba(255,255,255,.08) !important; }
+[data-dark="1"] .fp { background:#000000 !important; }
+[data-dark="1"] .fp-hdr { background:#111113 !important; border-bottom:.5px solid rgba(255,255,255,.08) !important; }
+[data-dark="1"] #claude-panel { background:#111113 !important; }
+[data-dark="1"] .claude-msg.ai .claude-bubble { background:#1c1c1e !important; border-color:rgba(255,255,255,.08) !important; }
+[data-dark="1"] #claude-panel > div:first-child { background:#111113 !important; }
+[data-dark="1"] #claude-panel > div:last-child { background:#111113 !important; }
+[data-dark="1"] .date-banner { color:rgba(255,255,255,.5) !important; }
+[data-dark="1"] .hdr-act, [data-dark="1"] #nav-pill { background:#1c1c1e !important; border-color:rgba(255,255,255,.09) !important; }
+[data-dark="1"] #nav-add { background:#1c1c1e !important; border-color:rgba(255,255,255,.09) !important; color:#ffffff !important; }
+[data-dark="1"] #nav-add span { color:#ffffff !important; }
+[data-dark="1"] .nb { color:rgba(255,255,255,.5) !important; }
+[data-dark="1"] .nb.on { color:#ffffff !important; }
+[data-dark="1"] #nav-bubble { background:rgba(255,255,255,.12) !important; }
+[data-dark="1"] .mrow { border-bottom-color:rgba(255,255,255,.06) !important; }
+[data-dark="1"] input, [data-dark="1"] textarea, [data-dark="1"] select { background:#2c2c2e !important; color:#ffffff !important; border-color:rgba(255,255,255,.1) !important; }
+[data-dark="1"] .chip:not(.on) { background:#2c2c2e !important; color:rgba(255,255,255,.7) !important; border-color:rgba(255,255,255,.1) !important; }
+[data-dark="1"] #ai-menu-box { background:#1c1c1e !important; }
 </style>
 </head>
 <body>
@@ -683,11 +703,11 @@ body {
       <span>Config</span>
     </button>
   </div>
-  <button id="nav-add" onclick="openClaude()" title="IA"><span style="font-size:15px;font-weight:700;letter-spacing:-.3px;color:#3a3a3c">IA</span></button>
+  <button id="nav-add" onclick="openClaude()" title="IA"><span style="font-size:15px;font-weight:800;letter-spacing:-.3px;color:#1c1c1e">IA</span></button>
 </div>
 
 <!-- Claude AI Panel -->
-<div id="claude-panel" style="position:fixed;inset:0;z-index:2000;display:none;flex-direction:column;background:linear-gradient(160deg,#eaf3ff 0%,#f0f7ff 35%,#f8fbff 65%,#ffffff 100%);padding-top:env(safe-area-inset-top,62px)">
+<div id="claude-panel" style="position:fixed;inset:0;z-index:2000;display:none;flex-direction:column;background:linear-gradient(135deg, #ebebee 0%, #f0f0f3 30%, #f6f6f8 60%, #ffffff 100%);padding-top:env(safe-area-inset-top,62px)">
 
   <!-- Header — padded below Dynamic Island -->
   <div style="flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
@@ -2166,6 +2186,37 @@ function saveClaudeKey(){
 // ── Claude guided creation state ──
 var _aiFlow={active:false,type:null,step:null,data:{}};
 
+
+function readClipboardImport(){
+  // Try to read clipboard
+  if(navigator.clipboard&&navigator.clipboard.readText){
+    navigator.clipboard.readText().then(function(text){
+      if(!text||!text.trim()){
+        _addClaudeMsg('ai','📋 Área de transferência vazia. Copie algo do Lembretes ou Calendário primeiro.');
+        return;
+      }
+      var inp=document.getElementById('claude-inp');
+      if(inp){inp.value=text;inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,100)+'px';}
+      _addClaudeMsg('ai','✅ Conteúdo lido da área de transferência! Processando…');
+      // Trigger import
+      _aiFlow={active:false,type:null,step:null,data:{}};
+      sendToClaude();
+    }).catch(function(){
+      // Clipboard permission denied — ask user to paste manually
+      _addClaudeMsg('ai',
+        '⚠️ Permissão de leitura negada.\n\n'
+        +'No Safari, quando aparecer "Colar" no topo da tela, toque nele. '
+        +'Ou cole manualmente no campo de texto abaixo.'
+      );
+      var inp=document.getElementById('claude-inp');
+      if(inp){inp.placeholder='Cole o conteúdo copiado aqui…';inp.focus();}
+    });
+  } else {
+    _addClaudeMsg('ai','Cole o conteúdo copiado no campo de texto abaixo.');
+    var inp=document.getElementById('claude-inp');
+    if(inp){inp.placeholder='Cole aqui…';inp.focus();}
+  }
+}
 function openClaude(mode){
   document.getElementById('claude-panel').classList.add('on');
   var msgs = document.getElementById('claude-msgs');
@@ -2174,12 +2225,43 @@ function openClaude(mode){
   _aiFlow={active:false,type:null,step:null,data:{}};
 
   if(mode==='import'){
-    _addClaudeMsg('ai','📲 **Importar da Apple**\n\nCole aqui o conteúdo copiado do Lembretes ou Calendário. Eu identifico as datas e crio tudo automaticamente.');
-    setTimeout(function(){
+    var msgs=document.getElementById('claude-msgs');
+    msgs.innerHTML='';
+    _addClaudeMsg('ai',
+      '📲 **Importar da Apple**\n\n'
+      +'O iOS não permite acesso direto ao Lembretes/Calendário via web. '
+      +'Mas funciona assim:\n\n'
+      +'**Opção 1 — Atalho automático (recomendado):**\n'
+      +'Toque em "Criar Atalho" abaixo para instalar um atalho que exporta seus lembretes para o FocusFlow com 1 toque.\n\n'
+      +'**Opção 2 — Colar manualmente:**\n'
+      +'Copie qualquer texto com datas do Lembretes, WhatsApp, e-mail ou notas e cole aqui.'
+    );
+    // Show options
+    var wrap=document.createElement('div');
+    wrap.style.cssText='display:flex;flex-direction:column;gap:8px;margin-top:4px';
+    // Shortcut button
+    var btn1=document.createElement('a');
+    btn1.href='shortcuts://create-shortcut';
+    btn1.style.cssText='display:flex;align-items:center;gap:10px;padding:13px 16px;border-radius:14px;border:.5px solid rgba(0,0,0,.1);background:#ffffff;color:#1c1c1e;font-family:inherit;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer';
+    btn1.innerHTML='<span style="font-size:22px">⚡</span><div><div style="font-weight:700">Criar Atalho de Importação</div><div style="font-size:12px;color:#636366;font-weight:400;margin-top:1px">Abre o app Atalhos do iPhone</div></div>';
+    wrap.appendChild(btn1);
+    // Clipboard button
+    var btn2=document.createElement('button');
+    btn2.style.cssText='display:flex;align-items:center;gap:10px;padding:13px 16px;border-radius:14px;border:.5px solid rgba(0,122,255,.2);background:rgba(0,122,255,.06);color:#007AFF;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;width:100%;text-align:left';
+    btn2.innerHTML='<span style="font-size:22px">📋</span><div><div style="font-weight:700">Ler da Área de Transferência</div><div style="font-size:12px;color:#636366;font-weight:400;margin-top:1px">Importa o que você copiou</div></div>';
+    btn2.onclick=function(){readClipboardImport();};
+    wrap.appendChild(btn2);
+    // Manual text
+    var btn3=document.createElement('button');
+    btn3.style.cssText='display:flex;align-items:center;gap:10px;padding:13px 16px;border-radius:14px;border:.5px solid rgba(0,0,0,.08);background:#ffffff;color:#1c1c1e;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;width:100%;text-align:left';
+    btn3.innerHTML='<span style="font-size:22px">✏️</span><div><div style="font-weight:700">Digitar / Colar texto</div><div style="font-size:12px;color:#636366;font-weight:400;margin-top:1px">Cole eventos e datas no campo abaixo</div></div>';
+    btn3.onclick=function(){
       var inp=document.getElementById('claude-inp');
-      inp.placeholder='Cole seus lembretes ou eventos aqui…';
+      inp.placeholder='Cole ou escreva seus lembretes com datas…';
       inp.focus();
-    },200);
+    };
+    wrap.appendChild(btn3);
+    msgs.appendChild(wrap);
     return;
   }
 
