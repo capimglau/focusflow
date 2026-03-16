@@ -678,6 +678,7 @@ body {
     <div style="display:flex;gap:6px">
       <button onclick="openClaude('import')" style="border:none;background:rgba(0,122,255,.1);border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;padding:5px 10px">📲 Importar</button>
       <button onclick="clearClaude()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:var(--sub);cursor:pointer;padding:4px 0">Limpar</button>
+      <button onclick="resetClaudeKey()" style="border:none;background:transparent;font-family:inherit;font-size:11px;color:var(--sub);cursor:pointer;padding:4px 0">🔑</button>
     </div>
   </div>
   <!-- Messages -->
@@ -1957,6 +1958,21 @@ setTimeout(function(){loadAutoGestData(function(){if(S.page==='dashboard')render
 // ═══════════════════════════════════════════════════════════
 var _claudeHistory = [];
 
+
+function saveClaudeKey(){
+  var inp=document.getElementById('claude-key-inp');
+  if(!inp)return;
+  var key=(inp.value||'').trim();
+  if(!key.startsWith('sk-ant-')){
+    inp.style.borderColor='var(--red)';
+    inp.placeholder='Chave inválida — deve começar com sk-ant-';
+    return;
+  }
+  localStorage.setItem('ff-claude-key',key);
+  var wrap=document.getElementById('key-setup-wrap');
+  if(wrap)wrap.remove();
+  _addClaudeMsg('ai','✅ Chave salva! Pode fazer sua pergunta agora.');
+}
 function openClaude(mode){
   document.getElementById('claude-panel').classList.add('on');
   var msgs = document.getElementById('claude-msgs');
@@ -1998,6 +2014,11 @@ function clearClaude(){
   _claudeHistory=[];
   document.getElementById('claude-msgs').innerHTML='';
   _addClaudeMsg('ai','Conversa limpa! Como posso ajudar?');
+}
+function resetClaudeKey(){
+  localStorage.removeItem('ff-claude-key');
+  clearClaude();
+  _addClaudeMsg('ai','Chave removida. Cole uma nova chave para reconectar.');
 }
 
 function _addClaudeMsg(role, text){
@@ -2083,9 +2104,48 @@ function sendToClaude(){
     ? _claudeHistory.slice(-6).concat([{role:'user',content:text}])
     : [{role:'user', content: (isImport ? '' : context + '\n\n') + text}];
 
+  var _apiKey = localStorage.getItem('ff-claude-key')||'';
+  if(!_apiKey){
+    typingEl.remove();
+    document.getElementById('claude-send').style.opacity='1';
+    _addClaudeMsg('ai',
+      '🔑 **API Key necessária**\n\n'
+      +'Para usar o Claude IA, você precisa de uma chave da Anthropic.\n\n'
+      +'1. Acesse **console.anthropic.com**\n'
+      +'2. Crie uma conta gratuita\n'
+      +'3. Vá em **API Keys** → Create Key\n'
+      +'4. Cole a chave abaixo:'
+    );
+    // Show key input inline
+    setTimeout(function(){
+      var msgs=document.getElementById('claude-msgs');
+      var keyWrap=document.createElement('div');
+      keyWrap.id='key-setup-wrap';
+      keyWrap.style.cssText='display:flex;gap:8px;margin-top:4px;flex-direction:column';
+      keyWrap.innerHTML=
+        '<input id="claude-key-inp" type="password" placeholder="sk-ant-..." '
+        +'style="flex:1;border:.5px solid rgba(0,0,0,.15);background:rgba(255,255,255,.8);'
+        +'border-radius:12px;padding:10px 14px;font-family:inherit;font-size:14px;outline:none;color:var(--fg)">'
+        +'<button onclick="saveClaudeKey()" '
+        +'style="padding:10px 20px;border-radius:12px;border:none;background:var(--blue);'
+        +'color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Salvar e conectar</button>'
+        +'<div style="font-size:11px;color:var(--sub);text-align:center">A chave fica salva só no seu iPhone</div>';
+      msgs.appendChild(keyWrap);
+      msgs.scrollTop=msgs.scrollHeight;
+      document.getElementById('claude-key-inp').focus();
+    },100);
+    _claudeHistory.push({role:'assistant',content:'[key required]'});
+    return;
+  }
+
   fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: {'Content-Type': 'application/json'},
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': _apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 1000,
