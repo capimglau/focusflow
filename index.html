@@ -24,10 +24,8 @@ updateThemeColor();
 :root{--bg:transparent;--card:#FFFFFF;--card2:#F2F2F7;--fg:#000000;--sub:#8E8E93;--sep:rgba(0,0,0,.06);--line:rgba(0,0,0,.09);--shadow:rgba(0,0,0,.06);--blue:#007AFF;--red:#FF3B30;--green:#34C759;--orange:#FF9500;--purple:#AF52DE;--teal:#5AC8FA;--pink:#FF2D55;--yellow:#FFCC00;--chk:#C7C7CC;--nav-bg:rgba(255,255,255,.72);--sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px);}
 [data-dark="1"]{--bg:#000000;--card:#1C1C1E;--card2:#2C2C2E;--fg:#FFFFFF;--sub:#8E8E93;--sep:rgba(255,255,255,.08);--line:rgba(255,255,255,.12);--shadow:rgba(0,0,0,.3);--chk:#48484A;--nav-bg:rgba(28,28,30,.85);}
 [data-dark="1"] body,[data-dark="1"] html{background-color:#000000!important}
-[data-dark="1"] .pages,[data-dark="1"] .page{background:#000000!important}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{overscroll-behavior:none;margin:0;padding:0;}
-html{background-color:var(--bg);min-height:100vh;min-height:-webkit-fill-available;min-height:100dvh}
+[data-dark="1"] .pages,[data-dark="1"] *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{overscroll-behavior:none;}
 body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:var(--fg);-webkit-font-smoothing:antialiased;min-height:100vh;}
 .pages{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;background:transparent}
 .page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;padding-bottom:84px;display:none;background:transparent;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
@@ -46,7 +44,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 .page.anim-r{animation:slideInR .22s cubic-bezier(.25,1,.5,1)}
 .page.anim-l{animation:slideInL .22s cubic-bezier(.25,1,.5,1)}
 .page.anim-f{animation:fadeIn .18s ease}
-.hdr{padding:calc(env(safe-area-inset-top,44px) + 10px) 18px 8px;display:flex;align-items:center;justify-content:space-between}
+.hdr{padding:14px 18px 8px;display:flex;align-items:center;justify-content:space-between}
 .hdr-left{display:flex;align-items:center}
 .hdr-left small{display:none}
 .hdr-act{display:flex;gap:0;align-items:center;background:rgba(255,255,255,.7);backdrop-filter:blur(80px) saturate(4) brightness(1.14);-webkit-backdrop-filter:blur(80px) saturate(4) brightness(1.14);border:.5px solid rgba(255,255,255,.88);box-shadow:0 1.5px 0 rgba(255,255,255,.96) inset,0 4px 20px rgba(80,100,180,.12);border-radius:50px;padding:3px 4px;}
@@ -245,8 +243,20 @@ body .nb.on svg,body .nb.on span{color:var(--blue)}
 button,a{-webkit-tap-highlight-color:transparent}
 button:active,.nb:active{transform:scale(.88)!important;opacity:.58!important}
 .irow:active{background:rgba(120,120,128,.08)!important}
-html:not([data-dark="1"]){min-height:100svh;background:#fafdff;background:radial-gradient(ellipse at 10% 0%,#f1f7fd 0%,transparent 36%),radial-gradient(ellipse at 92% 5%,#f2f8fd 0%,transparent 32%),radial-gradient(ellipse at 50% 100%,#f3f8fc 0%,transparent 38%),linear-gradient(170deg,#fafdff 0%,#fbfeff 40%,#fdffff 70%,#ffffff 100%) fixed!important;background-attachment:fixed!important}
-html:not([data-dark="1"]) .pages,html:not([data-dark="1"]) .page{background:transparent!important}
+html:not([data-dark="1"]){
+  min-height:100svh;
+  background:#fafdff;
+  background:
+    radial-gradient(ellipse at 10% 0%,#f1f7fd 0%,transparent 36%),
+    radial-gradient(ellipse at 92% 5%,#f2f8fd 0%,transparent 32%),
+    radial-gradient(ellipse at 50% 100%,#f3f8fc 0%,transparent 38%),
+    linear-gradient(170deg,#fafdff 0%,#fbfeff 40%,#fdffff 70%,#ffffff 100%) fixed !important;
+  background-attachment:fixed !important;
+  /* Extend into safe areas */
+  padding-top:env(safe-area-inset-top,0px);
+  padding-top:0; /* override - let content handle it */
+}
+html:not([data-dark="1"]) .pages,html:not([data-dark="1"]) 
 #dashboard-feed,.sec{padding-bottom:4px}
 
 [data-dark="1"] .hdr-act{background:rgba(44,44,46,.88)!important;border:.5px solid rgba(255,255,255,.10)!important;box-shadow:0 1px 0 rgba(255,255,255,.07) inset!important;}
@@ -488,31 +498,8 @@ html:not([data-dark="1"]) .dash-kpi {
 }
 
 /* ── Dynamic Island / Notch safe area background ── */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: env(safe-area-inset-top, 50px);
-  z-index: 99999;
-  pointer-events: none;
-  /* Light mode: subtle gradient matching app bg */
-  background: linear-gradient(
-    to bottom,
-    rgba(241,247,253,.95) 0%,
-    rgba(241,247,253,.60) 70%,
-    transparent 100%
-  );
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-[data-dark="1"] body::before {
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,.98) 0%,
-    rgba(0,0,0,.70) 70%,
-    transparent 100%
-  );
-}
+
+[data-dark="1"] 
 
 /* Prevent text selection on interactive elements */
 .irow, .irow *, .nb, .nb *,
@@ -526,6 +513,19 @@ body::before {
 input, textarea {
   -webkit-user-select: text !important;
   user-select: text !important;
+}
+[data-dark="1"] 
+/* The pages container must also start from top:0 */
+.pages {
+  top: 0 !important;
+}
+
+/* ── FULLSCREEN iOS PWA ── */
+body {
+  background-color: #fafdff;
+}
+[data-dark="1"] body {
+  background-color: #000000;
 }
 </style>
 </head>
@@ -707,7 +707,7 @@ input, textarea {
 //  DATA MODEL
 // ═══════════════════════════════════════
 var D={tasks:[],reminders:[],events:[],notes:[],projects:[]};
-var S={page:'dashboard',prevPage:'dashboard',weekOff:0,selDate:td0(),calY:new Date().getFullYear(),calM:new Date().getMonth(),calSel:td0(),calView:false,taskF:'todas',overdueOpen:true,showAllUpcoming:false,eTask:null,eRem:null,eEv:null};
+var S={page:'inicio',prevPage:'inicio',weekOff:0,selDate:td0(),calY:new Date().getFullYear(),calM:new Date().getMonth(),calSel:td0(),calView:false,taskF:'todas',overdueOpen:true,showAllUpcoming:false,eTask:null,eRem:null,eEv:null};
 var PAGE_ORDER=['inicio','hoje','entrada','projetos','notas','navegar'];
 var WSHORT=['D','S','T','Q','Q','S','S'];
 var WLONG=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
@@ -1009,13 +1009,17 @@ function renderInicio(){
   var t=td0(),all=getAllUpcoming(),overdue=[],upcoming=[];
   all.forEach(function(x){x.date<t?overdue.push(x):upcoming.push(x)});
   upcoming.sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0});
-  if(overdue.length){
+  // Seção Atrasados — sempre visível
+  {
     var sec=document.createElement('div');sec.className='sec';
-    sec.innerHTML='<div class="sec-t"><b>Atrasados</b> <span style="color:var(--red);font-size:11px;background:rgba(255,59,48,.12);padding:1px 7px;border-radius:6px;font-weight:700">'+overdue.length+'</span></div>'
-      +'<div style="display:flex;gap:7px"><button onclick="openReagendarModal()" style="border:none;background:transparent;color:var(--red);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">Reagendar</button>'
-      +'<button onclick="S.overdueOpen=!S.overdueOpen;renderInicio()" style="border:none;background:transparent;cursor:pointer;color:var(--sub)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="transform:rotate('+(S.overdueOpen?'0':'−90deg')+')"><polyline points="6 9 12 15 18 9"/></svg></button></div>';
+    sec.innerHTML='<div class="sec-t"><b style="color:var(--red)">⚠ Atrasados</b>'
+      +(overdue.length?'<span style="color:var(--red);font-size:11px;background:rgba(255,59,48,.12);padding:1px 7px;border-radius:6px;font-weight:700;margin-left:6px">'+overdue.length+'</span>':'')
+      +'</div>'
+      +(overdue.length?'<div style="display:flex;gap:7px"><button onclick="openReagendarModal()" style="border:none;background:transparent;color:var(--red);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">Reagendar</button>'
+        +'<button onclick="S.overdueOpen=!S.overdueOpen;renderInicio()" style="border:none;background:transparent;cursor:pointer;color:var(--sub)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="transform:rotate('+(S.overdueOpen?'0deg':'-90deg')+')"><polyline points="6 9 12 15 18 9"/></svg></button></div>':'');
     el.appendChild(sec);
-    if(S.overdueOpen)el.appendChild(buildCard(overdue));
+    if(overdue.length&&S.overdueOpen)el.appendChild(buildCard(overdue));
+    else if(!overdue.length){var ok=document.createElement('div');ok.style.cssText='padding:10px 18px;font-size:13px;color:var(--sub)';ok.textContent='Nenhum item atrasado ✓';el.appendChild(ok);}
   }
   if(upcoming.length){
     var visible=S.showAllUpcoming?upcoming:upcoming.filter(function(x){return x.date<=addDays(td0(),7);});
@@ -1049,7 +1053,7 @@ function renderMiniCal(el){var y=S.calY,m=S.calM,t=td0();var nav=document.create
 // ═══════════════════════════════════════
 //  HOJE
 // ═══════════════════════════════════════
-function renderHoje(){var el=document.getElementById('hoje-feed');el.innerHTML='';var t=td0(),all=getAllUpcoming(),overdue=[],today=[];all.forEach(function(x){if(x.date<t)overdue.push(x);else if(x.date===t)today.push(x);});if(overdue.length){var sec=document.createElement('div');sec.className='sec';sec.innerHTML='<div class="sec-t"><b>Atrasados</b> <span style="color:var(--red);font-size:11px;background:rgba(255,59,48,.12);padding:1px 7px;border-radius:6px;font-weight:700">'+overdue.length+'</span></div><button onclick="openReagendarModal()" style="border:none;background:transparent;color:var(--red);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">Reagendar</button>';el.appendChild(sec);el.appendChild(buildCard(overdue));}if(today.length){addSec(el,'<b>Hoje</b>','');el.appendChild(buildCard(today));}if(!overdue.length&&!today.length){el.innerHTML='<div class="empty-state"><span class="ei">✅</span><div class="et">Dia livre!</div><div class="es">Nenhum item para hoje</div></div>';}var ar=makeAddBtn(function(){openTaskModal(null,{dueDate:td0()})});ar.style.marginTop='8px';el.appendChild(ar);}
+function renderHoje(){var el=document.getElementById('hoje-feed');el.innerHTML='';var t=td0(),all=getAllUpcoming(),overdue=[],today=[];all.forEach(function(x){if(x.date<t)overdue.push(x);else if(x.date===t)today.push(x);});{var sec=document.createElement('div');sec.className='sec';sec.innerHTML='<div class="sec-t"><b style="color:var(--red)">⚠ Atrasados</b>'+(overdue.length?'<span style="color:var(--red);font-size:11px;background:rgba(255,59,48,.12);padding:1px 7px;border-radius:6px;font-weight:700;margin-left:6px">'+overdue.length+'</span>':'')+'</div>'+(overdue.length?'<button onclick="openReagendarModal()" style="border:none;background:transparent;color:var(--red);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">Reagendar</button>':'');el.appendChild(sec);if(overdue.length)el.appendChild(buildCard(overdue));else{var ok=document.createElement('div');ok.style.cssText='padding:10px 18px;font-size:13px;color:var(--sub)';ok.textContent='Nenhum item atrasado ✓';el.appendChild(ok);}}if(today.length){addSec(el,'<b>Hoje</b>','');el.appendChild(buildCard(today));}if(!overdue.length&&!today.length){el.innerHTML='<div class="empty-state"><span class="ei">✅</span><div class="et">Dia livre!</div><div class="es">Nenhum item para hoje</div></div>';}var ar=makeAddBtn(function(){openTaskModal(null,{dueDate:td0()})});ar.style.marginTop='8px';el.appendChild(ar);}
 function makeAddBtn(fn){var b=document.createElement('button');b.style.cssText='display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 32px);margin:8px 16px;padding:14px;background:rgba(0,122,255,.07);border:.5px solid rgba(0,122,255,.15);border-radius:16px;color:var(--blue);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer';b.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Adicionar…';b.addEventListener('click',fn);return b;}
 // ═══════════════════════════════════════
 //  ENTRADA
@@ -1400,12 +1404,17 @@ function loadAutoGestData(cb){
   // Queries idênticas ao AutoGest Pro original (que funcionam com o RLS do Supabase)
   Promise.all([
     AG.get('despesas',''),
-    AG.get('orcamentopessoal',''),
+    AG.get('orcamentopessoal','tipo=eq.despesa'),
+    AG.get('orcamentopessoal','tipo=eq.despesa&status=eq.previsto'),
+    AG.get('orcamentopessoal','tipo=eq.despesa&status=eq.atrasado'),
     AG.get('contas','tipo=eq.pagar')
   ]).then(function(res){
     var rawDesp   = res[0]||[];
-    var rawOrc    = res[1]||[];
-    var rawContas = res[2]||[];
+    // Combina todas as queries de orcamento para pegar previsto + atrasado
+    var orcAll={};
+    (res[1]||[]).concat(res[2]||[]).concat(res[3]||[]).forEach(function(o){orcAll[o.id]=o;});
+    var rawOrc    = Object.values(orcAll);
+    var rawContas = res[4]||[];
     console.log('[AG] raw: desp='+rawDesp.length+' orc='+rawOrc.length+' contas='+rawContas.length);
     // Log first orc record to see ALL fields
     if(rawOrc.length>0){
@@ -1434,8 +1443,8 @@ function loadAutoGestData(cb){
         if(d&&/^\d{4}-\d{2}$/.test(d))d=d+'-28';
         // Normaliza para YYYY-MM-DD
         if(d&&d.length>10)d=d.slice(0,10);
-        // Valida formato
-        if(d&&!/^\d{4}-\d{2}-\d{2}$/.test(d))d='';
+        // Aceita qualquer coisa que comece com YYYY-MM-DD (sem rejeitar)
+        if(d&&d.length<10)d='';
         item._data=d;
         return item;
       });
@@ -1518,24 +1527,24 @@ function _autoImportar(){
 }
 
 function _mkTask(item,tipo){
-  // _data pode ser string 'YYYY-MM-DD' ou vazio
-  var data=item._data&&item._data.length>=10?item._data.slice(0,10):td0();
+  var s=String(item.status||'').toLowerCase();
+  var isOverdue=s==='atrasado'||s==='vencido'||s==='atraso';
+  // Se tem data usa ela; se não tem mas está atrasado usa ontem; senão hoje
+  var data=item._data&&item._data.length>=10
+    ? item._data.slice(0,10)
+    : isOverdue ? addDays(td0(),-1) : td0();
   var vencida=data<td0();
   var icon=tipo==='despesa'?'🧾 ':tipo==='conta'?'💳 ':'💸 ';
-  var prioMap={despesa:'medium',conta:'high',orcamento:'none'};
   return{
     id:uid(),
     title:icon+(item.descricao||item.nome||'Sem descrição'),
     notes:fmtBRL(item.valor)+(item.categoria?' · '+item.categoria:'')+(item.recorrente?' · ↻':''),
-    dueDate:data,       // YYYY-MM-DD — aparece no Em Breve e Hoje
-    dueTime:'',
-    done:false,
-    recurrence:'none',
-    priority:vencida?'high':(prioMap[tipo]||'medium'),
+    dueDate:data,
+    dueTime:'',done:false,recurrence:'none',
+    priority:vencida?'high':'medium',
     subtasks:[],attachments:[],
     tags:['Financeiro','AutoGest'],
     notifyOffsets:[1440],
-    inbox:false,
     agRef:{tipo:tipo,id:item.id},
     createdAt:new Date().toISOString()
   };
