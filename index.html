@@ -277,7 +277,7 @@ html:not([data-dark="1"]){
     radial-gradient(ellipse at 85% 8%, #e8f4fd 0%, transparent 45%),
     radial-gradient(ellipse at 50% 110%, #e0ecfa 0%, transparent 50%),
     linear-gradient(160deg, #eaf3ff 0%, #f0f7ff 35%, #f8fbff 65%, #ffffff 100%);
-  background-attachment: fixed;
+ ixed;
 }
 html:not([data-dark="1"]) .pages,html:not([data-dark="1"]) 
 #dashboard-feed,.sec{padding-bottom:4px}
@@ -548,17 +548,21 @@ input, textarea {
 
 /* ── FULLSCREEN iOS PWA ── */
 body {
-  background-color: #fafdff;
+  background-color: transparent;
+  padding-top: env(safe-area-inset-top, 44px);
+  box-sizing: border-box;
 }
 [data-dark="1"] body {
   background-color: #000000;
+  padding-top: env(safe-area-inset-top, 44px);
+  box-sizing: border-box;
 }
 
 #hdr-date .hdr-day{font-size:15px;font-weight:700;color:var(--fg);line-height:1.25;letter-spacing:-.2px}
 #hdr-date .hdr-month{font-size:11px;font-weight:400;color:var(--sub);letter-spacing:.0px}
 
 /* Claude AI Panel */
-#claude-panel.on{display:flex!important}
+#claude-panel.on{display:flex!important;flex-direction:column}
 .claude-msg{display:flex;flex-direction:column;gap:3px;max-width:88%}
 .claude-msg.user{align-self:flex-end;align-items:flex-end}
 .claude-msg.ai{align-self:flex-start;align-items:flex-start}
@@ -624,26 +628,6 @@ body {
     <div id="navegar-body"></div>
   </div>
 
-<!-- Claude AI Panel -->
-<div id="claude-panel" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:1100;display:none;flex-direction:column;background:var(--bg)">
-  <div class="fp-hdr" style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px">
-    <button onclick="closeClaude()" style="display:flex;align-items:center;gap:6px;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--sub);cursor:pointer">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
-      Fechar
-    </button>
-    <span style="font-size:16px;font-weight:600;color:var(--fg)">✦ Claude</span>
-    <button onclick="clearClaude()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:var(--sub);cursor:pointer">Limpar</button>
-  </div>
-  <div id="claude-msgs" style="flex:1;overflow-y:auto;padding:12px 16px 8px;display:flex;flex-direction:column;gap:10px"></div>
-  <div style="padding:10px 16px calc(env(safe-area-inset-bottom,16px)+10px);display:flex;gap:8px;align-items:flex-end">
-    <div id="claude-input-wrap" style="flex:1;background:rgba(255,255,255,.7);backdrop-filter:blur(60px) saturate(3);-webkit-backdrop-filter:blur(60px) saturate(3);border:.5px solid rgba(255,255,255,.88);border-radius:20px;padding:10px 14px;box-shadow:0 2px 0 rgba(255,255,255,.9) inset,0 4px 16px rgba(80,120,200,.08)">
-      <textarea id="claude-inp" placeholder="Pergunte ao Claude…" rows="1" style="width:100%;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--fg);outline:none;resize:none;line-height:1.5;max-height:120px;overflow-y:auto" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-    </div>
-    <button id="claude-send" onclick="sendToClaude()" style="width:40px;height:40px;border-radius:50%;border:none;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:opacity .15s">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
-    </button>
-  </div>
-</div>
 </div>
 
 <div id="nav-out">
@@ -679,6 +663,27 @@ body {
     </button>
   </div>
   <button id="nav-add" onclick="openAddMenu()" title="Adicionar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+</div>
+
+<!-- Claude AI Panel -->
+<div id="claude-panel" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:1100;display:none;flex-direction:column;background:var(--bg);padding-top:env(safe-area-inset-top,44px)">
+  <div class="fp-hdr" style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px">
+    <button onclick="closeClaude()" style="display:flex;align-items:center;gap:6px;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--sub);cursor:pointer">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+      Fechar
+    </button>
+    <span style="font-size:16px;font-weight:600;color:var(--fg)">✦ Claude</span>
+    <button onclick="clearClaude()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:var(--sub);cursor:pointer">Limpar</button>
+  </div>
+  <div id="claude-msgs" style="flex:1;overflow-y:auto;padding:12px 16px 8px;display:flex;flex-direction:column;gap:10px"></div>
+  <div style="padding:10px 16px calc(env(safe-area-inset-bottom,16px)+10px);display:flex;gap:8px;align-items:flex-end">
+    <div id="claude-input-wrap" style="flex:1;background:rgba(255,255,255,.7);backdrop-filter:blur(60px) saturate(3);-webkit-backdrop-filter:blur(60px) saturate(3);border:.5px solid rgba(255,255,255,.88);border-radius:20px;padding:10px 14px;box-shadow:0 2px 0 rgba(255,255,255,.9) inset,0 4px 16px rgba(80,120,200,.08)">
+      <textarea id="claude-inp" placeholder="Pergunte ao Claude…" rows="1" style="width:100%;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--fg);outline:none;resize:none;line-height:1.5;max-height:120px;overflow-y:auto" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+    </div>
+    <button id="claude-send" onclick="sendToClaude()" style="width:40px;height:40px;border-radius:50%;border:none;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:opacity .15s">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+    </button>
+  </div>
 </div>
 
 <div id="search">
@@ -1535,22 +1540,27 @@ function loadAutoGestData(cb){
       return s!=='pago'&&s!=='baixado'&&s!=='recebido'&&s!=='quitado'&&s!=='cancelado';
     });
 
-    // Orçamento pessoal — mesma lógica das despesas que funciona
-    console.log('[AG] ORC RAW:',rawOrc.length,'registros');
+    // Orçamento pessoal — log completo para diagnóstico
+    console.log('[AG] ORC RAW count:',rawOrc.length);
     if(rawOrc.length>0){
-      console.log('[AG] ORC SAMPLE:',JSON.stringify(rawOrc[0]));
+      console.log('[AG] ORC[0] keys:',Object.keys(rawOrc[0]).join(','));
+      console.log('[AG] ORC[0] full:',JSON.stringify(rawOrc[0]));
+      // Log status values
+      var statuses=rawOrc.map(function(o){return o.status||'(vazio)';});
+      console.log('[AG] ORC statuses:',statuses.slice(0,10).join(','));
+      // Log databaixa values
+      var baixas=rawOrc.map(function(o){return o.databaixa||'null';});
+      console.log('[AG] ORC databaixas:',baixas.slice(0,10).join(','));
     }
+    // FILTRO MÍNIMO: só exclui se databaixa preenchida E não nula
     AG_DATA.orcamento = norm(rawOrc).filter(function(o){
-      // Exclui se tem qualquer campo de pagamento/baixa preenchido
-      var pgto=o.databaixa||o.datapagamento||o.data_baixa||o.data_pagamento||
-               o.dataBaixa||o.dataPagamento||'';
-      if(pgto&&String(pgto).trim()!==''&&String(pgto)!=='null')return false;
-      // Exclui status de pagamento — aceita previsto, atrasado, vencido, vazio
-      var s=String(o.status||'').toLowerCase();
-      if(s==='pago'||s==='baixado'||s==='recebido'||s==='quitado'||s==='cancelado')return false;
-      return true; // inclui previsto, atrasado, vencido, em aberto, vazio
+      var baixa=o.databaixa;
+      if(baixa!==null&&baixa!==undefined&&String(baixa).trim()!==''&&String(baixa)!=='null')return false;
+      var s=String(o.status||'').toLowerCase().trim();
+      if(s==='pago'||s==='baixado'||s==='recebido'||s==='quitado')return false;
+      return true;
     });
-    console.log('[AG] ORC filtrado:',AG_DATA.orcamento.length);
+    console.log('[AG] ORC filtrado:',AG_DATA.orcamento.length,'de',rawOrc.length);
 
     // Contas a pagar — inclui pendentes e atrasadas
     AG_DATA.contas = norm(rawContas).filter(function(c){
