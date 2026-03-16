@@ -746,10 +746,45 @@ function exportBackup(){var blob=new Blob([JSON.stringify(D,null,2)],{type:'appl
 // ═══════════════════════════════════════
 //  DARK MODE
 // ═══════════════════════════════════════
-(function(){var saved=localStorage.getItem('ff-dark');var sysDark=window.matchMedia('(prefers-color-scheme:dark)').matches;var isDark=(saved==='1')||(saved===null&&sysDark);document.documentElement.setAttribute('data-dark',isDark?'1':'0');document.documentElement.style.colorScheme=isDark?'dark':'light';document.documentElement.style.backgroundColor=isDark?'#000000':'transparent';})();
-function applyDark(isDark){document.documentElement.setAttribute('data-dark',isDark?'1':'0');document.documentElement.style.colorScheme=isDark?'dark':'light';document.documentElement.style.backgroundColor=isDark?'#000000':'transparent';localStorage.setItem('ff-dark',isDark?'1':'0');updateDarkIcon();updateThemeColor();}
-function toggleDark(){applyDark(document.documentElement.getAttribute('data-dark')!=='1');}
-window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',function(e){if(localStorage.getItem('ff-dark')===null)applyDark(e.matches);});
+(function(){var saved=localStorage.getItem('ff-dark');var sysDark=window.matchMedia('(prefers-color-scheme:dark)').matches;var isDark=(saved==='1')||(saved==='auto'&&sysDark)||(saved===null&&sysDark);document.documentElement.setAttribute('data-dark',isDark?'1':'0');document.documentElement.style.colorScheme=isDark?'dark':'light';document.documentElement.style.backgroundColor=isDark?'#000000':'transparent';})();
+function applyDark(isDark){
+  document.documentElement.setAttribute('data-dark',isDark?'1':'0');
+  document.documentElement.style.colorScheme=isDark?'dark':'light';
+  document.documentElement.style.backgroundColor=isDark?'#000000':'transparent';
+  // Only save if not in auto mode
+  if(localStorage.getItem('ff-dark')!=='auto'){
+    localStorage.setItem('ff-dark',isDark?'1':'0');
+  }
+  updateDarkIcon();
+  updateThemeColor();
+}
+function toggleDark(){
+  applyDark(document.documentElement.getAttribute('data-dark')!=='1');
+  // When manually toggling, clear auto mode
+  localStorage.setItem('ff-dark', document.documentElement.getAttribute('data-dark')==='1'?'1':'0');
+  updateThemeColor();
+}
+function toggleAutoTheme(){
+  var isAuto=localStorage.getItem('ff-dark')==='auto'||localStorage.getItem('ff-dark')===null;
+  if(isAuto){
+    // Turn OFF auto — fix current state
+    localStorage.setItem('ff-dark', document.documentElement.getAttribute('data-dark')==='1'?'1':'0');
+    toast('Modo '+(document.documentElement.getAttribute('data-dark')==='1'?'escuro':'claro')+' fixo');
+  } else {
+    // Turn ON auto — follow system
+    localStorage.setItem('ff-dark','auto');
+    var sysDark=window.matchMedia('(prefers-color-scheme:dark)').matches;
+    applyDark(sysDark);
+    toast('Seguindo o sistema');
+  }
+  // Reopen settings to refresh toggle state
+  setTimeout(function(){openSettings();},100);
+}
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',function(e){
+  // Segue sistema SEMPRE a menos que o usuário tenha fixado manualmente
+  var pref=localStorage.getItem('ff-dark');
+  if(pref===null||pref==='auto'){applyDark(e.matches);}
+});
 function updateDarkIcon(){var isDark=document.documentElement.getAttribute('data-dark')==='1';var icon=document.getElementById('dark-icon');if(!icon)return;if(isDark)icon.innerHTML='<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';else icon.innerHTML='<path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>';}
 document.getElementById('dark-btn').addEventListener('click',toggleDark);
 // ═══════════════════════════════════════
@@ -1183,12 +1218,17 @@ function openSettings(){
   var isDark=document.documentElement.getAttribute("data-dark")==="1";
   var tBg=isDark?"#34C759":"#e5e5ea";
   var tX=isDark?20:0;
+  var isAutoMode=localStorage.getItem('ff-dark')==='auto'||localStorage.getItem('ff-dark')===null;
+  var autoBg=isAutoMode?'#34C759':'#e5e5ea';
+  var autoX=isAutoMode?20:0;
   var h='<div style="padding:16px 0 8px">'
     +'<h2 style="font-size:20px;font-weight:700;margin:0 0 6px;padding:0 16px">Configurações</h2>'
-    +'<div class="msec" style="padding:0"><div class="mrow" style="padding:14px 16px;justify-content:space-between;align-items:center">'
-    +'<span style="font-size:16px;font-weight:500">Modo escuro</span>'
-    +'<span id="stog" onclick="toggleDark()" style="display:inline-flex;width:51px;height:31px;border-radius:50px;align-items:center;padding:2px;cursor:pointer;transition:background .25s;background:'+tBg+'"><span style="width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.28);transition:transform .25s;transform:translateX('+tX+'px)"></span></span>'
-    +'</div></div>'
+    +'<div class="msec" style="padding:0">'
+    +'<div class="mrow" style="padding:14px 16px;justify-content:space-between;align-items:center"><span style="font-size:16px;font-weight:500">Modo escuro</span>'
+    +'<span id="stog" onclick="toggleDark()" style="display:inline-flex;width:51px;height:31px;border-radius:50px;align-items:center;padding:2px;cursor:pointer;transition:background .25s;background:'+tBg+'"><span style="width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.28);transition:transform .25s;transform:translateX('+tX+'px)"></span></span></div>'
+    +'<div class="mrow" style="padding:14px 16px;justify-content:space-between;align-items:center;border-top:.5px solid var(--line)"><div><span style="font-size:16px;font-weight:500">Seguir sistema</span><div style="font-size:12px;color:var(--sub);margin-top:2px">Muda com o iPhone</div></div>'
+    +'<span id="stog-auto" onclick="toggleAutoTheme()" style="display:inline-flex;width:51px;height:31px;border-radius:50px;align-items:center;padding:2px;cursor:pointer;transition:background .25s;background:'+autoBg+'"><span style="width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.28);transition:transform .25s;transform:translateX('+autoX+'px)"></span></span></div>'
+    +'</div>'
     +'<div class="msec" style="padding:0">'
     +'<div class="mrow" style="padding:14px 16px;justify-content:space-between"><span style="font-size:16px;font-weight:500">Exportar backup</span><button onclick="exportBackup()" style="background:none;border:none;color:var(--blue);font-size:15px;font-weight:500;cursor:pointer">Exportar</button></div>'
     +'<div class="mrow" style="padding:14px 16px;border-top:.5px solid var(--line);justify-content:space-between"><span style="font-size:16px;font-weight:500;color:#ff3b30">Apagar todos os dados</span><button onclick="if(confirm(&quot;Apagar tudo?&quot;)){localStorage.clear();location.reload()}" style="background:none;border:none;color:#ff3b30;font-size:15px;font-weight:500;cursor:pointer">Apagar</button></div>'
@@ -1322,10 +1362,18 @@ function loadAutoGestData(cb){
     if(rawOrc.length>0)   console.log('[AG] campos orc:',      Object.keys(rawOrc[0]).join(','));
     if(rawContas.length>0)console.log('[AG] campos contas:',   Object.keys(rawContas[0]).join(','));
 
-    // Normaliza o campo de data para _data
+    // Normaliza o campo de data — tenta TODOS os campos possíveis
     function norm(arr){
       return arr.map(function(item){
-        item._data = item.dataprevista||item.vencimento||item.data||item.dt||'';
+        // Tenta todos os campos de data conhecidos do AutoGest
+        var d = item.dataprevista||item.vencimento||item.data||item.dt||
+                item.date||item.dueDate||item.due_date||item.data_vencimento||
+                item.data_prevista||item.competencia||'';
+        // Normaliza para YYYY-MM-DD
+        if(d&&d.length>10)d=d.slice(0,10);
+        // Valida formato
+        if(d&&!/^\d{4}-\d{2}-\d{2}$/.test(d))d='';
+        item._data=d;
         return item;
       });
     }
@@ -1371,10 +1419,28 @@ function loadAutoGestData(cb){
 function _autoImportar(){
   var n=0;
   function jaExiste(id,tipo){return D.tasks.some(function(t){return t.agRef&&t.agRef.id===id&&t.agRef.tipo===tipo;});}
-  AG_DATA.despesas.forEach(function(d){if(d.id&&!jaExiste(d.id,'despesa')){D.tasks.push(_mkTask(d,'despesa'));n++;}});
-  AG_DATA.orcamento.forEach(function(o){if(o.id&&!jaExiste(o.id,'orcamento')){D.tasks.push(_mkTask(o,'orcamento'));n++;}});
-  (AG_DATA.contas||[]).forEach(function(c){if(c.id&&!jaExiste(c.id,'conta')){D.tasks.push(_mkTask(c,'conta'));n++;}});
-  if(n>0){save();console.log('[AG] '+n+' tarefa(s) importada(s)');}
+  AG_DATA.despesas.forEach(function(d){
+    if(d.id&&!jaExiste(d.id,'despesa')){
+      var t=_mkTask(d,'despesa');
+      console.log('[AG] desp:',d.descricao,'_data:',d._data,'→dueDate:',t.dueDate,'vencida:',t.dueDate<td0());
+      D.tasks.push(t);n++;
+    }
+  });
+  AG_DATA.orcamento.forEach(function(o){
+    if(o.id&&!jaExiste(o.id,'orcamento')){
+      var t=_mkTask(o,'orcamento');
+      console.log('[AG] orc:',o.descricao,'_data:',o._data,'→dueDate:',t.dueDate,'vencida:',t.dueDate<td0());
+      D.tasks.push(t);n++;
+    }
+  });
+  (AG_DATA.contas||[]).forEach(function(c){
+    if(c.id&&!jaExiste(c.id,'conta')){
+      var t=_mkTask(c,'conta');
+      console.log('[AG] conta:',c.descricao,'_data:',c._data,'→dueDate:',t.dueDate);
+      D.tasks.push(t);n++;
+    }
+  });
+  if(n>0){save();console.log('[AG] '+n+' tarefa(s) importada(s) — total tasks:',D.tasks.length);}
   else console.log('[AG] Sem novas tarefas para importar');
 }
 
