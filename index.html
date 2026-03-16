@@ -513,6 +513,20 @@ body::before {
     transparent 100%
   );
 }
+
+/* Prevent text selection on interactive elements */
+.irow, .irow *, .nb, .nb *,
+.chip, .ds-btn, .pri-btn, .mact,
+.wday, .cal-cell, .hdr-btn, .qadd-btn {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+/* But allow selection in text inputs and textareas */
+input, textarea {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
 </style>
 </head>
 <body>
@@ -1103,7 +1117,35 @@ function saveProjSilent(){var ti=document.getElementById('pj-ti'),no=document.ge
 //  LONG PRESS MOVE
 // ═══════════════════════════════════════
 var _mv=null;
-function addLongPress(el,item){var timer,moved=false,sx=0,sy=0;el.addEventListener('touchstart',function(e){moved=false;sx=e.touches[0].clientX;sy=e.touches[0].clientY;timer=setTimeout(function(){if(moved)return;el.classList.add('lp-active');haiku([20,10,20]);setTimeout(function(){el.classList.remove('lp-active');openMoveSheet(item);},150);},550);},{passive:true});el.addEventListener('touchmove',function(e){if(Math.abs(e.touches[0].clientX-sx)>8||Math.abs(e.touches[0].clientY-sy)>8){moved=true;clearTimeout(timer);}},{passive:true});el.addEventListener('touchend',function(){clearTimeout(timer);},{passive:true});}
+function addLongPress(el,item){
+  var timer,moved=false,sx=0,sy=0,fired=false;
+  el.addEventListener('touchstart',function(e){
+    moved=false;fired=false;
+    sx=e.touches[0].clientX;sy=e.touches[0].clientY;
+    timer=setTimeout(function(){
+      if(moved)return;
+      fired=true;
+      // Cancela qualquer seleção de texto em andamento
+      if(window.getSelection)window.getSelection().removeAllRanges();
+      el.classList.add('lp-active');
+      haiku([20,10,20]);
+      setTimeout(function(){el.classList.remove('lp-active');openMoveSheet(item);},150);
+    },520);
+  },{passive:true});
+  el.addEventListener('touchmove',function(e){
+    if(Math.abs(e.touches[0].clientX-sx)>8||Math.abs(e.touches[0].clientY-sy)>8){
+      moved=true;clearTimeout(timer);
+    }
+  },{passive:true});
+  el.addEventListener('touchend',function(e){
+    clearTimeout(timer);
+    // Se long press disparou, bloqueia o click seguinte
+    if(fired){e.preventDefault();e.stopPropagation();}
+  },{passive:false});
+  el.addEventListener('touchcancel',function(){clearTimeout(timer);},{passive:true});
+  // Previne context menu e seleção de texto no elemento
+  el.addEventListener('contextmenu',function(e){e.preventDefault();},{passive:false});
+}
 function openMoveSheet(item){_mv=item;var t=item.data;var name=(t.title||'Item').slice(0,30);var today=td0();var DATES=[['Hoje',today],['Amanhã',addDays(today,1)],['+2d',addDays(today,2)],['+1sem',addDays(today,7)],['+2sem',addDays(today,14)]];var curDate=t.dueDate||t.date||'';var html='<div class="mv-title">Mover: '+esc(name)+'</div><div class="mv-sec"><div class="mv-dates">';for(var i=0;i<DATES.length;i++){var lbl=DATES[i][0],val=DATES[i][1];html+='<button class="mv-date-btn'+(curDate===val?' on':'')+'" onclick="mvDate(\''+val+'\')">'+lbl+'</button>';}html+='</div><div class="mv-row"><span class="mlbl" style="font-size:13px">Outra data</span><input type="date" style="border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--blue);outline:none;text-align:right" onchange="mvDate(this.value)"></div></div><div class="mv-sec"><button class="mact" style="color:var(--sub)" onclick="closeMoveSheet()">Cancelar</button></div>';document.getElementById('move-sheet-body').innerHTML=html;document.getElementById('move-sheet-bg').classList.add('on');haiku([10,5,10]);}
 function closeMoveSheet(){document.getElementById('move-sheet-bg').classList.remove('on');_mv=null;}
 function mvDate(val){if(!val||!_mv)return;var t=_mv.data;if(_mv.kind==='task')t.dueDate=val;else if(_mv.kind==='ev')t.date=val;else if(_mv.kind==='rem'){var tm=(t.datetime||'T09:00').split('T')[1]||'09:00';t.datetime=val+'T'+tm;}save();render(S.page);closeMoveSheet();toast('Movido para '+fmtD(val));}
@@ -1270,7 +1312,7 @@ function loadAutoGestData(cb){
   Promise.all([
     AG.get('despesas',''),
     AG.get('orcamentopessoal',''),  // sem filtro — pega tudo e filtra no JS
-    AG.get('contas','status=eq.pendente&tipo=eq.pagar')
+    AG.get('contas','tipo=eq.pagar')
   ]).then(function(res){
     var rawDesp   = res[0]||[];
     var rawOrc    = res[1]||[];
@@ -1288,25 +1330,32 @@ function loadAutoGestData(cb){
       });
     }
 
-    // Despesas financeiro — filtra não pagas
+    // Despesas financeiro — inclui atrasadas e pendentes (sem datapagamento)
     AG_DATA.despesas = norm(rawDesp).filter(function(d){
-      if(d.datapagamento)return false;
+      // Se tem data de pagamento preenchida = já foi pago
+      if(d.datapagamento&&String(d.datapagamento).trim()!=='')return false;
       var s=String(d.status||'').toLowerCase();
-      return s!=='pago'&&s!=='baixado'&&s!=='recebido'&&s!=='quitado';
+      // Exclui explicitamente pagas/baixadas
+      return s!=='pago'&&s!=='baixado'&&s!=='recebido'&&s!=='quitado'&&s!=='cancelado';
     });
 
-    // Orçamento pessoal — filtra despesas não baixadas
+    // Orçamento pessoal — inclui atrasadas (convênio, condomínio etc)
     AG_DATA.orcamento = norm(rawOrc).filter(function(o){
-      if(o.databaixa&&o.databaixa!==null&&o.databaixa!=='')return false;
+      // Se tem databaixa preenchida = já foi baixado
+      if(o.databaixa&&String(o.databaixa).trim()!=='')return false;
       var s=String(o.status||'').toLowerCase();
-      if(s==='pago'||s==='baixado'||s==='recebido'||s==='quitado')return false;
+      if(s==='pago'||s==='baixado'||s==='recebido'||s==='quitado'||s==='cancelado')return false;
       var tp=String(o.tipo||'').toLowerCase();
-      // Aceita despesa, vazio, ou qualquer valor que não seja receita
-      return tp!=='receita'&&tp!=='r'&&tp!=='entrada';
+      // Aceita despesa ou sem tipo definido; rejeita apenas receita
+      return tp!=='receita'&&tp!=='r'&&tp!=='entrada'&&tp!=='rec';
     });
 
-    // Contas a pagar (tabela separada)
-    AG_DATA.contas = norm(rawContas);
+    // Contas a pagar — inclui pendentes e atrasadas
+    AG_DATA.contas = norm(rawContas).filter(function(c){
+      if(c.datapagamento&&String(c.datapagamento).trim()!=='')return false;
+      var s=String(c.status||'').toLowerCase();
+      return s!=='pago'&&s!=='baixado'&&s!=='quitado'&&s!=='cancelado';
+    });
 
     console.log('[AG] filtrado: desp='+AG_DATA.despesas.length+' orc='+AG_DATA.orcamento.length+' contas='+AG_DATA.contas.length);
     AG_DATA.loaded=true; AG_DATA.loading=false; AG_DATA.lastSync=new Date();
