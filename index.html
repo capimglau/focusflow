@@ -95,14 +95,14 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 .tag-opt.on{color:#fff;border-color:transparent}
 #modal-bg{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.32);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:none;align-items:flex-end;justify-content:center}
 #modal-bg.on{display:flex}
-#modal-box{width:100%;max-width:600px;max-height:93vh;overflow-y:auto;background:#e8eef8;border-radius:26px 26px 0 0;padding:0 0 40px;animation:sheetUp .32s cubic-bezier(.25,1,.5,1)}
+#modal-box{width:100%;max-width:600px;max-height:93vh;overflow-y:auto;background:#f4f8ff;border-radius:26px 26px 0 0;padding:0 0 40px;animation:sheetUp .32s cubic-bezier(.25,1,.5,1)}
 [data-dark="1"] #modal-box{background:#1C1C1E}
 .mhandle{width:36px;height:4px;background:rgba(0,0,0,.14);border-radius:2px;margin:10px auto 12px}
 [data-dark="1"] .mhandle{background:rgba(255,255,255,.22)}
-.msec{background:#ffffff;border-radius:14px;margin:0 16px 10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.msec{background:#ffffff;border:.5px solid rgba(0,0,0,.07);border-radius:14px;margin:0 16px 10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 [data-dark="1"] .msec{background:#2C2C2E}
 .msec-lbl{font-size:11px;font-weight:600;color:var(--sub);letter-spacing:.6px;text-transform:uppercase;padding:14px 16px 4px;opacity:.7}
-.mrow{padding:12px 14px;border-bottom:.5px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:10px;min-height:44px}
+.mrow{padding:12px 14px;border-bottom:.5px solid rgba(0,0,0,.05);display:flex;align-items:center;gap:10px;min-height:44px}
 [data-dark="1"] .mrow{border-bottom-color:rgba(255,255,255,.07)}
 .mrow:last-child{border-bottom:none}
 .mlbl{font-size:11px;color:var(--sub);min-width:60px;flex-shrink:0;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
@@ -113,7 +113,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 .mtitle::placeholder{color:var(--chk)}
 .mta{width:100%;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--sub);outline:none;min-height:48px;resize:none;padding:0 18px 16px;line-height:1.5}
 .mta::placeholder{color:var(--chk)}
-.mact{width:calc(100% - 32px);padding:14px;border:none;cursor:pointer;font-family:inherit;font-size:16px;font-weight:500;background:#ffffff;color:var(--blue);display:block;text-align:center;margin:0 16px 8px;border-radius:16px}
+.mact{width:calc(100% - 32px);padding:14px;border:none;cursor:pointer;font-family:inherit;font-size:16px;font-weight:500;background:#ffffff;border:.5px solid rgba(0,0,0,.07);color:var(--blue);display:block;text-align:center;margin:0 16px 8px;border-radius:16px}
 .mact.pri{font-weight:700;color:var(--blue)}
 .mact.del{color:var(--red)}
 .mact:active{opacity:.45}
@@ -214,14 +214,9 @@ body #nav-add{
   cursor:pointer;
   flex-shrink:0;
   pointer-events:auto;
-  background:rgba(255,255,255,.72);
-  backdrop-filter:blur(72px) saturate(3.5) brightness(1.14);
-  -webkit-backdrop-filter:blur(72px) saturate(3.5) brightness(1.14);
-  border:.5px solid rgba(255,255,255,.90);
-  box-shadow:0 1.5px 0 rgba(255,255,255,.96) inset,
-             0 -1px 0 rgba(150,185,240,.22) inset,
-             0 6px 24px rgba(70,110,200,.13),
-             0 2px 8px rgba(0,0,0,.06);
+  background:#ffffff;
+  border:.5px solid rgba(0,0,0,.08);
+  box-shadow:0 1px 6px rgba(0,0,0,.08);
   color:#1c1c1e;
   transition:transform .12s,opacity .12s;
 }
@@ -321,15 +316,12 @@ html:not([data-dark="1"]) .pages,html:not([data-dark="1"])
 /* ── Cards de conteúdo ── */
 html:not([data-dark="1"]) .card,
 html:not([data-dark="1"]) .proj-card {
-  background: rgba(255,255,255,.72) !important;
-  backdrop-filter: blur(60px) saturate(2.5) brightness(1.04) !important;
-  -webkit-backdrop-filter: blur(60px) saturate(2.5) brightness(1.04) !important;
-  border: .5px solid rgba(255,255,255,.85) !important;
-  box-shadow: 0 2px 0 rgba(255,255,255,.90) inset,
-              0 -1px 0 rgba(160,195,240,.18) inset,
-              0 8px 32px rgba(80,120,200,.08),
-              0 2px 8px rgba(0,0,0,.05) !important;
-  border-radius: 18px !important;
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: .5px solid rgba(0,0,0,.07) !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05) !important;
+  border-radius: 16px !important;
 }
 
 /* ── Modal sections ── */
@@ -385,25 +377,21 @@ html:not([data-dark="1"]) .pri-btn:not(.on) {
 
 /* ── Nav pill ── */
 html:not([data-dark="1"]) #nav-pill {
-  background: rgba(255,255,255,.75) !important;
-  backdrop-filter: blur(72px) saturate(3) brightness(1.08) !important;
-  -webkit-backdrop-filter: blur(72px) saturate(3) brightness(1.08) !important;
-  border: .5px solid rgba(255,255,255,.88) !important;
-  box-shadow: 0 2px 0 rgba(255,255,255,.92) inset,
-              0 -1px 0 rgba(150,190,240,.20) inset,
-              0 8px 32px rgba(70,110,200,.12),
-              0 2px 8px rgba(0,0,0,.06) !important;
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: .5px solid rgba(0,0,0,.08) !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08) !important;
 }
 
 /* ── Header pills (qadd + hdr-act) ── */
 html:not([data-dark="1"]) .qadd-pill,
 html:not([data-dark="1"]) .hdr-act {
-  background: rgba(255,255,255,.75) !important;
-  backdrop-filter: blur(72px) saturate(3) brightness(1.08) !important;
-  -webkit-backdrop-filter: blur(72px) saturate(3) brightness(1.08) !important;
-  border: .5px solid rgba(255,255,255,.88) !important;
-  box-shadow: 0 2px 0 rgba(255,255,255,.92) inset,
-              0 4px 18px rgba(70,110,200,.10) !important;
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: .5px solid rgba(0,0,0,.08) !important;
+  box-shadow: 0 1px 6px rgba(0,0,0,.07) !important;
 }
 
 /* ── Move sheet ── */
@@ -505,15 +493,11 @@ html:not([data-dark="1"]) .ag-kpi-box {
 
 /* Dashboard KPI banners */
 html:not([data-dark="1"]) .dash-kpi {
-  background: rgba(255,255,255,.68) !important;
-  backdrop-filter: blur(72px) saturate(3.5) brightness(1.12) !important;
-  -webkit-backdrop-filter: blur(72px) saturate(3.5) brightness(1.12) !important;
-  border: .5px solid rgba(255,255,255,.90) !important;
-  box-shadow:
-    0 1.5px 0 rgba(255,255,255,.96) inset,
-    0 -1px 0 rgba(150,185,240,.20) inset,
-    0 6px 28px rgba(70,110,200,.10),
-    0 2px 8px rgba(0,0,0,.06) !important;
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: .5px solid rgba(0,0,0,.07) !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05) !important;
 }
 [data-dark="1"] .dash-kpi {
   background: rgba(40,40,46,.78) !important;
@@ -577,6 +561,8 @@ body {
 [data-dark="1"] #claude-input-wrap{background:rgba(44,44,46,.82);border-color:rgba(255,255,255,.12)}
 [data-dark="1"] #claude-panel{background:rgba(0,0,0,.88)!important;backdrop-filter:blur(40px) saturate(1.8);-webkit-backdrop-filter:blur(40px) saturate(1.8)}
 [data-dark="1"] .claude-msg.ai .claude-bubble{background:rgba(44,44,46,.85);border-color:rgba(255,255,255,.1)}
+[data-dark="1"] #modal-box{background:linear-gradient(175deg,#1a1f2e 0%,#1c1c1e 60%,#18181a 100%)}
+[data-dark="1"] .msec{background:rgba(36,36,42,.80)!important;border-color:rgba(255,255,255,.09)!important}
 </style>
 </head>
 <body>
@@ -631,6 +617,40 @@ body {
 
 </div>
 
+
+<!-- AI Quick Menu (disabled) -->
+<div id="ai-menu-bg" onclick="closeAiMenu()" style="display:none!important" style="position:fixed;inset:0;z-index:1800;display:none;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)">
+  <div id="ai-menu-box" onclick="event.stopPropagation()" style="position:absolute;bottom:calc(env(safe-area-inset-bottom,20px)+80px);right:16px;width:260px;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.92);backdrop-filter:blur(60px) saturate(3);-webkit-backdrop-filter:blur(60px) saturate(3);border:.5px solid rgba(255,255,255,.9);box-shadow:0 8px 40px rgba(0,0,0,.18),0 2px 0 rgba(255,255,255,.9) inset">
+    <!-- Claude IA primary -->
+    <button onclick="closeAiMenu();openClaude()" style="width:100%;display:flex;align-items:center;gap:12px;padding:16px 18px;border:none;background:linear-gradient(135deg,#007AFF,#5856D6);cursor:pointer;font-family:inherit">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">✦</div>
+      <div style="text-align:left">
+        <div style="font-size:15px;font-weight:700;color:#fff">Claude IA</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.8);margin-top:1px">Perguntar, criar, importar</div>
+      </div>
+    </button>
+    <div style="height:.5px;background:rgba(0,0,0,.08)"></div>
+    <!-- Quick actions grid -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5px;background:rgba(0,0,0,.08)">
+      <button onclick="closeAiMenu();openTaskModal()" style="background:rgba(255,255,255,.95);border:none;padding:16px 14px;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span style="font-size:24px">○</span>
+        <span style="font-size:12px;font-weight:600;color:#1c1c1e">Tarefa</span>
+      </button>
+      <button onclick="closeAiMenu();openReminderModal()" style="background:rgba(255,255,255,.95);border:none;padding:16px 14px;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span style="font-size:24px">🔔</span>
+        <span style="font-size:12px;font-weight:600;color:#1c1c1e">Lembrete</span>
+      </button>
+      <button onclick="closeAiMenu();openEventModal()" style="background:rgba(255,255,255,.95);border:none;padding:16px 14px;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span style="font-size:24px">📅</span>
+        <span style="font-size:12px;font-weight:600;color:#1c1c1e">Evento</span>
+      </button>
+      <button onclick="closeAiMenu();document.getElementById('search').classList.add('on');setTimeout(function(){document.getElementById('s-inp').focus()},50)" style="background:rgba(255,255,255,.95);border:none;padding:16px 14px;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span style="font-size:24px">🔍</span>
+        <span style="font-size:12px;font-weight:600;color:#1c1c1e">Buscar</span>
+      </button>
+    </div>
+  </div>
+</div>
 <div id="nav-out">
   <div id="nav-pill"><div id="nav-bubble"></div>
 
@@ -663,34 +683,30 @@ body {
       <span>Config</span>
     </button>
   </div>
-  <button id="nav-add" onclick="openAddMenu()" title="Adicionar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+  <button id="nav-add" onclick="openClaude()" title="IA"><span style="font-size:15px;font-weight:700;letter-spacing:-.3px;color:#3a3a3c">IA</span></button>
 </div>
 
 <!-- Claude AI Panel -->
-<div id="claude-panel" style="position:fixed;inset:0;z-index:2000;display:none;flex-direction:column;background:rgba(235,243,255,.94);backdrop-filter:blur(50px) saturate(2.8);-webkit-backdrop-filter:blur(50px) saturate(2.8)">
-  <!-- Header -->
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,59px)+12px) 18px 12px;border-bottom:.5px solid rgba(0,0,0,.06);background:rgba(255,255,255,.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);flex-shrink:0">
-    <button onclick="closeClaude()" style="display:flex;align-items:center;gap:6px;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--sub);cursor:pointer;padding:4px 0">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-      Voltar
+<div id="claude-panel" style="position:fixed;inset:0;z-index:2000;display:none;flex-direction:column;background:linear-gradient(160deg,#eaf3ff 0%,#f0f7ff 35%,#f8fbff 65%,#ffffff 100%);">
+  <div style="flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,59px)+10px) 20px 12px;border-bottom:.5px solid rgba(0,0,0,.08)">
+    <button onclick="closeClaude()" style="display:flex;align-items:center;gap:5px;border:none;background:transparent;font-family:inherit;font-size:15px;color:#636366;cursor:pointer;padding:0">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Voltar
     </button>
-    <span style="font-size:16px;font-weight:700;color:var(--fg)">✦ Claude IA</span>
-    <div style="display:flex;gap:6px">
-      <button onclick="openClaude('import')" style="border:none;background:rgba(0,122,255,.1);border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;padding:5px 10px">📲 Importar</button>
-      <button onclick="clearClaude()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:var(--sub);cursor:pointer;padding:4px 0">Limpar</button>
-      <button onclick="resetClaudeKey()" style="border:none;background:transparent;font-family:inherit;font-size:11px;color:var(--sub);cursor:pointer;padding:4px 0">🔑</button>
+    <span style="font-size:16px;font-weight:700;color:#1c1c1e">✦ Claude IA</span>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button onclick="openClaude('import')" style="border:none;background:rgba(0,122,255,.12);border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;color:#007AFF;cursor:pointer;padding:5px 10px">📲 Importar</button>
+      <button onclick="clearClaude()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:#636366;cursor:pointer;padding:4px">Limpar</button>
+      <button onclick="resetClaudeKey()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:#636366;cursor:pointer;padding:4px">🔑</button>
     </div>
   </div>
-  <!-- Messages -->
-  <div id="claude-msgs" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 8px;display:flex;flex-direction:column;gap:12px"></div>
-  <!-- Input bar -->
-  <div style="flex-shrink:0;padding:10px 14px calc(env(safe-area-inset-bottom,20px)+10px);background:rgba(255,255,255,.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:.5px solid rgba(0,0,0,.06);display:flex;gap:10px;align-items:flex-end">
+  <div id="claude-msgs" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 20px;display:flex;flex-direction:column;gap:12px"></div>
+  <div style="flex-shrink:0;padding:10px 16px calc(env(safe-area-inset-bottom,20px)+8px);border-top:.5px solid rgba(0,0,0,.07);display:flex;gap:10px;align-items:flex-end;background:#f5f7fa">
     <textarea id="claude-inp" placeholder="Pergunte ao Claude…" rows="1"
-      style="flex:1;border:.5px solid rgba(0,0,0,.12);background:rgba(255,255,255,.8);border-radius:18px;padding:10px 14px;font-family:inherit;font-size:15px;color:var(--fg);outline:none;resize:none;line-height:1.5;max-height:100px;overflow-y:auto;box-sizing:border-box"
+      style="flex:1;border:.5px solid rgba(0,0,0,.14);background:rgba(255,255,255,.9);border-radius:20px;padding:10px 16px;font-family:inherit;font-size:15px;color:#1c1c1e;outline:none;resize:none;line-height:1.5;max-height:100px;overflow-y:auto;box-sizing:border-box"
       oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
     <button id="claude-send" onclick="sendToClaude()"
-      style="width:38px;height:38px;border-radius:50%;border:none;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9z"/></svg>
+      style="width:40px;height:40px;border-radius:50%;border:none;background:#007AFF;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:opacity .15s">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9z"/></svg>
     </button>
   </div>
 </div>
@@ -1186,6 +1202,66 @@ function importBk(file){var r=new FileReader();r.onload=function(e){try{var d=JS
 // ═══════════════════════════════════════
 //  TASK MODAL
 // ═══════════════════════════════════════
+
+var NOTIF_OPTS=[
+  {label:'Na hora',val:0},
+  {label:'5 min antes',val:5},
+  {label:'30 min antes',val:30},
+  {label:'1h antes',val:60},
+  {label:'2h antes',val:120},
+  {label:'1 dia antes',val:1440},
+  {label:'2 dias antes',val:2880}
+];
+
+function _buildNotifChips(active){
+  active=active||[];
+  return NOTIF_OPTS.map(function(o){
+    var on=active.indexOf(o.val)>=0;
+    return '<button onclick="toggleNotif('+o.val+')" style="'
+      +'flex-shrink:0;padding:6px 13px;border-radius:20px;'
+      +'border:.5px solid '+(on?'var(--blue)':'rgba(0,0,0,.12)')+';'
+      +'background:'+(on?'rgba(0,122,255,.12)':'rgba(255,255,255,.8)')+';'
+      +'color:'+(on?'var(--blue)':'var(--sub)')+';'
+      +'font-family:inherit;font-size:13px;font-weight:'+(on?'700':'400')+';'
+      +'cursor:pointer;white-space:nowrap'
+      +'">'+o.label+'</button>';
+  }).join('');
+}
+
+
+function toggleNotifSec(){
+  syncTaskFields();
+  if(_curT.notifyAt){
+    _curT.notifyAt='';
+  } else {
+    // Default: same day as task, 9am
+    var d=_curT.dueDate||td0();
+    _curT.notifyAt=d+'T09:00';
+  }
+  window._taskRender&&window._taskRender();
+}
+function setNotifPreset(minsBefore){
+  syncTaskFields();
+  var base=_curT.dueDate||td0();
+  var time=_curT.dueTime||'09:00';
+  var dt=new Date(base+'T'+time);
+  dt.setMinutes(dt.getMinutes()-minsBefore);
+  _curT.notifyAt=dt.toISOString().slice(0,16);
+  // Update inputs
+  var di=document.getElementById('t-notif-date');
+  var ti=document.getElementById('t-notif-time');
+  if(di)di.value=_curT.notifyAt.slice(0,10);
+  if(ti)ti.value=_curT.notifyAt.slice(11,16);
+}
+function toggleNotif(val){
+  syncTaskFields();
+  var arr=_curT.notifyOffsets||[];
+  var idx=arr.indexOf(val);
+  if(idx>=0)arr.splice(idx,1); else arr.push(val);
+  _curT.notifyOffsets=arr;
+  var row=document.getElementById('t-notif-row');
+  if(row)row.innerHTML=_buildNotifChips(arr);
+}
 function openTaskModal(task,defaults){
   S.eTask=task||null;
   _curT=task?JSON.parse(JSON.stringify(task)):{recurrence:'none',priority:'none',subtasks:[],attachments:[],tags:[]};
@@ -1199,6 +1275,23 @@ function openTaskModal(task,defaults){
       +'<div class="msec"><div class="mrow" onclick="openDateWheelPicker()" style="cursor:pointer"><span class="mlbl">Data</span><span class="minp" id="t-dt-lbl" style="text-align:right;color:var(--blue);font-weight:500">'+((_curT.dueDate)?fmtD(_curT.dueDate):'Selecionar')+'</span><input type="hidden" id="t-dt" value="'+(_curT.dueDate||'')+'"></div>'
       +'<div class="dshort"><button class="ds-btn" onclick="setDate(td0())">Hoje</button><button class="ds-btn" onclick="setDate(addDays(td0(),1))">Amanhã</button><button class="ds-btn" onclick="setDate(addDays(td0(),7))">+1 sem</button></div>'
       +'<div class="mrow"><span class="mlbl">Hora</span><input class="minp" type="time" id="t-hr" value="'+(_curT.dueTime||'')+'"></div>'
+      +'<div class="mrow" style="justify-content:space-between;align-items:center">'
+      +'<div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">🔔</span><span style="font-size:15px;font-weight:500">Notificar</span></div>'
+      +'<span id="t-notif-tog" onclick="toggleNotifSec()" style="display:inline-flex;width:46px;height:28px;border-radius:50px;align-items:center;padding:2px;cursor:pointer;background:'+(_curT.notifyAt?'#34C759':'#e5e5ea')+'">'
+      +'<span style="width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s;transform:translateX('+(_curT.notifyAt?'18':'0')+'px)"></span></span>'
+      +'</div>'
+      +(_curT.notifyAt
+        ? '<div style="padding:8px 0 12px;display:flex;flex-direction:column;gap:8px">'
+          +'<div style="font-size:12px;color:var(--sub)">Data e hora da notificação:</div>'
+          +'<div style="display:flex;gap:8px;align-items:center">'
+          +'<input type="date" id="t-notif-date" value="'+((_curT.notifyAt||'').slice(0,10)||(_curT.dueDate||td0()))+'" style="flex:1;border:.5px solid rgba(0,0,0,.12);border-radius:10px;padding:8px 12px;font-family:inherit;font-size:14px;color:var(--blue);background:rgba(255,255,255,.8);outline:none">'
+          +'<input type="time" id="t-notif-time" value="'+((_curT.notifyAt||'').slice(11,16)||'09:00')+'" style="width:100px;border:.5px solid rgba(0,0,0,.12);border-radius:10px;padding:8px 12px;font-family:inherit;font-size:14px;color:var(--blue);background:rgba(255,255,255,.8);outline:none">'
+          +'</div>'
+          +'<div style="display:flex;flex-wrap:wrap;gap:6px">'
+          +[{l:'Na hora',fn:'setNotifPreset(0)'},{l:'30 min antes',fn:'setNotifPreset(30)'},{l:'1h antes',fn:'setNotifPreset(60)'},{l:'1 dia antes',fn:'setNotifPreset(1440)'}].map(function(p){return '<button onclick="'+p.fn+'" style="padding:4px 10px;border-radius:14px;border:.5px solid rgba(0,0,0,.12);background:rgba(255,255,255,.8);color:var(--sub);font-family:inherit;font-size:12px;cursor:pointer">'+p.l+'</button>';}).join('')
+          +'</div>'
+          +'</div>'
+        : '')
       +'<div class="mrow"><span class="mlbl">Repete</span><select class="msel" id="t-rc"><option value="none">Nunca</option><option value="daily">Diário</option><option value="weekly">Semanal</option><option value="monthly">Mensal</option><option value="yearly">Anual</option></select></div></div>'
       +'<div class="msec"><div style="padding:8px 14px 2px;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.5px">Prioridade</div><div class="pri-row"><button class="pri-btn'+(priH?' on':'')+'" onclick="setPri(\'high\')" style="'+(priH?'background:var(--red);color:#fff':'')+'">🔴 Alta</button><button class="pri-btn'+(priM?' on':'')+'" onclick="setPri(\'medium\')" style="'+(priM?'background:var(--orange);color:#fff':'')+'">🟡 Média</button><button class="pri-btn'+(!priH&&!priM?' on':'')+'" onclick="setPri(\'none\')" style="'+((!priH&&!priM)?'background:var(--sub);color:#fff':'')+'">⚪ Nenhuma</button></div></div>'
       +'<div class="msec"><div style="padding:8px 14px 2px;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.5px">Tags</div>'+tagsHtml+'</div>'
@@ -1221,15 +1314,78 @@ function delSub(i){syncTaskFields();_curT.subtasks.splice(i,1);window._taskRende
 function addSub(){var inp=document.getElementById('sub-i');if(!inp||!inp.value.trim())return;syncTaskFields();_curT.subtasks=_curT.subtasks||[];_curT.subtasks.push({id:uid(),title:inp.value.trim(),done:false});window._taskRender&&window._taskRender();}
 function addAtt(inp){syncTaskFields();for(var i=0;i<inp.files.length;i++)_curT.attachments.push(inp.files[i].name);window._taskRender&&window._taskRender()}
 function delAtt(i){syncTaskFields();_curT.attachments.splice(i,1);window._taskRender&&window._taskRender()}
-function syncTaskFields(){var ti=document.getElementById('t-ti'),no=document.getElementById('t-no'),dt=document.getElementById('t-dt'),hr=document.getElementById('t-hr'),rc=document.getElementById('t-rc'),lk=document.getElementById('t-lk'),loc=document.getElementById('t-loc');if(ti)_curT.title=ti.value;if(no)_curT.notes=no.value;if(dt)_curT.dueDate=dt.value;if(hr)_curT.dueTime=hr.value;if(rc)_curT.recurrence=rc.value;if(lk)_curT.link=lk.value.trim();if(loc)_curT.location=loc.value.trim();}
+function syncTaskFields(){var ti=document.getElementById('t-ti'),no=document.getElementById('t-no'),dt=document.getElementById('t-dt'),hr=document.getElementById('t-hr'),rc=document.getElementById('t-rc'),lk=document.getElementById('t-lk'),loc=document.getElementById('t-loc');if(ti)_curT.title=ti.value;if(no)_curT.notes=no.value;if(dt)_curT.dueDate=dt.value;if(hr)_curT.dueTime=hr.value;if(rc)_curT.recurrence=rc.value;if(lk)_curT.link=lk.value.trim();if(loc)_curT.location=loc.value.trim();
+  var nd=document.getElementById('t-notif-date');
+  var nt=document.getElementById('t-notif-time');
+  if(nd&&nt&&nd.value)_curT.notifyAt=nd.value+'T'+nt.value;
+}
 function saveTask(){syncTaskFields();if(!_curT.title||!_curT.title.trim())return;var obj=Object.assign({},_curT);obj.title=obj.title.trim();if(S.eTask)Object.assign(S.eTask,obj);else{obj.id=uid();obj.done=false;obj.createdAt=new Date().toISOString();D.tasks.unshift(obj)}save();closeModal();render(S.page);toast('Salvo ✓');}
 function deleteTask(){if(!S.eTask)return;D.tasks=D.tasks.filter(function(t){return t.id!==S.eTask.id});save();closeModal();render(S.page);toast('Excluído')}
 function getGPS(){if(!navigator.geolocation){toast('GPS indisponível');return;}toast('📡 Capturando…');navigator.geolocation.getCurrentPosition(function(p){syncTaskFields();_curT.locationCoords={lat:p.coords.latitude.toFixed(6),lng:p.coords.longitude.toFixed(6)};var loc=document.getElementById('t-loc');if(loc&&!loc.value.trim())loc.value='Minha localização';if(loc)_curT.location=loc.value;toast('📍 Localização capturada!');window._taskRender&&window._taskRender();},function(){toast('Acesso ao GPS negado');});}
 // ═══════════════════════════════════════
 //  REMINDER MODAL
 // ═══════════════════════════════════════
-function openReminderModal(rem){S.eRem=rem||null;var r=rem||{recurrence:'none'};var h='<div class="msec"><input class="mtitle" id="r-ti" placeholder="Título do lembrete" value="'+esc(r.title||'')+'"><textarea class="mta" id="r-no" placeholder="Notas…">'+esc(r.notes||'')+'</textarea></div><div class="msec"><div class="mrow"><span class="mlbl">Data e hora</span><input class="minp" type="datetime-local" id="r-dt" value="'+(r.datetime||'')+'"></div><div class="dshort"><button class="ds-btn" onclick="document.getElementById(\'r-dt\').value=td0()+\'T09:00\'">Hoje 9h</button><button class="ds-btn" onclick="document.getElementById(\'r-dt\').value=addDays(td0(),1)+\'T09:00\'">Amanhã 9h</button></div><div class="mrow"><span class="mlbl">Repete</span><select class="msel" id="r-rc"><option value="none">Nunca</option><option value="daily">Diário</option><option value="weekly">Semanal</option><option value="monthly">Mensal</option></select></div></div><div class="msec"><button class="mact pri" onclick="saveReminder()">Salvar lembrete</button></div>'+(rem?'<div class="msec"><button class="mact del" onclick="deleteReminder()">Excluir lembrete</button></div>':'')+'<div class="msec"><button class="mact" onclick="closeModal()">Cancelar</button></div>';openModal(h);setTimeout(function(){var rc=document.getElementById('r-rc');if(rc)rc.value=r.recurrence||'none'},20);}
-function saveReminder(){var ti=document.getElementById('r-ti');if(!ti||!ti.value.trim())return;var obj={title:ti.value.trim(),notes:document.getElementById('r-no').value,datetime:document.getElementById('r-dt').value,recurrence:document.getElementById('r-rc').value};if(obj.datetime)scheduleNotif(obj.title,'Lembrete',obj.datetime);if(S.eRem)Object.assign(S.eRem,obj);else{obj.id=uid();obj.done=false;obj.createdAt=new Date().toISOString();D.reminders.unshift(obj)}save();closeModal();render(S.page);toast('Salvo ✓');}
+function openReminderModal(rem){
+  S.eRem=rem||null;
+  var r=rem||{recurrence:'none'};
+  var h='<div class="msec"><input class="mtitle" id="r-ti" placeholder="Título do lembrete" value="'+esc(r.title||'')+'"><textarea class="mta" id="r-no" placeholder="Notas…">'+esc(r.notes||'')+'</textarea></div>'
+    +'<div class="msec">'
+    +'<div class="mrow"><span class="mlbl">📅 Data</span><input class="minp" type="date" id="r-date" value="'+(r.datetime?r.datetime.slice(0,10):td0())+'" style="text-align:right;color:var(--blue)"></div>'
+    +'<div class="dshort"><button class="ds-btn" onclick="setRemDate(td0())">Hoje</button><button class="ds-btn" onclick="setRemDate(addDays(td0(),1))">Amanhã</button><button class="ds-btn" onclick="setRemDate(addDays(td0(),7))">+1 sem</button></div>'
+    +'<div class="mrow"><span class="mlbl">🕐 Hora</span><input class="minp" type="time" id="r-time" value="'+(r.datetime?r.datetime.slice(11,16):'09:00')+'" style="text-align:right;color:var(--blue)"></div>'
+    +'<div style="padding:8px 14px 4px;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.5px">Alertas</div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 14px 12px">'
+    +[{l:'Na hora',v:0},{l:'5 min antes',v:5},{l:'30 min antes',v:30},{l:'1 hora antes',v:60},{l:'1 dia antes',v:1440}].map(function(o){
+      var on=(r.notifyOffsets||[0]).indexOf(o.v)>=0;
+      return '<button onclick="toggleRemNotif(this,'+o.v+')" data-on="'+(on?1:0)+'" style="padding:5px 11px;border-radius:20px;border:.5px solid '+(on?'var(--blue)':'rgba(0,0,0,.15)')+';background:'+(on?'rgba(0,122,255,.1)':'rgba(255,255,255,.7)')+';color:'+(on?'var(--blue)':'var(--sub)')+';font-family:inherit;font-size:12px;font-weight:'+(on?'700':'500')+';cursor:pointer">'+o.l+'</button>';
+    }).join('')
+    +'</div>'
+    +'<div class="mrow"><span class="mlbl">Repete</span><select class="msel" id="r-rc"><option value="none">Nunca</option><option value="daily">Diário</option><option value="weekly">Semanal</option><option value="monthly">Mensal</option></select></div>'
+    +'</div>'
+    +'<div class="msec"><button class="mact pri" onclick="saveReminder()">Salvar lembrete</button></div>'
+    +(rem?'<div class="msec"><button class="mact del" onclick="deleteReminder()">Excluir lembrete</button></div>':'')
+    +'<div class="msec"><button class="mact" onclick="closeModal()">Cancelar</button></div>';
+  openModal(h);
+  setTimeout(function(){var rc=document.getElementById('r-rc');if(rc)rc.value=r.recurrence||'none'},20);
+}
+
+function setRemDate(d){var el=document.getElementById("r-date");if(el)el.value=d;}
+function toggleRemNotif(btn,val){
+  var on=btn.getAttribute('data-on')==='1';
+  var newOn=!on;
+  btn.setAttribute('data-on',newOn?'1':'0');
+  btn.style.borderColor=newOn?'var(--blue)':'rgba(0,0,0,.15)';
+  btn.style.background=newOn?'rgba(0,122,255,.1)':'rgba(255,255,255,.7)';
+  btn.style.color=newOn?'var(--blue)':'var(--sub)';
+  btn.style.fontWeight=newOn?'700':'500';
+}
+function saveReminder(){
+  var ti=document.getElementById('r-ti');
+  if(!ti||!ti.value.trim())return;
+  var dateEl=document.getElementById('r-date');
+  var timeEl=document.getElementById('r-time');
+  var dt=(dateEl?dateEl.value:'')+((timeEl&&timeEl.value)?'T'+timeEl.value:'T09:00');
+  // Collect selected alert offsets
+  var notifs=[];
+  document.querySelectorAll('#modal-body [data-on]').forEach(function(b){
+    if(b.getAttribute('data-on')==='1'){
+      var match=b.textContent.match(/\d+/);
+      if(b.textContent.indexOf('hora')>=0)notifs.push(60);
+      else if(b.textContent.indexOf('dia')>=0)notifs.push(1440);
+      else if(b.textContent.indexOf('30')>=0)notifs.push(30);
+      else if(b.textContent.indexOf('5 ')>=0)notifs.push(5);
+      else if(b.textContent.indexOf('hora')>=0)notifs.push(0);
+      else notifs.push(0);
+    }
+  });
+  var obj={title:ti.value.trim(),notes:document.getElementById('r-no').value,
+    datetime:dt,recurrence:document.getElementById('r-rc').value,
+    notifyOffsets:notifs.length?notifs:[0]};
+  if(dt)scheduleNotif(obj.title,'Lembrete',dt);
+  if(S.eRem)Object.assign(S.eRem,obj);
+  else{obj.id=uid();obj.done=false;obj.createdAt=new Date().toISOString();D.reminders.unshift(obj)}
+  save();closeModal();render(S.page);toast('Salvo ✓');
+}
 function deleteReminder(){if(!S.eRem)return;D.reminders=D.reminders.filter(function(r){return r.id!==S.eRem.id});save();closeModal();render(S.page)}
 // ═══════════════════════════════════════
 //  EVENT MODAL
@@ -1959,6 +2115,17 @@ setTimeout(function(){loadAutoGestData(function(){if(S.page==='dashboard')render
 var _claudeHistory = [];
 
 
+
+function openAiMenu(){
+  haiku(10);
+  var bg=document.getElementById('ai-menu-bg');
+  if(bg){bg.style.display='flex';var box=document.getElementById('ai-menu-box');if(box){box.style.transform='scale(.92) translateY(10px)';box.style.opacity='0';box.style.transition='transform .22s cubic-bezier(.34,1.56,.64,1),opacity .18s';setTimeout(function(){box.style.transform='';box.style.opacity='1';},10);}}
+}
+function closeAiMenu(){
+  var bg=document.getElementById('ai-menu-bg');
+  if(bg)bg.style.display='none';
+}
+
 function saveClaudeKey(){
   var inp=document.getElementById('claude-key-inp');
   if(!inp)return;
@@ -1973,37 +2140,217 @@ function saveClaudeKey(){
   if(wrap)wrap.remove();
   _addClaudeMsg('ai','✅ Chave salva! Pode fazer sua pergunta agora.');
 }
+// ── Claude guided creation state ──
+var _aiFlow={active:false,type:null,step:null,data:{}};
+
 function openClaude(mode){
   document.getElementById('claude-panel').classList.add('on');
   var msgs = document.getElementById('claude-msgs');
-  if(!msgs.children.length){
-    _addClaudeMsg('ai',
-      'Olá! Sou o Claude integrado ao FocusFlow. Posso:\n\n'
-      +'• **Responder perguntas** sobre suas tarefas e agenda\n'
-      +'• **Criar itens** — diga "crie uma tarefa para amanhã às 10h"\n'
-      +'• **Importar da Apple** — cole seus lembretes ou eventos copiados e eu os importo automaticamente\n\n'
-      +'Como posso ajudar?'
-    );
-  }
+  msgs.innerHTML=''; // always start fresh
+  _claudeHistory=[];
+  _aiFlow={active:false,type:null,step:null,data:{}};
+
   if(mode==='import'){
+    _addClaudeMsg('ai','📲 **Importar da Apple**\n\nCole aqui o conteúdo copiado do Lembretes ou Calendário. Eu identifico as datas e crio tudo automaticamente.');
     setTimeout(function(){
       var inp=document.getElementById('claude-inp');
-      inp.placeholder='Cole aqui seus lembretes ou eventos da Apple…';
+      inp.placeholder='Cole seus lembretes ou eventos aqui…';
       inp.focus();
     },200);
-    _addClaudeMsg('ai',
-      '📲 **Importar da Apple**\n\n'
-      +'Cole aqui o conteúdo copiado do **Lembretes** ou **Calendário** do iPhone.\n\n'
-      +'Você pode:\n'
-      +'• Copiar a lista de lembretes do app Lembretes\n'
-      +'• Copiar eventos do Calendário\n'
-      +'• Colar texto livre com datas (ex: "dentista 25/03 às 14h")\n'
-      +'• Colar conteúdo de arquivo .ics\n\n'
-      +'Eu identifico as datas e crio tudo automaticamente no FocusFlow.'
-    );
-  } else {
-    setTimeout(function(){document.getElementById('claude-inp').focus();},200);
+    return;
   }
+
+  // Show welcome with quick-action buttons
+  _addClaudeMsg('ai','Olá! O que deseja fazer?');
+  _addQuickActions([
+    {icon:'✅',label:'Nova Tarefa',    fn:'aiStartFlow("task")'},
+    {icon:'📅',label:'Novo Evento',    fn:'aiStartFlow("event")'},
+    {icon:'🔔',label:'Novo Lembrete',  fn:'aiStartFlow("reminder")'},
+    {icon:'📲',label:'Importar Apple', fn:'openClaude("import")'},
+    {icon:'💬',label:'Perguntar',      fn:'aiStartFlow("ask")'}
+  ]);
+}
+
+function _addQuickActions(actions){
+  var msgs=document.getElementById('claude-msgs');
+  var wrap=document.createElement('div');
+  wrap.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin-top:4px';
+  actions.forEach(function(a){
+    var btn=document.createElement('button');
+    btn.style.cssText='display:flex;align-items:center;gap:6px;padding:10px 14px;border-radius:14px;border:.5px solid rgba(0,0,0,.08);background:#ffffff;color:#1c1c1e;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer';
+    btn.innerHTML='<span style="font-size:18px">'+a.icon+'</span><span>'+a.label+'</span>';
+    btn.setAttribute('onclick',a.fn+'()');
+    btn.addEventListener('click',function(){eval(a.fn+'()');});
+    wrap.appendChild(btn);
+  });
+  msgs.appendChild(wrap);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function aiStartFlow(type){
+  _aiFlow={active:true,type:type,step:'title',data:{}};
+  var msgs=document.getElementById('claude-msgs');
+  var inp=document.getElementById('claude-inp');
+  // Remove quick action buttons
+  var btns=msgs.querySelector('div[style*="flex-wrap"]');
+  if(btns)btns.remove();
+
+  if(type==='ask'){
+    _aiFlow.active=false;
+    _addClaudeMsg('ai','Pode perguntar! Tenho acesso às suas tarefas, eventos e notas.');
+    inp.placeholder='Sua pergunta…';
+    inp.focus();
+    return;
+  }
+
+  var labels={task:'tarefa',event:'evento',reminder:'lembrete'};
+  _addClaudeMsg('ai','Qual é o **nome** d'+({'task':'a','event':'e','reminder':'o'}[type])+' '+labels[type]+'?');
+  inp.placeholder='Digite o nome…';
+  inp.focus();
+}
+
+function aiNextStep(userText){
+  var flow=_aiFlow;
+  if(!flow.active){return false;} // let sendToClaude handle it
+
+  _addClaudeMsg('user',userText);
+
+  if(flow.step==='title'){
+    flow.data.title=userText;
+    flow.step='date';
+    _addClaudeMsg('ai','📅 Qual **data**? (ex: hoje, amanhã, 25/03, ou deixe em branco)');
+    document.getElementById('claude-inp').placeholder='Data…';
+    return true;
+  }
+  if(flow.step==='date'){
+    // Parse date
+    var d=parseNaturalDate(userText);
+    flow.data.date=d;
+    if(flow.type==='task'||flow.type==='event'){
+      flow.step='time';
+      _addClaudeMsg('ai','🕐 Qual **horário**? (ex: 14:30, ou deixe em branco)');
+      document.getElementById('claude-inp').placeholder='Horário…';
+    } else {
+      flow.step='notify';
+      _addClaudeMsg('ai','🔔 Quer ser notificado? (sim / não / 30 min antes / 1h antes)');
+      document.getElementById('claude-inp').placeholder='Notificação…';
+    }
+    return true;
+  }
+  if(flow.step==='time'){
+    var t=userText.match(/\d{1,2}[:h]\d{0,2}/);
+    flow.data.time=t?t[0].replace('h',':').padEnd(5,'0'):'';
+    flow.step='notify';
+    _addClaudeMsg('ai','🔔 Quer ser **notificado**? (sim / não / 30 min antes / 1h antes / 1 dia antes)');
+    document.getElementById('claude-inp').placeholder='Notificação…';
+    return true;
+  }
+  if(flow.step==='notify'){
+    var txt=userText.toLowerCase();
+    var notifyAt='';
+    if(txt!=='não'&&txt!=='nao'&&txt!=='n'&&txt!==''){
+      var base=flow.data.date||td0();
+      var time=flow.data.time||'09:00';
+      var mins=0;
+      if(txt.indexOf('30')>=0)mins=30;
+      else if(txt.indexOf('1h')>=0||txt.indexOf('1 h')>=0)mins=60;
+      else if(txt.indexOf('2h')>=0)mins=120;
+      else if(txt.indexOf('dia')>=0)mins=1440;
+      var dt=new Date(base+'T'+time);
+      dt.setMinutes(dt.getMinutes()-mins);
+      notifyAt=dt.toISOString().slice(0,16);
+    }
+    flow.data.notifyAt=notifyAt;
+    flow.step='confirm';
+    // Build confirm message
+    var label={task:'Tarefa',event:'Evento',reminder:'Lembrete'}[flow.type];
+    var summary='📋 **Resumo:**\n'
+      +'Nome: **'+flow.data.title+'**\n'
+      +(flow.data.date?'Data: **'+fmtD(flow.data.date)+'**\n':'')
+      +(flow.data.time?'Hora: **'+flow.data.time+'**\n':'')
+      +(notifyAt?'Notificação: **'+fmtD(notifyAt.slice(0,10))+' '+notifyAt.slice(11,16)+'**\n':'')
+      +'\nCriar '+(label.toLowerCase())+'?';
+    _addClaudeMsg('ai',summary);
+    _addQuickActions([
+      {icon:'✅',label:'Criar',fn:'aiConfirm'},
+      {icon:'✏️',label:'Editar',fn:'aiEdit'},
+      {icon:'✕', label:'Cancelar',fn:'aiCancel'}
+    ]);
+    return true;
+  }
+  return false;
+}
+
+function aiConfirm(){
+  var flow=_aiFlow;
+  if(!flow.data.title)return;
+  var id=uid();
+  if(flow.type==='task'){
+    D.tasks.unshift({id:id,title:flow.data.title,done:false,
+      dueDate:flow.data.date||'',dueTime:flow.data.time||'',
+      notifyAt:flow.data.notifyAt||'',priority:'none',
+      recurrence:'none',subtasks:[],attachments:[],tags:[],
+      createdAt:new Date().toISOString()});
+  } else if(flow.type==='event'){
+    D.events.push({id:id,title:flow.data.title,
+      date:flow.data.date||td0(),time:flow.data.time||'',
+      endTime:'',location:'',desc:''});
+  } else if(flow.type==='reminder'){
+    var dt=(flow.data.date||td0())+'T'+(flow.data.time||'09:00');
+    D.reminders.unshift({id:id,title:flow.data.title,done:false,
+      datetime:dt,notifyAt:flow.data.notifyAt||'',
+      notes:'',recurrence:'none',createdAt:new Date().toISOString()});
+  }
+  save();render(S.page);
+  _aiFlow={active:false,type:null,step:null,data:{}};
+  var msgs=document.getElementById('claude-msgs');
+  // Remove action buttons
+  var btns=msgs.lastElementChild;
+  if(btns&&btns.style.cssText&&btns.style.cssText.indexOf('flex-wrap')>=0)btns.remove();
+  _addClaudeMsg('ai','✅ Criado com sucesso! Deseja adicionar mais alguma coisa?');
+  _addQuickActions([
+    {icon:'✅',label:'Nova Tarefa',    fn:'aiStartFlow("task")'},
+    {icon:'📅',label:'Novo Evento',    fn:'aiStartFlow("event")'},
+    {icon:'🔔',label:'Novo Lembrete',  fn:'aiStartFlow("reminder")'},
+    {icon:'💬',label:'Perguntar',      fn:'aiStartFlow("ask")'}
+  ]);
+}
+
+function aiEdit(){
+  _aiFlow.step='title';
+  var msgs=document.getElementById('claude-msgs');
+  var btns=msgs.lastElementChild;
+  if(btns&&btns.style.cssText&&btns.style.cssText.indexOf('flex-wrap')>=0)btns.remove();
+  _addClaudeMsg('ai','Vamos recomeçar. Qual é o nome?');
+  document.getElementById('claude-inp').focus();
+}
+
+function aiCancel(){
+  _aiFlow={active:false,type:null,step:null,data:{}};
+  var msgs=document.getElementById('claude-msgs');
+  var btns=msgs.lastElementChild;
+  if(btns&&btns.style.cssText&&btns.style.cssText.indexOf('flex-wrap')>=0)btns.remove();
+  _addClaudeMsg('ai','Cancelado. O que mais posso fazer?');
+  _addQuickActions([
+    {icon:'✅',label:'Nova Tarefa',    fn:'aiStartFlow("task")'},
+    {icon:'📅',label:'Novo Evento',    fn:'aiStartFlow("event")'},
+    {icon:'🔔',label:'Novo Lembrete',  fn:'aiStartFlow("reminder")'},
+    {icon:'💬',label:'Perguntar',      fn:'aiStartFlow("ask")'}
+  ]);
+}
+
+function parseNaturalDate(txt){
+  if(!txt||txt.toLowerCase()==='não'||txt.toLowerCase()==='nao')return '';
+  if(txt.toLowerCase()==='hoje')return td0();
+  if(txt.toLowerCase()==='amanhã'||txt.toLowerCase()==='amanha')return addDays(td0(),1);
+  if(txt.toLowerCase()==='depois de amanhã')return addDays(td0(),2);
+  // DD/MM or DD/MM/YYYY
+  var m=txt.match(/(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/);
+  if(m){
+    var y=m[3]?parseInt(m[3])+(m[3].length===2?2000:0):new Date().getFullYear();
+    return y+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[1]).padStart(2,'0');
+  }
+  return txt;
 }
 
 function closeClaude(){
@@ -2066,8 +2413,14 @@ function sendToClaude(){
   var inp = document.getElementById('claude-inp');
   var text = (inp.value||'').trim();
   if(!text) return;
-  inp.value = ''; inp.style.height = 'auto';
-
+  inp.value=''; inp.style.height='auto';
+  // If guided flow is active, handle locally
+  if(_aiFlow&&_aiFlow.active){
+    aiNextStep(text);
+    return;
+  }
+  // Manually re-add so the rest of the function can use it
+  // (was cleared above)
   // Add user message
   _addClaudeMsg('user', text);
   _claudeHistory.push({role:'user', content:text});
