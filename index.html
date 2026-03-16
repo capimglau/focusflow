@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="FocusFlow">
 <meta name="theme-color" content="#007AFF" id="theme-color-meta">
 <title>FocusFlow</title>
@@ -26,8 +26,8 @@ updateThemeColor();
 [data-dark="1"] body,[data-dark="1"] html{background-color:#000000!important}
 [data-dark="1"] .pages,[data-dark="1"] .page{background:#000000!important}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{overscroll-behavior:none}
-html{background-color:var(--bg)}
+html,body{overscroll-behavior:none;margin:0;padding:0;}
+html{background-color:var(--bg);min-height:100vh;min-height:-webkit-fill-available;min-height:100dvh}
 body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:var(--fg);-webkit-font-smoothing:antialiased;min-height:100vh;}
 .pages{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;background:transparent}
 .page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;padding-bottom:84px;display:none;background:transparent;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
@@ -46,7 +46,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 .page.anim-r{animation:slideInR .22s cubic-bezier(.25,1,.5,1)}
 .page.anim-l{animation:slideInL .22s cubic-bezier(.25,1,.5,1)}
 .page.anim-f{animation:fadeIn .18s ease}
-.hdr{padding:52px 18px 8px;display:flex;align-items:center;justify-content:space-between}
+.hdr{padding:calc(env(safe-area-inset-top,44px) + 10px) 18px 8px;display:flex;align-items:center;justify-content:space-between}
 .hdr-left{display:flex;align-items:center}
 .hdr-left small{display:none}
 .hdr-act{display:flex;gap:0;align-items:center;background:rgba(255,255,255,.7);backdrop-filter:blur(80px) saturate(4) brightness(1.14);-webkit-backdrop-filter:blur(80px) saturate(4) brightness(1.14);border:.5px solid rgba(255,255,255,.88);box-shadow:0 1.5px 0 rgba(255,255,255,.96) inset,0 4px 20px rgba(80,100,180,.12);border-radius:50px;padding:3px 4px;}
@@ -250,6 +250,269 @@ html:not([data-dark="1"]) .pages,html:not([data-dark="1"]) .page{background:tran
 #dashboard-feed,.sec{padding-bottom:4px}
 
 [data-dark="1"] .hdr-act{background:rgba(44,44,46,.88)!important;border:.5px solid rgba(255,255,255,.10)!important;box-shadow:0 1px 0 rgba(255,255,255,.07) inset!important;}
+
+/* KPI cards dark mode */
+[data-dark="1"] .kpi-card{
+  background:rgba(44,44,46,.72)!important;
+  backdrop-filter:blur(40px) saturate(2) brightness(1.1)!important;
+  -webkit-backdrop-filter:blur(40px) saturate(2) brightness(1.1)!important;
+  border:.5px solid rgba(255,255,255,.10)!important;
+  box-shadow:0 1px 0 rgba(255,255,255,.07) inset,0 4px 14px rgba(0,0,0,.25)!important;
+}
+
+/* ═══════════════════════════════════════════════
+   LIQUID GLASS — SISTEMA UNIFICADO
+   Mesmo tom em todos os banners, cards e botões
+═══════════════════════════════════════════════ */
+
+:root {
+  --lg:rgba(255,255,255,.68);
+  --lg-blur:blur(72px) saturate(3.5) brightness(1.12);
+  --lg-border:rgba(255,255,255,.85);
+  --lg-shine:rgba(255,255,255,.96);
+  --lg-shadow:0 1.5px 0 rgba(255,255,255,.96) inset,
+              0 -1px 0 rgba(160,190,240,.22) inset,
+              0 6px 28px rgba(70,110,200,.10),
+              0 2px 8px rgba(0,0,0,.06);
+}
+[data-dark="1"] {
+  --lg:rgba(42,42,46,.82);
+  --lg-blur:blur(60px) saturate(2.2) brightness(1.08);
+  --lg-border:rgba(255,255,255,.12);
+  --lg-shine:rgba(255,255,255,.09);
+  --lg-shadow:0 1px 0 rgba(255,255,255,.09) inset,
+              0 6px 24px rgba(0,0,0,.38),
+              0 2px 8px rgba(0,0,0,.22);
+}
+
+/* ── Cards de conteúdo ── */
+html:not([data-dark="1"]) .card,
+html:not([data-dark="1"]) .proj-card {
+  background: var(--lg) !important;
+  backdrop-filter: var(--lg-blur) !important;
+  -webkit-backdrop-filter: var(--lg-blur) !important;
+  border: .5px solid var(--lg-border) !important;
+  box-shadow: var(--lg-shadow) !important;
+  border-radius: 18px !important;
+}
+
+/* ── Modal sections ── */
+html:not([data-dark="1"]) .msec {
+  background: rgba(255,255,255,.72) !important;
+  backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  border: .5px solid rgba(255,255,255,.88) !important;
+  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 3px 12px rgba(0,0,0,.06) !important;
+  border-radius: 16px !important;
+}
+html:not([data-dark="1"]) #modal-box {
+  background: rgba(232,240,252,.92) !important;
+  backdrop-filter: blur(60px) saturate(2.8) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(2.8) !important;
+}
+
+/* ── Chips de filtro ── */
+html:not([data-dark="1"]) .chip:not(.on),
+html:not([data-dark="1"]) .sf-chip:not(.on),
+html:not([data-dark="1"]) .ds-btn,
+html:not([data-dark="1"]) .mv-date-btn:not(.on) {
+  background: rgba(255,255,255,.70) !important;
+  backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  border: .5px solid rgba(255,255,255,.88) !important;
+  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 3px 12px rgba(70,100,180,.08) !important;
+  color: #3a3a3c !important;
+  font-weight: 500 !important;
+}
+
+/* ── Botões de ação modais (Salvar, Cancelar) ── */
+html:not([data-dark="1"]) .mact {
+  background: rgba(255,255,255,.75) !important;
+  backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  border: .5px solid rgba(255,255,255,.90) !important;
+  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 4px 14px rgba(70,100,180,.09) !important;
+  border-radius: 16px !important;
+  margin: 0 16px 8px !important;
+  width: calc(100% - 32px) !important;
+}
+
+/* ── Priority buttons ── */
+html:not([data-dark="1"]) .pri-btn:not(.on) {
+  background: rgba(255,255,255,.72) !important;
+  backdrop-filter: blur(50px) saturate(2.8) !important;
+  -webkit-backdrop-filter: blur(50px) saturate(2.8) !important;
+  border: .5px solid rgba(255,255,255,.88) !important;
+  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 2px 8px rgba(0,0,0,.07) !important;
+  color: #3a3a3c !important;
+}
+
+/* ── Nav pill ── */
+html:not([data-dark="1"]) #nav-pill {
+  background: rgba(255,255,255,.72) !important;
+  backdrop-filter: blur(72px) saturate(3.5) brightness(1.12) !important;
+  -webkit-backdrop-filter: blur(72px) saturate(3.5) brightness(1.12) !important;
+  border: .5px solid rgba(255,255,255,.88) !important;
+  box-shadow: 0 1.5px 0 rgba(255,255,255,.96) inset,
+              0 -1px 0 rgba(160,190,240,.22) inset,
+              0 8px 32px rgba(70,110,200,.12),
+              0 2px 8px rgba(0,0,0,.07) !important;
+}
+
+/* ── Header pills (qadd + hdr-act) ── */
+html:not([data-dark="1"]) .qadd-pill,
+html:not([data-dark="1"]) .hdr-act {
+  background: rgba(255,255,255,.72) !important;
+  backdrop-filter: blur(72px) saturate(3.5) brightness(1.12) !important;
+  -webkit-backdrop-filter: blur(72px) saturate(3.5) brightness(1.12) !important;
+  border: .5px solid rgba(255,255,255,.88) !important;
+  box-shadow: 0 1.5px 0 rgba(255,255,255,.96) inset,
+              0 4px 18px rgba(70,110,200,.10) !important;
+}
+
+/* ── Move sheet ── */
+html:not([data-dark="1"]) #move-sheet,
+html:not([data-dark="1"]) .mv-sec {
+  background: rgba(240,248,255,.90) !important;
+  backdrop-filter: blur(60px) saturate(2.8) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(2.8) !important;
+  border: .5px solid rgba(255,255,255,.85) !important;
+}
+
+/* ── Full-page headers (fp) ── */
+html:not([data-dark="1"]) .fp {
+  background: rgba(235,244,254,.85) !important;
+}
+html:not([data-dark="1"]) .fp-hdr {
+  background: rgba(228,238,252,.88) !important;
+  backdrop-filter: blur(50px) saturate(2.5) !important;
+  -webkit-backdrop-filter: blur(50px) saturate(2.5) !important;
+  border-bottom: .5px solid rgba(255,255,255,.75) !important;
+}
+
+/* ── Ver tudo button ── */
+html:not([data-dark="1"]) .ver-tudo-btn {
+  background: rgba(255,255,255,.68) !important;
+  backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  border: .5px solid rgba(255,255,255,.88) !important;
+  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 4px 14px rgba(70,100,180,.09) !important;
+  color: var(--blue) !important;
+}
+
+/* ── Tag chips ── */
+html:not([data-dark="1"]) .tag-opt:not(.on) {
+  background: rgba(255,255,255,.72) !important;
+  backdrop-filter: blur(40px) !important;
+  -webkit-backdrop-filter: blur(40px) !important;
+  border: .5px solid rgba(255,255,255,.85) !important;
+}
+
+/* ── Search bar ── */
+html:not([data-dark="1"]) .s-bar {
+  background: rgba(255,255,255,.75) !important;
+  backdrop-filter: blur(60px) saturate(3) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(3) !important;
+  border: .5px solid rgba(255,255,255,.88) !important;
+  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 2px 10px rgba(0,0,0,.06) !important;
+}
+
+/* ── PWA Banner ── */
+html:not([data-dark="1"]) #pwa-banner {
+  background: rgba(255,255,255,.78) !important;
+  backdrop-filter: blur(60px) saturate(3) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(3) !important;
+  border: .5px solid rgba(255,255,255,.88) !important;
+  color: #1c1c1e !important;
+}
+
+/* ── Notif bar ── */
+html:not([data-dark="1"]) #notif-bar {
+  background: rgba(255,255,255,.88) !important;
+  backdrop-filter: blur(60px) saturate(3) brightness(1.08) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.08) !important;
+  border: .5px solid rgba(255,255,255,.90) !important;
+}
+
+/* ── AG section cards (dentro do dashboard) ── */
+html:not([data-dark="1"]) .ag-kpi-box {
+  background: rgba(255,255,255,.68) !important;
+  backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
+  border: .5px solid rgba(255,255,255,.88) !important;
+  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 4px 16px rgba(70,110,200,.09) !important;
+}
+
+/* ── DARK MODE contrastes ── */
+[data-dark="1"] .card,
+[data-dark="1"] .proj-card {
+  background: rgba(36,36,40,.80) !important;
+  backdrop-filter: blur(50px) saturate(2) brightness(1.05) !important;
+  -webkit-backdrop-filter: blur(50px) saturate(2) brightness(1.05) !important;
+  border: .5px solid rgba(255,255,255,.09) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 6px 22px rgba(0,0,0,.32) !important;
+}
+[data-dark="1"] .chip:not(.on),
+[data-dark="1"] .ds-btn {
+  background: rgba(52,52,58,.82) !important;
+  border: .5px solid rgba(255,255,255,.12) !important;
+  color: rgba(255,255,255,.75) !important;
+}
+[data-dark="1"] .mact {
+  background: rgba(44,44,50,.85) !important;
+  border: .5px solid rgba(255,255,255,.10) !important;
+}
+[data-dark="1"] .msec {
+  background: rgba(44,44,50,.85) !important;
+  border: .5px solid rgba(255,255,255,.08) !important;
+}
+
+/* Dashboard KPI banners */
+html:not([data-dark="1"]) .dash-kpi {
+  background: rgba(255,255,255,.68) !important;
+  backdrop-filter: blur(72px) saturate(3.5) brightness(1.12) !important;
+  -webkit-backdrop-filter: blur(72px) saturate(3.5) brightness(1.12) !important;
+  border: .5px solid rgba(255,255,255,.90) !important;
+  box-shadow:
+    0 1.5px 0 rgba(255,255,255,.96) inset,
+    0 -1px 0 rgba(150,185,240,.20) inset,
+    0 6px 28px rgba(70,110,200,.10),
+    0 2px 8px rgba(0,0,0,.06) !important;
+}
+[data-dark="1"] .dash-kpi {
+  background: rgba(40,40,46,.78) !important;
+  backdrop-filter: blur(50px) saturate(2) !important;
+  -webkit-backdrop-filter: blur(50px) saturate(2) !important;
+  border: .5px solid rgba(255,255,255,.10) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.07) inset, 0 6px 22px rgba(0,0,0,.30) !important;
+}
+
+/* ── Dynamic Island / Notch safe area background ── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: env(safe-area-inset-top, 50px);
+  z-index: 99999;
+  pointer-events: none;
+  /* Light mode: subtle gradient matching app bg */
+  background: linear-gradient(
+    to bottom,
+    rgba(241,247,253,.95) 0%,
+    rgba(241,247,253,.60) 70%,
+    transparent 100%
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+[data-dark="1"] body::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.98) 0%,
+    rgba(0,0,0,.70) 70%,
+    transparent 100%
+  );
+}
 </style>
 </head>
 <body>
@@ -367,7 +630,15 @@ html:not([data-dark="1"]) .pages,html:not([data-dark="1"]) .page{background:tran
   </div>
   <div class="fp-scroll">
     <input type="text" id="ne-title" placeholder="Título" style="width:100%;border:none;font-family:inherit;font-size:22px;font-weight:600;padding:14px 18px 6px;outline:none;color:var(--fg);background:transparent">
-    <textarea id="ne-body" placeholder="Escreva sua nota…" style="width:100%;min-height:220px;border:none;background:transparent;font-family:inherit;font-size:16px;color:var(--fg);outline:none;padding:8px 18px;resize:none;line-height:1.7"></textarea>
+    <textarea id="ne-body" placeholder="Escreva sua nota…" style="width:100%;min-height:180px;border:none;background:transparent;font-family:inherit;font-size:16px;color:var(--fg);outline:none;padding:8px 18px;resize:none;line-height:1.7"></textarea>
+    <div class="msec" style="margin:8px 16px">
+      <div class="mrow">
+        <span style="font-size:16px">🔔</span>
+        <span style="font-size:13px;color:var(--sub);min-width:64px">Lembrete</span>
+        <input type="date" id="ne-rem-date" style="flex:1;border:none;background:transparent;font-family:inherit;font-size:14px;color:var(--blue);outline:none;text-align:right">
+        <input type="time" id="ne-rem-time" style="width:70px;border:none;background:transparent;font-family:inherit;font-size:14px;color:var(--blue);outline:none;text-align:right">
+      </div>
+    </div>
     <div class="msec" style="margin:8px 16px">
       <div class="mrow"><span style="font-size:18px">🔗</span><input type="url" id="ne-link" placeholder="Adicionar link…" style="flex:1;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--blue);outline:none"></div>
       <div class="mrow" style="border-top:.5px solid rgba(0,0,0,.06)"><span style="font-size:18px">📍</span><input type="text" id="ne-loc" placeholder="Adicionar local…" style="flex:1;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--fg);outline:none"><button onclick="getNoteGPS()" style="border:none;background:transparent;font-size:16px;cursor:pointer;padding:0 4px">📡</button></div>
@@ -543,7 +814,27 @@ function renderWeek(){var ws=weekStart(S.weekOff),t=td0(),el=document.getElement
 //  DATA QUERIES
 // ═══════════════════════════════════════
 function getForDate(ds){var a=[];D.tasks.forEach(function(t){if(t.dueDate===ds&&!t.done)a.push({kind:'task',data:t,date:ds})});D.reminders.forEach(function(r){if(r.datetime&&r.datetime.slice(0,10)===ds&&!r.done)a.push({kind:'rem',data:r,date:ds})});D.events.forEach(function(e){if(e.date===ds)a.push({kind:'ev',data:e,date:ds})});D.projects.forEach(function(p){(p.tasks||[]).forEach(function(pt){if(pt.dueDate===ds&&!pt.done)a.push({kind:'ptask',data:pt,proj:p,date:ds})})});return a;}
-function getAllUpcoming(){var a=[];D.tasks.forEach(function(x){if(x.dueDate&&!x.done)a.push({kind:'task',data:x,date:x.dueDate})});D.reminders.forEach(function(x){if(x.datetime&&!x.done)a.push({kind:'rem',data:x,date:x.datetime.slice(0,10)})});D.events.forEach(function(x){if(x.date)a.push({kind:'ev',data:x,date:x.date})});D.projects.forEach(function(p){(p.tasks||[]).forEach(function(pt){if(pt.dueDate&&!pt.done)a.push({kind:'ptask',data:pt,proj:p,date:pt.dueDate})})});return a;}
+function getAllUpcoming(){
+  var a=[];
+  // Tarefas normais (inclui AG importadas)
+  D.tasks.forEach(function(x){if(x.dueDate&&!x.done)a.push({kind:'task',data:x,date:x.dueDate})});
+  // Lembretes
+  D.reminders.forEach(function(x){if(x.datetime&&!x.done)a.push({kind:'rem',data:x,date:x.datetime.slice(0,10)})});
+  // Eventos
+  D.events.forEach(function(x){if(x.date)a.push({kind:'ev',data:x,date:x.date})});
+  // Tarefas de projetos — APENAS as que têm dueDate definida
+  D.projects.forEach(function(p){
+    (p.tasks||[]).forEach(function(pt){
+      if(pt.dueDate&&!pt.done)a.push({kind:'ptask',data:pt,proj:p,date:pt.dueDate});
+    });
+  });
+  // Notas com lembrete definido
+  D.notes.forEach(function(n){
+    if(n.reminderDate&&!n.reminderDone)
+      a.push({kind:'note',data:n,date:n.reminderDate});
+  });
+  return a;
+}
 // ═══════════════════════════════════════
 //  RECURRENCE
 // ═══════════════════════════════════════
@@ -596,6 +887,18 @@ function buildRow(item,showDrag){
     div.querySelector('.chk').addEventListener('click',function(e){e.stopPropagation();haiku(12);pt.done=!pt.done;save();render(S.page)});
     div.querySelector('.ibody').addEventListener('click',function(){openProjEd(proj)});
     addSwipe(div,function(){pt.done=true;save();render(S.page)},function(){if(confirm('Excluir?')){proj.tasks=proj.tasks.filter(function(x){return x.id!==pt.id});save();render(S.page)}});
+  } else if(item.kind==='note'){
+    var n=item.data;
+    div.innerHTML='<div style="width:36px;height:36px;border-radius:10px;background:rgba(255,204,0,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📝</div>'
+      +'<div class="ibody"><div class="ititle">'+esc(n.title)+'</div>'
+      +(n.body?'<div class="inotes">'+esc(n.body.slice(0,60))+'</div>':'')
+      +'<div class="imeta">'
+      +(n.reminderDate?'<span class="idate'+(n.reminderDate<td0()?' late':n.reminderDate===td0()?' today-c':'')+'">'+(n.reminderTime?n.reminderDate+' · '+n.reminderTime:fmtD(n.reminderDate))+'</span>':'')
+      +'</div></div>'
+      +'<svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="var(--chk)" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l5 5-5 5"/></svg>';
+    div.addEventListener('click',function(){openNoteEd(n)});
+    // Swipe right = mark reminder done
+    addSwipe(div,function(){n.reminderDone=true;save();render(S.page)},function(){});
   }
   addLongPress(div,item);
   return div;
@@ -642,8 +945,6 @@ function renderInicio(){
     });
   }
   if(!overdue.length&&!upcoming.length)el.innerHTML+='<div class="empty-state"><span class="ei">🎉</span><div class="et">Tudo em dia!</div><div class="es">Nenhum item programado</div></div>';
-  if(D.notes.length){addSec(el,'<b>Notas recentes</b>','<button onclick="goPage(\'notas\')" style="border:none;background:transparent;color:var(--blue);font-family:inherit;font-size:13px;cursor:pointer">Ver tudo</button>');var nc=document.createElement('div');nc.className='card';D.notes.slice(0,3).forEach(function(n){var row=document.createElement('div');row.className='irow';row.innerHTML='<div style="width:32px;height:32px;border-radius:8px;background:rgba(255,204,0,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">📝</div><div class="ibody"><div class="ititle">'+esc(n.title)+'</div>'+(n.body?'<div class="inotes">'+esc(n.body)+'</div>':'')+'<div class="imeta"><span class="idate">'+fmtD(n.updatedAt)+'</span></div></div>';row.addEventListener('click',function(){openNoteEd(n)});nc.appendChild(row);});el.appendChild(nc);}
-  if(D.projects.length){addSec(el,'<b>Projetos</b>','<button onclick="goPage(\'projetos\')" style="border:none;background:transparent;color:var(--blue);font-family:inherit;font-size:13px;cursor:pointer">Ver tudo</button>');D.projects.slice(0,2).forEach(function(p){var tot=(p.tasks||[]).length,dn=(p.tasks||[]).filter(function(t){return t.done}).length;var pct=tot>0?Math.round(dn/tot*100):0;var pc=document.createElement('div');pc.className='proj-card';pc.style.marginBottom='8px';pc.innerHTML='<div class="proj-hdr"><div class="proj-dot" style="background:'+(p.color||'var(--blue)')+'"></div><div class="proj-info"><div class="proj-name">'+esc(p.title)+'</div>'+(p.notes?'<div class="proj-desc">'+esc(p.notes)+'</div>':'')+'</div></div><div class="proj-foot"><div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%"></div></div><div class="prog-meta"><span>'+dn+'/'+tot+' tarefas</span><span style="color:'+(p.color||'var(--blue)')+'">'+pct+'%</span></div></div>';pc.addEventListener('click',function(){openProjEd(p)});el.appendChild(pc);});}
   updateBadges();initScrollDateTracker();initPullToRefresh();
 }
 function renderMiniCal(el){var y=S.calY,m=S.calM,t=td0();var nav=document.createElement('div');nav.className='cal-nav';nav.innerHTML='<button class="w-arr" id="cprev">‹</button><span style="font-size:16px;font-weight:700">'+MONTHS[m]+' '+y+'</span><button class="w-arr" id="cnext">›</button>';el.appendChild(nav);document.getElementById('cprev').addEventListener('click',function(){S.calM--;if(S.calM<0){S.calM=11;S.calY--}renderInicio()});document.getElementById('cnext').addEventListener('click',function(){S.calM++;if(S.calM>11){S.calM=0;S.calY++}renderInicio()});var wds=document.createElement('div');wds.className='cal-grid';['D','S','T','Q','Q','S','S'].forEach(function(w){var d=document.createElement('div');d.className='cal-wd';d.textContent=w;wds.appendChild(d)});el.appendChild(wds);var g=document.createElement('div');g.className='cal-grid';var fd=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate();for(var i=0;i<fd;i++)g.appendChild(document.createElement('div'));for(var d2=1;d2<=days;d2++){var ds=y+'-'+p2(m+1)+'-'+p2(d2);var isT=ds===t,isSel=ds===S.calSel,has=getForDate(ds).length>0;var cell=document.createElement('div');cell.className='cal-cell'+(isT?' is-today':'')+(isSel&&!isT?' is-sel':'');cell.innerHTML='<div class="cal-num">'+d2+'</div>'+(has?'<div class="wday-dot"></div>':'');cell.addEventListener('click',(function(ds2){return function(){S.calSel=ds2;S.calView=false;S.selDate=ds2;renderInicio()}})(ds));g.appendChild(cell);}el.appendChild(g);var items=getForDate(S.calSel);addSec(el,'<b>'+fmtDFull(S.calSel)+'</b>','');if(items.length)el.appendChild(buildCard(items));else{var ep=document.createElement('div');ep.style.padding='18px 20px 8px';ep.innerHTML='<div style="font-size:13px;color:var(--sub)">Nenhum item nesta data</div>';el.appendChild(ep)}}
@@ -665,7 +966,22 @@ function renderProjetos(){var el=document.getElementById('projetos-feed');el.inn
 // ═══════════════════════════════════════
 //  NOTAS
 // ═══════════════════════════════════════
-function renderNotas(){var el=document.getElementById('notas-feed');el.innerHTML='';if(!D.notes.length){el.innerHTML='<div class="empty-state"><span class="ei">📝</span><div class="et">Nenhuma nota</div></div>';}else{var c=document.createElement('div');c.className='card';c.style.margin='0 16px';D.notes.forEach(function(n){var row=document.createElement('div');row.className='irow';row.innerHTML='<div class="ibody"><div class="ititle">'+esc(n.title)+'</div>'+(n.body?'<div class="inotes">'+esc(n.body)+'</div>':'')+'<div class="imeta"><span class="idate">'+fmtD(n.updatedAt)+'</span></div></div><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="var(--chk)" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l5 5-5 5"/></svg>';row.addEventListener('click',function(){openNoteEd(n)});addSwipe(row,function(){},function(){if(confirm('Excluir nota?')){D.notes=D.notes.filter(function(x){return x.id!==n.id});save();renderNotas()}});c.appendChild(row);});el.appendChild(c);}el.appendChild(makeAddBtn(openNoteEd));}
+function renderNotas(){var el=document.getElementById('notas-feed');el.innerHTML='';if(!D.notes.length){el.innerHTML='<div class="empty-state"><span class="ei">📝</span><div class="et">Nenhuma nota</div></div>';}else{var c=document.createElement('div');c.className='card';c.style.margin='0 16px';D.notes.forEach(function(n){
+  var row=document.createElement('div');row.className='irow';
+  var remBadge='';
+  if(n.reminderDate&&!n.reminderDone){
+    var isLateR=n.reminderDate<td0();
+    var isTodayR=n.reminderDate===td0();
+    remBadge='<span class="idate'+(isLateR?' late':isTodayR?' today-c':'')+'" style="display:flex;align-items:center;gap:3px">🔔 '+(n.reminderTime?n.reminderTime:fmtD(n.reminderDate))+'</span>';
+  }
+  row.innerHTML='<div class="ibody"><div class="ititle">'+esc(n.title)+'</div>'
+    +(n.body?'<div class="inotes">'+esc(n.body)+'</div>':'')
+    +'<div class="imeta"><span class="idate">'+fmtD(n.updatedAt)+'</span>'+remBadge+'</div></div>'
+    +'<svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="var(--chk)" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l5 5-5 5"/></svg>';
+  row.addEventListener('click',function(){openNoteEd(n)});
+  addSwipe(row,function(){},function(){if(confirm('Excluir nota?')){D.notes=D.notes.filter(function(x){return x.id!==n.id});save();renderNotas()}});
+  c.appendChild(row);
+});el.appendChild(c);}el.appendChild(makeAddBtn(openNoteEd));}
 // ═══════════════════════════════════════
 //  NAVEGAR
 // ═══════════════════════════════════════
@@ -735,9 +1051,42 @@ function doReagendar(){var nd=document.getElementById('reag-dt');if(!nd||!nd.val
 // ═══════════════════════════════════════
 document.getElementById('ne-back').addEventListener('click',closeNoteEd);
 document.getElementById('ne-save').addEventListener('click',saveNote);
-function openNoteEd(note){_ned.id=note?note.id:null;document.getElementById('ne-title').value=note?note.title:'';document.getElementById('ne-body').value=note?note.body:'';document.querySelector('#ned .fp-title2').textContent=note?'Editar nota':'Nova nota';document.getElementById('ned').classList.add('on');setTimeout(function(){document.getElementById(note&&note.title?'ne-body':'ne-title').focus()},160);}
+function openNoteEd(note){
+  _ned.id=note?note.id:null;
+  document.getElementById('ne-title').value=note?note.title:'';
+  document.getElementById('ne-body').value=note?note.body:'';
+  var rdEl=document.getElementById('ne-rem-date');
+  var rtEl=document.getElementById('ne-rem-time');
+  if(rdEl)rdEl.value=note&&note.reminderDate?note.reminderDate:'';
+  if(rtEl)rtEl.value=note&&note.reminderTime?note.reminderTime:'';
+  document.querySelector('#ned .fp-title2').textContent=note?'Editar nota':'Nova nota';
+  document.getElementById('ned').classList.add('on');
+  setTimeout(function(){document.getElementById(note&&note.title?'ne-body':'ne-title').focus()},160);
+}
 function closeNoteEd(){document.getElementById('ned').classList.remove('on');render(S.page)}
-function saveNote(){var ti=document.getElementById('ne-title').value.trim()||'Sem título';var bo=document.getElementById('ne-body').value;if(_ned.id){var n=D.notes.find(function(x){return x.id===_ned.id});if(n){n.title=ti;n.body=bo;n.updatedAt=td0()}}else D.notes.unshift({id:uid(),title:ti,body:bo,attachments:[],createdAt:td0(),updatedAt:td0()});save();closeNoteEd();toast('Nota salva ✓');}
+function saveNote(){
+  var ti=document.getElementById('ne-title').value.trim()||'Sem título';
+  var bo=document.getElementById('ne-body').value;
+  var rd=(document.getElementById('ne-rem-date')||{}).value||'';
+  var rt=(document.getElementById('ne-rem-time')||{}).value||'';
+  if(_ned.id){
+    var n=D.notes.find(function(x){return x.id===_ned.id});
+    if(n){n.title=ti;n.body=bo;n.updatedAt=td0();
+      n.reminderDate=rd;n.reminderTime=rt;
+      if(rd)n.reminderDone=false; // reset se mudou lembrete
+    }
+  } else {
+    D.notes.unshift({id:uid(),title:ti,body:bo,attachments:[],
+      reminderDate:rd,reminderTime:rt,reminderDone:false,
+      createdAt:td0(),updatedAt:td0()});
+  }
+  // Agenda notificação se tiver lembrete
+  if(rd){
+    var dt=rd+(rt?'T'+rt:'T09:00');
+    scheduleNotif(ti,'📝 Nota com lembrete',dt);
+  }
+  save();closeNoteEd();toast('Nota salva ✓');
+}
 function getNoteGPS(){toast('GPS não disponível no editor')}
 // ═══════════════════════════════════════
 //  PROJECT EDITOR
@@ -868,13 +1217,35 @@ function syncAutoGest(){
 var AG={
   url:'https://jsyiriqtzpbuqvjrkwin.supabase.co',
   key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzeWlyaXF0enBidXF2anJrd2luIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMDEyNjksImV4cCI6MjA4ODU3NzI2OX0.BCeCKcwLGnrRhfaFryeTbbCRoGyt3wRPlZzfsxuV0mM',
-  hdr:function(){return{'apikey':this.key,'Authorization':'Bearer '+this.key,'Content-Type':'application/json','Accept':'application/json','Prefer':'return=representation'};},
+  hdr:function(){
+    return{
+      'apikey':this.key,
+      'Authorization':'Bearer '+this.key,
+      'Content-Type':'application/json',
+      'Accept':'application/json'
+    };
+  },
   get:function(table,qs){
+    // URL igual ao AutoGest Pro original
     var url=this.url+'/rest/v1/'+table+'?order=id.desc'+(qs?'&'+qs:'');
-    return fetch(url,{headers:this.hdr()}).then(function(r){
-      if(!r.ok){console.error('[AG] HTTP '+r.status+' em '+table+' query='+qs);return r.text().then(function(t){console.error('[AG] body:',t.slice(0,200));return[];});}
-      return r.json();
-    }).catch(function(e){console.error('[AG] fetch error '+table+':',e.message);return[];});
+    return fetch(url,{
+      method:'GET',
+      headers:this.hdr(),
+      mode:'cors',
+      credentials:'omit'
+    }).then(function(r){
+      if(!r.ok){
+        console.error('[AG] HTTP '+r.status+' '+table);
+        return r.text().then(function(t){
+          console.error('[AG] resp:',t.slice(0,300));
+          return[];
+        });
+      }
+      return r.json().catch(function(){return[];});
+    }).catch(function(e){
+      console.error('[AG] erro '+table+':',e.message||e);
+      return[];
+    });
   }
 };
 var AG_DATA={despesas:[],orcamento:[],contas:[],loaded:false,loading:false,lastSync:null};
@@ -883,19 +1254,28 @@ function fmtBRL(v){return'R$\u00a0'+parseFloat(v||0).toLocaleString('pt-BR',{min
 
 function loadAutoGestData(cb){
   if(AG_DATA.loading)return;
+  // Verifica se está rodando num domínio que o Supabase aceita
+  var origin=window.location.origin||'';
+  var isLocal=(origin==='null'||origin===''||origin.indexOf('claude.ai')>=0||origin.indexOf('blob:')>=0||origin.indexOf('localhost')<0&&origin.indexOf('github.io')<0&&origin.indexOf('netlify')>=0===false&&origin.indexOf('focusflow')<0);
+  var isGitHub=origin.indexOf('github.io')>=0||origin.indexOf('netlify')>=0||origin.indexOf('capimglau')>=0;
+  if(!isGitHub&&origin!=='http://localhost:3000'){
+    AG_DATA.loaded=true;AG_DATA.loading=false;
+    AG_DATA._blockedOrigin=origin;
+    console.warn('[AG] Bloqueado — abra em: capimglau.github.io/focusflow | Origin:',origin);
+    if(cb)cb();
+    return;
+  }
   AG_DATA.loading=true;
   // Queries idênticas ao AutoGest Pro original (que funcionam com o RLS do Supabase)
   Promise.all([
     AG.get('despesas',''),
-    AG.get('orcamentopessoal','tipo=eq.despesa'),
+    AG.get('orcamentopessoal',''),  // sem filtro — pega tudo e filtra no JS
     AG.get('contas','status=eq.pendente&tipo=eq.pagar')
   ]).then(function(res){
     var rawDesp   = res[0]||[];
     var rawOrc    = res[1]||[];
     var rawContas = res[2]||[];
-    console.log('[AG] despesas:',rawDesp.length,'orc:',rawOrc.length,'contas:',rawContas.length);
-    if(rawDesp.length>0)  console.log('[AG] campos:',Object.keys(rawDesp[0]).join(','));
-    console.log('[AG] despesas:',rawDesp.length,'orc:',rawOrc.length,'contas:',rawContas.length);
+    console.log('[AG] raw: desp='+rawDesp.length+' orc='+rawOrc.length+' contas='+rawContas.length);
     if(rawDesp.length>0)  console.log('[AG] campos despesa:',  Object.keys(rawDesp[0]).join(','));
     if(rawOrc.length>0)   console.log('[AG] campos orc:',      Object.keys(rawOrc[0]).join(','));
     if(rawContas.length>0)console.log('[AG] campos contas:',   Object.keys(rawContas[0]).join(','));
@@ -915,11 +1295,14 @@ function loadAutoGestData(cb){
       return s!=='pago'&&s!=='baixado'&&s!=='recebido'&&s!=='quitado';
     });
 
-    // Orçamento pessoal — já vem filtrado tipo=despesa, remove baixados
+    // Orçamento pessoal — filtra despesas não baixadas
     AG_DATA.orcamento = norm(rawOrc).filter(function(o){
-      if(o.databaixa)return false;
+      if(o.databaixa&&o.databaixa!==null&&o.databaixa!=='')return false;
       var s=String(o.status||'').toLowerCase();
-      return s!=='pago'&&s!=='baixado'&&s!=='recebido'&&s!=='quitado';
+      if(s==='pago'||s==='baixado'||s==='recebido'||s==='quitado')return false;
+      var tp=String(o.tipo||'').toLowerCase();
+      // Aceita despesa, vazio, ou qualquer valor que não seja receita
+      return tp!=='receita'&&tp!=='r'&&tp!=='entrada';
     });
 
     // Contas a pagar (tabela separada)
@@ -947,15 +1330,27 @@ function _autoImportar(){
 }
 
 function _mkTask(item,tipo){
-  var data=item._data||td0();
-  var vencida=data&&data<td0();
+  // _data pode ser string 'YYYY-MM-DD' ou vazio
+  var data=item._data&&item._data.length>=10?item._data.slice(0,10):td0();
+  var vencida=data<td0();
   var icon=tipo==='despesa'?'🧾 ':tipo==='conta'?'💳 ':'💸 ';
-  return{id:uid(),title:icon+(item.descricao||item.nome||'Sem descrição'),
+  var prioMap={despesa:'medium',conta:'high',orcamento:'none'};
+  return{
+    id:uid(),
+    title:icon+(item.descricao||item.nome||'Sem descrição'),
     notes:fmtBRL(item.valor)+(item.categoria?' · '+item.categoria:'')+(item.recorrente?' · ↻':''),
-    dueDate:data,dueTime:'',done:false,recurrence:'none',
-    priority:vencida?'high':'medium',subtasks:[],attachments:[],
-    tags:['Financeiro','AutoGest'],notifyOffsets:[1440],
-    agRef:{tipo:tipo,id:item.id},createdAt:new Date().toISOString()};
+    dueDate:data,       // YYYY-MM-DD — aparece no Em Breve e Hoje
+    dueTime:'',
+    done:false,
+    recurrence:'none',
+    priority:vencida?'high':(prioMap[tipo]||'medium'),
+    subtasks:[],attachments:[],
+    tags:['Financeiro','AutoGest'],
+    notifyOffsets:[1440],
+    inbox:false,
+    agRef:{tipo:tipo,id:item.id},
+    createdAt:new Date().toISOString()
+  };
 }
 
 function importarItemComoTarefa(item,tipo){
@@ -974,10 +1369,18 @@ function importarTodosAutoGest(){
 }
 
 function syncAutoGest(){
+  // Remove tarefas AG pendentes para reimportar fresh
   D.tasks=D.tasks.filter(function(t){return !t.agRef||t.done;});
-  AG_DATA.loaded=false;AG_DATA.loading=false;
+  save();
+  AG_DATA.loaded=false;AG_DATA.loading=false;AG_DATA._blockedOrigin=undefined;
+  AG_DATA.despesas=[];AG_DATA.orcamento=[];AG_DATA.contas=[];
   toast('⏳ Sincronizando…');
-  loadAutoGestData(function(){render(S.page);toast('AutoGest sincronizado ✓');});
+  loadAutoGestData(function(){
+    render(S.page);
+    updateBadges();
+    toast('AutoGest sincronizado ✓ — '+
+      (AG_DATA.despesas.length+AG_DATA.orcamento.length+AG_DATA.contas.length)+' itens');
+  });
 }
 
 
@@ -992,9 +1395,27 @@ function renderDashboard(){
   var d7=iso(new Date(now.getTime()+7*86400000));
   var next7=allTasks.filter(function(x){return x.dueDate&&x.dueDate>t&&x.dueDate<=d7;}).sort(function(a,b){return a.dueDate<b.dueDate?-1:1;});
 
-  // KPIs
-  var kpiWrap=document.createElement('div');kpiWrap.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 16px 4px';
-  [{icon:'📅',label:'Hoje',val:todayTasks.length,color:'rgba(0,122,255,.1)',ic:'var(--blue)'},{icon:'⚠️',label:'Atrasadas',val:lateTasks.length,color:'rgba(255,59,48,.1)',ic:'var(--red)'},{icon:'📋',label:'Abertas',val:allTasks.length,color:'rgba(255,149,0,.1)',ic:'var(--orange)'},{icon:'📁',label:'Projetos',val:D.projects.length,color:'rgba(88,86,214,.1)',ic:'var(--purple)'}].forEach(function(k){var box=document.createElement('div');box.style.cssText='background:'+k.color+';border-radius:16px;padding:14px 16px;border:.5px solid rgba(0,0,0,.05);cursor:pointer';box.innerHTML='<div style="font-size:22px;margin-bottom:6px">'+k.icon+'</div><div style="font-size:26px;font-weight:700;color:'+k.ic+';line-height:1">'+k.val+'</div><div style="font-size:12px;color:var(--sub);margin-top:4px;font-weight:500">'+k.label+'</div>';kpiWrap.appendChild(box);});el.appendChild(kpiWrap);
+  // KPI banners — Liquid Glass minimal, clicável
+  var kpiWrap=document.createElement('div');
+  kpiWrap.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 16px 4px';
+  [{icon:'📅',label:'Hoje',val:todayTasks.length,page:'hoje'},
+   {icon:'⚠️',label:'Atrasadas',val:lateTasks.length,page:'inicio'},
+   {icon:'📋',label:'Em Breve',val:next7.length,page:'inicio'},
+   {icon:'📁',label:'Projetos',val:D.projects.length,page:'projetos'}
+  ].forEach(function(k){
+    var box=document.createElement('div');
+    box.className='dash-kpi';
+    box.style.cssText='border-radius:18px;padding:14px 16px;cursor:pointer;transition:transform .12s,opacity .12s';
+    box.innerHTML=
+      '<div style="font-size:20px;margin-bottom:8px;line-height:1">'+k.icon+'</div>'
+      +'<div style="font-size:28px;font-weight:300;color:var(--fg);line-height:1;letter-spacing:-.5px">'+k.val+'</div>'
+      +'<div style="font-size:11px;color:var(--sub);margin-top:5px;font-weight:500;letter-spacing:.2px;text-transform:uppercase">'+k.label+'</div>';
+    box.addEventListener('click',function(){goPage(k.page);});
+    box.addEventListener('touchstart',function(){box.style.transform='scale(.96)';box.style.opacity='.75';},{passive:true});
+    box.addEventListener('touchend',function(){box.style.transform='';box.style.opacity='';},{passive:true});
+    kpiWrap.appendChild(box);
+  });
+  el.appendChild(kpiWrap);
 
   // Seção helper
   function dashSec(title,badge,badgeBg,badgeColor){var s=document.createElement('div');s.className='sec';s.innerHTML='<div class="sec-t"><b>'+title+'</b>'+(badge?'<span style="background:'+(badgeBg||'rgba(0,122,255,.12)')+';color:'+(badgeColor||'var(--blue)')+';font-size:11px;font-weight:700;padding:1px 8px;border-radius:6px;margin-left:6px">'+badge+'</span>':'')+'</div>';el.appendChild(s);}
@@ -1021,7 +1442,13 @@ function renderDashboard(){
   buildDashFinanceiro(el);
 
   // Notas
-  if(D.notes.length){dashSec('Notas Recentes');var nCard=document.createElement('div');nCard.className='card';nCard.style.margin='0 16px';D.notes.slice(0,3).forEach(function(n){var nr=document.createElement('div');nr.className='irow';nr.onclick=function(){openNoteEd(n);};nr.innerHTML='<div style="width:36px;height:36px;border-radius:10px;background:rgba(255,204,0,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📝</div><div style="flex:1;min-width:0"><div class="ititle">'+esc(n.title||'Sem título')+'</div>'+(n.body?'<div class="imeta">'+esc(n.body.slice(0,50))+'</div>':'')+'</div>';nCard.appendChild(nr);});el.appendChild(nCard);}
+  if(D.notes.length){dashSec('Notas Recentes');var nCard=document.createElement('div');nCard.className='card';nCard.style.margin='0 16px';D.notes.slice(0,3).forEach(function(n){var nr=document.createElement('div');nr.className='irow';nr.onclick=function(){openNoteEd(n);};var remInfo='';
+      if(n.reminderDate&&!n.reminderDone)remInfo='<span style="font-size:11px;color:'+(n.reminderDate<td0()?'var(--red)':'var(--blue)')+'">🔔 '+fmtD(n.reminderDate)+'</span>';
+      nr.innerHTML='<div style="width:36px;height:36px;border-radius:10px;background:rgba(255,204,0,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📝</div>'
+        +'<div style="flex:1;min-width:0"><div class="ititle">'+esc(n.title||'Sem título')+'</div>'
+        +(n.body?'<div class="imeta">'+esc(n.body.slice(0,50))+'</div>':'')
+        +(remInfo?'<div class="imeta">'+remInfo+'</div>':'')
+        +'</div>';nCard.appendChild(nr);});el.appendChild(nCard);}
 
   var spacer=document.createElement('div');spacer.style.height='100px';el.appendChild(spacer);
   updateBadges();
@@ -1049,7 +1476,24 @@ function buildDashFinanceiro(el){
     +'</div>';
   el.appendChild(header);
 
-  if(!AG_DATA.loaded){var loading=document.createElement('div');loading.className='card';loading.style.margin='0 16px';loading.innerHTML='<div style="padding:20px;text-align:center;color:var(--sub);font-size:13px">⏳ Conectando ao AutoGest…</div>';el.appendChild(loading);return;}
+  if(!AG_DATA.loaded){
+    var loading=document.createElement('div');loading.className='card';loading.style.margin='0 16px';
+    loading.innerHTML='<div style="padding:20px;text-align:center;color:var(--sub);font-size:13px">⏳ Conectando ao AutoGest…</div>';
+    el.appendChild(loading);return;
+  }
+  // Bloqueado por CORS (aberto fora do GitHub Pages)
+  if(AG_DATA._blockedOrigin!==undefined){
+    var warn=document.createElement('div');warn.className='card';warn.style.margin='0 16px';
+    warn.innerHTML='<div style="padding:16px 18px">'
+      +'<div style="font-size:14px;font-weight:600;color:var(--fg);margin-bottom:6px">📡 Integração bloqueada</div>'
+      +'<div style="font-size:13px;color:var(--sub);line-height:1.6;margin-bottom:12px">'
+      +'Para carregar as despesas do AutoGest, o app precisa estar hospedado no GitHub Pages.</div>'
+      +'<div style="background:rgba(0,122,255,.08);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--blue);font-family:monospace;word-break:break-all;margin-bottom:10px">'
+      +'capimglau.github.io/focusflow</div>'
+      +'<div style="font-size:12px;color:var(--sub)">Suba o arquivo como <b>index.html</b> no repositório <b>focusflow</b> e acesse pelo link acima.</div>'
+      +'</div>';
+    el.appendChild(warn);return;
+  }
   if(!AG_DATA.despesas.length&&!AG_DATA.orcamento.length&&!(AG_DATA.contas&&AG_DATA.contas.length)){
     var vazio=document.createElement('div');vazio.className='card';vazio.style.margin='0 16px';
     vazio.innerHTML='<div style="padding:16px"><div style="font-size:13px;color:var(--sub);margin-bottom:8px">Nenhuma despesa pendente encontrada.</div>'
@@ -1059,9 +1503,18 @@ function buildDashFinanceiro(el){
 
   // KPIs financeiros
   if(totalGeral>0){
-    var kRow=document.createElement('div');kRow.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 6px';
-    [{label:'Financeiro',val:totalDesp,n:AG_DATA.despesas.length,clr:'rgba(255,149,0,.12)',ic:'var(--orange)'},{label:'Orçamento Pessoal',val:totalOrc,n:AG_DATA.orcamento.length,clr:'rgba(255,59,48,.10)',ic:'var(--red)'}].forEach(function(k){var box=document.createElement('div');box.style.cssText='background:'+k.clr+';border-radius:14px;padding:12px 14px;border:.5px solid rgba(0,0,0,.05)';box.innerHTML='<div style="font-size:9px;font-weight:700;color:'+k.ic+';text-transform:uppercase;letter-spacing:.4px">'+k.label+'</div><div style="font-size:15px;font-weight:800;color:'+k.ic+';margin-top:4px;line-height:1.1">'+fmtBRL(k.val)+'</div><div style="font-size:10px;color:var(--sub);margin-top:2px">'+k.n+' item'+(k.n!==1?'s':'')+'</div>';kRow.appendChild(box);});el.appendChild(kRow);
-    var totEl=document.createElement('div');totEl.style.cssText='margin:0 16px 4px;padding:10px 14px;background:rgba(0,0,0,.04);border-radius:12px;display:flex;justify-content:space-between;align-items:center';totEl.innerHTML='<span style="font-size:13px;color:var(--sub);font-weight:500">Total previsto</span><span style="font-size:15px;font-weight:800;color:var(--fg)">'+fmtBRL(totalGeral)+'</span>';el.appendChild(totEl);
+    var kRow=document.createElement('div');kRow.style.cssText='display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 6px';
+    [{label:'Financeiro',val:totalDesp,n:AG_DATA.despesas.length},{label:'Orçamento Pessoal',val:totalOrc,n:AG_DATA.orcamento.length},{label:'Contas',val:totalContas,n:(AG_DATA.contas||[]).length}].forEach(function(k){
+      if(k.n===0)return;
+      var box=document.createElement('div');
+      box.className='ag-kpi-box';
+      box.style.cssText='border-radius:14px;padding:12px 14px;flex:1;min-width:100px';
+      box.innerHTML='<div style="font-size:9px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px">'+k.label+'</div>'
+        +'<div style="font-size:15px;font-weight:700;color:var(--fg);margin-top:4px;line-height:1.1">'+fmtBRL(k.val)+'</div>'
+        +'<div style="font-size:10px;color:var(--sub);margin-top:2px">'+k.n+' item'+(k.n!==1?'s':'')+'</div>';
+      kRow.appendChild(box);
+    });el.appendChild(kRow);
+    var totEl=document.createElement('div');totEl.className='ag-kpi-box';totEl.style.cssText='margin:0 16px 4px;padding:10px 14px;border-radius:12px;display:flex;justify-content:space-between;align-items:center';totEl.innerHTML='<span style="font-size:13px;color:var(--sub);font-weight:500">Total previsto</span><span style="font-size:15px;font-weight:800;color:var(--fg)">'+fmtBRL(totalGeral)+'</span>';el.appendChild(totEl);
   }
 
   function agSec(lbl,n,bg,c){var s=document.createElement('div');s.className='sec';s.innerHTML='<div class="sec-t"><b style="color:'+c+'">'+lbl+'</b><span style="background:'+bg+';color:'+c+';font-size:11px;font-weight:700;padding:1px 8px;border-radius:6px;margin-left:6px">'+n+'</span></div>';el.appendChild(s);}
