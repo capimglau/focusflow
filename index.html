@@ -549,7 +549,7 @@ input, textarea {
 /* ── FULLSCREEN iOS PWA ── */
 body {
   background-color: transparent;
-  padding-top: env(safe-area-inset-top, 44px);
+  padding-top: calc(env(safe-area-inset-top, 44px) + 16px);
   box-sizing: border-box;
 }
 [data-dark="1"] body {
@@ -575,6 +575,7 @@ body {
 .claude-typing span:nth-child(3){animation-delay:.4s}
 @keyframes typingDot{0%,60%,100%{opacity:.2;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
 [data-dark="1"] #claude-input-wrap{background:rgba(44,44,46,.82);border-color:rgba(255,255,255,.12)}
+[data-dark="1"] #claude-panel{background:rgba(0,0,0,.88)!important;backdrop-filter:blur(40px) saturate(1.8);-webkit-backdrop-filter:blur(40px) saturate(1.8)}
 [data-dark="1"] .claude-msg.ai .claude-bubble{background:rgba(44,44,46,.85);border-color:rgba(255,255,255,.1)}
 </style>
 </head>
@@ -666,7 +667,7 @@ body {
 </div>
 
 <!-- Claude AI Panel -->
-<div id="claude-panel" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:1100;display:none;flex-direction:column;background:var(--bg);padding-top:env(safe-area-inset-top,44px)">
+<div id="claude-panel" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:1100;display:none;flex-direction:column;background:rgba(235,243,255,0.92);backdrop-filter:blur(40px) saturate(2.5);-webkit-backdrop-filter:blur(40px) saturate(2.5);padding-top:calc(env(safe-area-inset-top,44px) + 8px)">
   <div class="fp-hdr" style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px">
     <button onclick="closeClaude()" style="display:flex;align-items:center;gap:6px;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--sub);cursor:pointer">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
@@ -1480,7 +1481,7 @@ function loadAutoGestData(cb){
   AG_DATA.loading=true;
   Promise.all([
     AG.get('despesas',''),
-    AG.get('orcamentopessoal',''),
+    AG.get('orcamentopessoal','select=*&order=id.desc&limit=200'),
     AG.get('contas','tipo=eq.pagar')
   ]).then(function(res){
     var rawDesp   = res[0]||[];
@@ -1540,27 +1541,34 @@ function loadAutoGestData(cb){
       return s!=='pago'&&s!=='baixado'&&s!=='recebido'&&s!=='quitado'&&s!=='cancelado';
     });
 
-    // Orçamento pessoal — log completo para diagnóstico
-    console.log('[AG] ORC RAW count:',rawOrc.length);
+    // Orçamento pessoal — diagnóstico completo
+    console.log('[AG] ORC bruto:',rawOrc.length);
     if(rawOrc.length>0){
-      console.log('[AG] ORC[0] keys:',Object.keys(rawOrc[0]).join(','));
-      console.log('[AG] ORC[0] full:',JSON.stringify(rawOrc[0]));
-      // Log status values
-      var statuses=rawOrc.map(function(o){return o.status||'(vazio)';});
-      console.log('[AG] ORC statuses:',statuses.slice(0,10).join(','));
-      // Log databaixa values
-      var baixas=rawOrc.map(function(o){return o.databaixa||'null';});
-      console.log('[AG] ORC databaixas:',baixas.slice(0,10).join(','));
+      var s0=rawOrc[0];
+      console.log('[AG] ORC[0]:',JSON.stringify(s0));
+      console.log('[AG] ORC tipos:',rawOrc.map(function(o){return o.tipo;}).join(','));
+      console.log('[AG] ORC status:',rawOrc.map(function(o){return o.status;}).join(','));
     }
-    // FILTRO MÍNIMO: só exclui se databaixa preenchida E não nula
-    AG_DATA.orcamento = norm(rawOrc).filter(function(o){
-      var baixa=o.databaixa;
-      if(baixa!==null&&baixa!==undefined&&String(baixa).trim()!==''&&String(baixa)!=='null')return false;
-      var s=String(o.status||'').toLowerCase().trim();
-      if(s==='pago'||s==='baixado'||s==='recebido'||s==='quitado')return false;
+    // Filtra despesas não pagas do orçamento pessoal
+    var orcFiltrado = norm(rawOrc).filter(function(o){
+      // Só aceita tipo=despesa (ou vazio/null)
+      var tp=String(o.tipo||'').toLowerCase().trim();
+      if(tp==='receita'||tp==='r')return false;
+      // Exclui se tem databaixa preenchida
+      var bx=o.databaixa;
+      if(bx!==null&&bx!==undefined&&String(bx).trim()!==''&&String(bx)!=='null')return false;
+      // Exclui status de pago
+      var st=String(o.status||'').toLowerCase().trim();
+      if(st==='pago'||st==='baixado'||st==='recebido'||st==='quitado'||st==='cancelado')return false;
       return true;
     });
-    console.log('[AG] ORC filtrado:',AG_DATA.orcamento.length,'de',rawOrc.length);
+    // SE filtro retornou 0 mas havia dados, mostra tudo (fallback de emergência)
+    if(orcFiltrado.length===0&&rawOrc.length>0){
+      console.warn('[AG] FALLBACK: filtro zerou '+rawOrc.length+' registros — mostrando todos');
+      orcFiltrado=norm(rawOrc);
+    }
+    AG_DATA.orcamento=orcFiltrado;
+    console.log('[AG] ORC final:',AG_DATA.orcamento.length,'de',rawOrc.length);
 
     // Contas a pagar — inclui pendentes e atrasadas
     AG_DATA.contas = norm(rawContas).filter(function(c){
