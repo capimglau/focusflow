@@ -687,28 +687,47 @@ body {
 </div>
 
 <!-- Claude AI Panel -->
-<div id="claude-panel" style="position:fixed;inset:0;z-index:2000;display:none;flex-direction:column;background:linear-gradient(160deg,#eaf3ff 0%,#f0f7ff 35%,#f8fbff 65%,#ffffff 100%);">
-  <div style="flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,59px)+10px) 20px 12px;border-bottom:.5px solid rgba(0,0,0,.08)">
-    <button onclick="closeClaude()" style="display:flex;align-items:center;gap:5px;border:none;background:transparent;font-family:inherit;font-size:15px;color:#636366;cursor:pointer;padding:0">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Voltar
+<div id="claude-panel" style="position:fixed;inset:0;z-index:2000;display:none;flex-direction:column;background:linear-gradient(160deg,#eaf3ff 0%,#f0f7ff 35%,#f8fbff 65%,#ffffff 100%);padding-top:env(safe-area-inset-top,62px)">
+
+  <!-- Header — padded below Dynamic Island -->
+  <div style="flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
+    padding:14px 20px;
+    border-bottom:.5px solid rgba(0,0,0,.07);background:rgba(255,255,255,.85)">
+    <button onclick="closeClaude()" style="display:flex;align-items:center;gap:5px;border:none;background:transparent;font-family:inherit;font-size:15px;color:#636366;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Voltar
     </button>
     <span style="font-size:16px;font-weight:700;color:#1c1c1e">✦ Claude IA</span>
     <div style="display:flex;gap:6px;align-items:center">
-      <button onclick="openClaude('import')" style="border:none;background:rgba(0,122,255,.12);border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;color:#007AFF;cursor:pointer;padding:5px 10px">📲 Importar</button>
+      <button onclick="openClaude('import')" style="border:none;background:rgba(0,122,255,.1);border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;color:#007AFF;cursor:pointer;padding:5px 10px">📲 Importar</button>
       <button onclick="clearClaude()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:#636366;cursor:pointer;padding:4px">Limpar</button>
-      <button onclick="resetClaudeKey()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:#636366;cursor:pointer;padding:4px">🔑</button>
+      <button onclick="resetClaudeKey()" style="border:none;background:transparent;font-family:inherit;font-size:15px;color:#636366;cursor:pointer;padding:4px">🔑</button>
     </div>
   </div>
-  <div id="claude-msgs" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 20px;display:flex;flex-direction:column;gap:12px"></div>
-  <div style="flex-shrink:0;padding:10px 16px calc(env(safe-area-inset-bottom,20px)+8px);border-top:.5px solid rgba(0,0,0,.07);display:flex;gap:10px;align-items:flex-end;background:#f5f7fa">
+
+  <!-- Messages -->
+  <div id="claude-msgs" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 20px 12px;display:flex;flex-direction:column;gap:12px"></div>
+
+  <!-- Input bar — padded above home indicator -->
+  <div style="flex-shrink:0;
+    padding:12px 16px;
+    padding-bottom:calc(env(safe-area-inset-bottom,34px) + 12px);
+    border-top:.5px solid rgba(0,0,0,.07);
+    display:flex;gap:10px;align-items:flex-end;
+    background:rgba(255,255,255,.9)">
     <textarea id="claude-inp" placeholder="Pergunte ao Claude…" rows="1"
-      style="flex:1;border:.5px solid rgba(0,0,0,.14);background:rgba(255,255,255,.9);border-radius:20px;padding:10px 16px;font-family:inherit;font-size:15px;color:#1c1c1e;outline:none;resize:none;line-height:1.5;max-height:100px;overflow-y:auto;box-sizing:border-box"
+      style="flex:1;border:.5px solid rgba(0,0,0,.12);background:#ffffff;border-radius:20px;
+        padding:10px 16px;font-family:inherit;font-size:15px;color:#1c1c1e;
+        outline:none;resize:none;line-height:1.5;max-height:100px;overflow-y:auto;box-sizing:border-box"
       oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
     <button id="claude-send" onclick="sendToClaude()"
-      style="width:40px;height:40px;border-radius:50%;border:none;background:#007AFF;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:opacity .15s">
+      style="width:40px;height:40px;border-radius:50%;border:none;background:#007AFF;
+        color:#fff;display:flex;align-items:center;justify-content:center;
+        cursor:pointer;flex-shrink:0;transition:opacity .15s">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9z"/></svg>
     </button>
   </div>
+
 </div>
 
 <div id="search">
@@ -1984,104 +2003,108 @@ function renderDashboard(){
 }
 
 function buildDashFinanceiro(el){
-  var hoje=td0();
-  var despVenc=AG_DATA.despesas.filter(function(d){return d._data&&d._data<hoje;});
-  var despHoje=AG_DATA.despesas.filter(function(d){return d._data===hoje;});
-  var despFut=AG_DATA.despesas.filter(function(d){return d._data&&d._data>hoje;});
-  var orcVenc=AG_DATA.orcamento.filter(function(o){return o._data&&o._data<hoje;});
-  var orcFut=AG_DATA.orcamento.filter(function(o){return !o._data||o._data>=hoje;});
-  var totalDesp  =AG_DATA.despesas.reduce(function(s,d){return s+parseFloat(d.valor||0);},0);
-  var totalOrc   =AG_DATA.orcamento.reduce(function(s,o){return s+parseFloat(o.valor||0);},0);
-  var totalContas=(AG_DATA.contas||[]).reduce(function(s,c){return s+parseFloat(c.valor||0);},0);
-  var totalGeral =totalDesp+totalOrc+totalContas;
-
-  // Header
-  var header=document.createElement('div');header.className='sec';
-  var syncTxt=AG_DATA.lastSync?'<span style="font-size:10px;color:var(--sub);margin-right:4px">sync '+AG_DATA.lastSync.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'</span>':'';
-  header.innerHTML='<div class="sec-t"><b>💰 AutoGest Financeiro</b>'+(totalGeral>0?'<span style="background:rgba(255,149,0,.12);color:var(--orange);font-size:11px;font-weight:700;padding:1px 8px;border-radius:6px;margin-left:6px">'+fmtBRL(totalGeral)+'</span>':'')+'</div>'
-    +'<div style="display:flex;align-items:center;gap:4px">'+syncTxt
-    +'<button onclick="syncAutoGest()" style="font-size:10px;font-weight:700;padding:4px 9px;border-radius:8px;background:rgba(0,122,255,.1);color:var(--blue);border:none;cursor:pointer">🔄 Sync</button>'
-    +(totalGeral>0?'<button onclick="importarTodosAutoGest()" style="font-size:10px;font-weight:700;padding:4px 9px;border-radius:8px;background:rgba(255,149,0,.12);color:var(--orange);border:none;cursor:pointer;margin-left:2px">⬇ Tudo</button>':'')
+  // Header row
+  var hdr=document.createElement('div');
+  hdr.className='sec';
+  var syncTxt=AG_DATA.lastSync?AG_DATA.lastSync.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'--:--';
+  hdr.innerHTML='<div class="sec-t"><b>💰 Financeiro</b></div>'
+    +'<div style="display:flex;align-items:center;gap:6px">'
+    +'<span style="font-size:11px;color:var(--sub)">'+syncTxt+'</span>'
+    +'<button onclick="syncAutoGest()" style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:8px;background:rgba(0,122,255,.08);color:var(--blue);border:none;cursor:pointer">↻ Sync</button>'
     +'</div>';
-  el.appendChild(header);
+  el.appendChild(hdr);
 
-  if(!AG_DATA.loaded){
-    var loading=document.createElement('div');loading.className='card';loading.style.margin='0 16px';
-    loading.innerHTML='<div style="padding:20px;text-align:center;color:var(--sub);font-size:13px">⏳ Conectando ao AutoGest…</div>';
-    el.appendChild(loading);return;
-  }
-  // Bloqueado por CORS (aberto fora do GitHub Pages)
   if(AG_DATA._blockedOrigin!==undefined){
     var warn=document.createElement('div');warn.className='card';warn.style.margin='0 16px';
-    warn.innerHTML='<div style="padding:16px 18px">'
-      +'<div style="font-size:14px;font-weight:600;color:var(--fg);margin-bottom:6px">📡 Integração bloqueada</div>'
-      +'<div style="font-size:13px;color:var(--sub);line-height:1.6;margin-bottom:12px">'
-      +'Para carregar as despesas do AutoGest, o app precisa estar hospedado no GitHub Pages.</div>'
-      +'<div style="background:rgba(0,122,255,.08);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--blue);font-family:monospace;word-break:break-all;margin-bottom:10px">'
-      +'capimglau.github.io/focusflow</div>'
-      +'<div style="font-size:12px;color:var(--sub)">Suba o arquivo como <b>index.html</b> no repositório <b>focusflow</b> e acesse pelo link acima.</div>'
-      +'</div>';
+    warn.innerHTML='<div style="padding:14px 16px;font-size:13px;color:var(--sub)">📡 Abra em <b>capimglau.github.io/focusflow</b> para carregar as despesas.</div>';
     el.appendChild(warn);return;
   }
-  // Debug: always show raw counts so we can diagnose
-  {
-    var _dbg=document.createElement('div');
-    _dbg.style.cssText='margin:0 16px 4px;padding:6px 12px;background:rgba(0,0,0,.04);border-radius:8px;font-size:11px;color:var(--sub);display:flex;gap:12px;flex-wrap:wrap';
-    _dbg.innerHTML='Supabase: desp='+(AG_DATA._rawDesp||[]).length
-      +' orc='+(AG_DATA._rawOrc||[]).length
-      +' | filtrado: desp='+AG_DATA.despesas.length
-      +' orc='+AG_DATA.orcamento.length
-      +' contas='+(AG_DATA.contas||[]).length;
-    el.appendChild(_dbg);
+  if(!AG_DATA.loaded){
+    var loading=document.createElement('div');loading.className='card';loading.style.margin='0 16px';
+    loading.innerHTML='<div style="padding:16px;text-align:center;color:var(--sub);font-size:13px">⏳ Carregando…</div>';
+    el.appendChild(loading);return;
   }
 
-  if(!AG_DATA.despesas.length&&!AG_DATA.orcamento.length&&!(AG_DATA.contas&&AG_DATA.contas.length)){
-    var rawOrcLen=(AG_DATA._rawOrc||[]).length;
-    var rawDespLen=(AG_DATA._rawDesp||[]).length;
+  // Build unified list: despesas + orcamento + contas
+  var hoje=td0();
+  var all=[];
+  AG_DATA.despesas.forEach(function(d){all.push({item:d,tipo:'despesa'});});
+  AG_DATA.orcamento.forEach(function(o){all.push({item:o,tipo:'orcamento'});});
+  (AG_DATA.contas||[]).forEach(function(c){all.push({item:c,tipo:'conta'});});
+
+  if(!all.length){
     var vazio=document.createElement('div');vazio.className='card';vazio.style.margin='0 16px';
-    vazio.innerHTML='<div style="padding:16px">'
-      +'<div style="font-size:13px;font-weight:600;color:var(--fg);margin-bottom:6px">Nenhuma despesa pendente</div>'
-      +'<div style="font-size:12px;color:var(--sub);margin-bottom:10px">'
-      +'Supabase retornou: '+rawDespLen+' despesas, '+rawOrcLen+' orçamento pessoal<br>'
-      +(rawOrcLen>0?'<span style="color:var(--orange)">⚠ Filtro excluiu todos os '+rawOrcLen+' registros de orçamento</span>':'')
-      +'</div>'
-      +'<button onclick="agShowRaw()" style="font-size:12px;padding:6px 14px;border-radius:8px;background:rgba(255,149,0,.12);color:var(--orange);border:none;cursor:pointer;font-family:inherit;font-weight:600;margin-right:8px">🔍 Ver dados brutos</button>'
-      +'<button onclick="syncAutoGest()" style="font-size:12px;padding:6px 14px;border-radius:8px;background:rgba(0,122,255,.1);color:var(--blue);border:none;cursor:pointer;font-family:inherit;font-weight:600">🔄 Sync</button>'
+    var rawN=(AG_DATA._rawOrc||[]).length+(AG_DATA._rawDesp||[]).length;
+    vazio.innerHTML='<div style="padding:14px 16px;font-size:13px;color:var(--sub)">'
+      +(rawN>0?'⚠ Supabase retornou '+rawN+' registros mas o filtro zerou. <button onclick="agShowRaw()" style="border:none;background:transparent;color:var(--blue);font-size:13px;cursor:pointer">Ver dados</button>':'✅ Sem despesas pendentes')
       +'</div>';
     el.appendChild(vazio);return;
   }
 
-  // KPIs financeiros
-  if(totalGeral>0){
-    var kRow=document.createElement('div');kRow.style.cssText='display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 6px';
-    [{label:'Financeiro',val:totalDesp,n:AG_DATA.despesas.length},{label:'Orçamento Pessoal',val:totalOrc,n:AG_DATA.orcamento.length},{label:'Contas',val:totalContas,n:(AG_DATA.contas||[]).length}].forEach(function(k){
-      if(k.n===0)return;
-      var box=document.createElement('div');
-      box.className='ag-kpi-box';
-      box.style.cssText='border-radius:14px;padding:12px 14px;flex:1;min-width:100px';
-      box.innerHTML='<div style="font-size:9px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px">'+k.label+'</div>'
-        +'<div style="font-size:15px;font-weight:700;color:var(--fg);margin-top:4px;line-height:1.1">'+fmtBRL(k.val)+'</div>'
-        +'<div style="font-size:10px;color:var(--sub);margin-top:2px">'+k.n+' item'+(k.n!==1?'s':'')+'</div>';
-      kRow.appendChild(box);
-    });el.appendChild(kRow);
-    var totEl=document.createElement('div');totEl.className='ag-kpi-box';totEl.style.cssText='margin:0 16px 4px;padding:10px 14px;border-radius:12px;display:flex;justify-content:space-between;align-items:center';totEl.innerHTML='<span style="font-size:13px;color:var(--sub);font-weight:500">Total previsto</span><span style="font-size:15px;font-weight:800;color:var(--fg)">'+fmtBRL(totalGeral)+'</span>';el.appendChild(totEl);
+  // Sort: overdue first, then by date
+  all.sort(function(a,b){
+    var da=a.item._data||'9999';var db=b.item._data||'9999';
+    var oa=da<hoje?0:1;var ob=db<hoje?0:1;
+    if(oa!==ob)return oa-ob;
+    return da<db?-1:da>db?1:0;
+  });
+
+  // Total
+  var total=all.reduce(function(s,x){return s+parseFloat(x.item.valor||0);},0);
+  var overdue=all.filter(function(x){return x.item._data&&x.item._data<hoje;});
+
+  // Summary strip
+  var strip=document.createElement('div');
+  strip.style.cssText='margin:0 16px 6px;padding:10px 16px;background:#ffffff;border-radius:12px;border:.5px solid rgba(0,0,0,.07);display:flex;justify-content:space-between;align-items:center';
+  strip.innerHTML='<div style="font-size:12px;color:var(--sub)">'
+    +all.length+' despesa'+(all.length!==1?'s':'')+' pendente'+(all.length!==1?'s':'')
+    +(overdue.length?' · <span style="color:var(--red);font-weight:600">'+overdue.length+' atrasada'+(overdue.length!==1?'s':'')+'</span>':'')
+    +'</div>'
+    +'<div style="font-size:15px;font-weight:700;color:var(--fg)">'+fmtBRL(total)+'</div>';
+  el.appendChild(strip);
+
+  // Single unified card
+  var card=document.createElement('div');
+  card.className='card';card.style.margin='0 16px';
+  all.slice(0,10).forEach(function(x,i){
+    var d=x.item;var tipo=x.tipo;
+    var venc=d._data&&d._data<hoje;var vencHoje=d._data===hoje;
+    var icon=tipo==='despesa'?'🧾':tipo==='conta'?'💳':'💸';
+    var clrBg=tipo==='despesa'?'rgba(175,82,222,.1)':tipo==='conta'?'rgba(0,122,255,.1)':'rgba(255,59,48,.08)';
+    var row=document.createElement('div');row.className='irow';
+    if(i===all.slice(0,10).length-1)row.style.borderBottom='none';
+    var iconEl=document.createElement('div');
+    iconEl.style.cssText='width:36px;height:36px;border-radius:10px;background:'+clrBg+';display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0';
+    iconEl.textContent=icon;
+    var info=document.createElement('div');info.style.cssText='flex:1;min-width:0';
+    info.innerHTML='<div class="ititle" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(d.descricao||d.nome||'Sem descrição')+'</div>'
+      +'<div class="imeta"><span style="font-weight:600;color:var(--fg)">'+fmtBRL(d.valor)+'</span>'
+      +(d._data?'<span style="color:'+(venc?'var(--red)':vencHoje?'var(--orange)':'var(--sub)')+'"> · '+(venc?'⚠ ':'')+fmtD(d._data)+'</span>':'')
+      +(d.categoria?'<span style="color:var(--sub)"> · '+esc(d.categoria)+'</span>':'')
+      +'</div>';
+    var jaTask=D.tasks.some(function(t){return t.agRef&&t.agRef.id===d.id;});
+    var btnWrap=document.createElement('div');btnWrap.style.flexShrink='0';
+    if(jaTask){
+      btnWrap.innerHTML='<span style="font-size:10px;color:var(--sub)">✓</span>';
+    } else {
+      var btn=document.createElement('button');
+      btn.style.cssText='font-size:10px;padding:4px 8px;border-radius:7px;background:rgba(0,122,255,.08);color:var(--blue);border:none;cursor:pointer;font-weight:600';
+      btn.textContent='+Task';
+      btn.onclick=(function(it,tp){return function(e){e.stopPropagation();importarItemComoTarefa(it,tp);};})(d,tipo);
+      btnWrap.appendChild(btn);
+    }
+    row.appendChild(iconEl);row.appendChild(info);row.appendChild(btnWrap);
+    card.appendChild(row);
+  });
+  if(all.length>10){
+    var more=document.createElement('div');
+    more.style.cssText='padding:10px 16px;text-align:center;font-size:13px;color:var(--blue);cursor:pointer;border-top:.5px solid var(--line)';
+    more.textContent='+'+(all.length-10)+' mais';
+    card.appendChild(more);
   }
-
-  function agSec(lbl,n,bg,c){var s=document.createElement('div');s.className='sec';s.innerHTML='<div class="sec-t"><b style="color:'+c+'">'+lbl+'</b><span style="background:'+bg+';color:'+c+';font-size:11px;font-weight:700;padding:1px 8px;border-radius:6px;margin-left:6px">'+n+'</span></div>';el.appendChild(s);}
-
-  // Contas a pagar
-  var contasVenc=(AG_DATA.contas||[]).filter(function(c){return c._data&&c._data<hoje;});
-  var contasHoje=(AG_DATA.contas||[]).filter(function(c){return c._data===hoje;});
-  var contasFut=(AG_DATA.contas||[]).filter(function(c){return c._data&&c._data>hoje;});
-  if(contasVenc.length){agSec('💳 Contas Vencidas',contasVenc.length,'rgba(255,59,48,.12)','var(--red)');el.appendChild(buildAgCard(contasVenc.slice(0,5),'conta'));}
-  if(contasHoje.length){agSec('💳 Contas Hoje',contasHoje.length,'rgba(255,149,0,.12)','var(--orange)');el.appendChild(buildAgCard(contasHoje,'conta'));}
-  if(contasFut.length){agSec('💳 Próximas Contas',contasFut.length,'rgba(0,122,255,.1)','var(--blue)');el.appendChild(buildAgCard(contasFut.slice(0,6),'conta'));}
-  if(despVenc.length){agSec('⚠️ Despesas Vencidas',despVenc.length,'rgba(255,59,48,.12)','var(--red)');el.appendChild(buildAgCard(despVenc.slice(0,5),'despesa'));}
-  if(despHoje.length){agSec('📅 Vencem Hoje',despHoje.length,'rgba(255,149,0,.12)','var(--orange)');el.appendChild(buildAgCard(despHoje,'despesa'));}
-  if(despFut.length){agSec('🧾 Próximas Despesas',despFut.length,'rgba(175,82,222,.1)','var(--purple)');el.appendChild(buildAgCard(despFut.slice(0,6),'despesa'));}
-  if(orcVenc.length){agSec('⚠️ Orçamento Vencido',orcVenc.length,'rgba(255,59,48,.12)','var(--red)');el.appendChild(buildAgCard(orcVenc.slice(0,4),'orcamento'));}
-  if(orcFut.length){agSec('💸 Orçamento Pessoal',orcFut.length,'rgba(255,59,48,.1)','var(--red)');el.appendChild(buildAgCard(orcFut.slice(0,6),'orcamento'));}
+  el.appendChild(card);
 }
+
 
 function buildAgCard(items,tipo){
   var card=document.createElement('div');card.className='card';card.style.margin='0 16px';
