@@ -675,7 +675,10 @@ body {
       Voltar
     </button>
     <span style="font-size:16px;font-weight:700;color:var(--fg)">✦ Claude IA</span>
-    <button onclick="clearClaude()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:var(--blue);cursor:pointer;padding:4px 0">Limpar</button>
+    <div style="display:flex;gap:6px">
+      <button onclick="openClaude('import')" style="border:none;background:rgba(0,122,255,.1);border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;padding:5px 10px">📲 Importar</button>
+      <button onclick="clearClaude()" style="border:none;background:transparent;font-family:inherit;font-size:13px;color:var(--sub);cursor:pointer;padding:4px 0">Limpar</button>
+    </div>
   </div>
   <!-- Messages -->
   <div id="claude-msgs" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 8px;display:flex;flex-direction:column;gap:12px"></div>
@@ -937,7 +940,12 @@ function closeSearch(){document.getElementById('search').classList.remove('on')}
 // ═══════════════════════════════════════
 document.getElementById('w-prev').addEventListener('click',function(){S.weekOff--;renderInicio()});
 document.getElementById('w-next').addEventListener('click',function(){S.weekOff++;renderInicio()});
-function renderWeek(){var ws=weekStart(S.weekOff),t=td0(),el=document.getElementById('wdays');el.innerHTML='';for(var i=0;i<7;i++){var d=new Date(ws);d.setDate(ws.getDate()+i);var ds=iso(d);var isT=ds===t,isSel=ds===S.selDate,has=getForDate(ds).length>0;var div=document.createElement('div');div.className='wday'+(isT?' is-today':'')+(isSel&&!isT?' is-sel':'');div.innerHTML='<div class="wday-l">'+WSHORT[d.getDay()]+'</div><div class="wday-n">'+d.getDate()+'</div>'+(has?'<div class="wday-dot"></div>':'<div style="height:4px"></div>');div.addEventListener('click',(function(ds2){return function(){S.selDate=ds2;renderInicio();}})(ds));el.appendChild(div);}}
+function renderWeek(){var ws=weekStart(S.weekOff),t=td0(),el=document.getElementById('wdays');el.innerHTML='';for(var i=0;i<7;i++){var d=new Date(ws);d.setDate(ws.getDate()+i);var ds=iso(d);var isT=ds===t,isSel=ds===S.selDate,has=getForDate(ds).length>0;var div=document.createElement('div');div.className='wday'+(isT?' is-today':'')+(isSel&&!isT?' is-sel':'');div.innerHTML='<div class="wday-l">'+WSHORT[d.getDay()]+'</div><div class="wday-n">'+d.getDate()+'</div>'+(has?'<div class="wday-dot"></div>':'<div style="height:4px"></div>');div.addEventListener('click',(function(ds2){return function(){
+  S.selDate=ds2;
+  renderInicio();
+  // Após render, rola até a data clicada
+  setTimeout(function(){scrollToDate(ds2);},80);
+}})(ds));el.appendChild(div);}}
 // ═══════════════════════════════════════
 //  DATA QUERIES
 // ═══════════════════════════════════════
@@ -1677,6 +1685,77 @@ function agShowRaw(){
   else msg+='(vazio)';
   alert(msg);
 }
+
+function openTaskModalDs(){
+  var btn=event.currentTarget||event.target;
+  var ds=btn.getAttribute('data-ds')||td0();
+  closeEmptyCard();
+  openTaskModal(null,{dueDate:ds});
+}
+
+function scrollToDate(ds){
+  var feed=document.getElementById('inicio-feed');
+  if(!feed)return;
+  // Try to find a date-banner with that date
+  var banner=feed.querySelector('[data-date="'+ds+'"]');
+  if(banner){
+    banner.scrollIntoView({behavior:'smooth',block:'start'});
+    // Flash highlight
+    banner.style.color='var(--blue)';
+    setTimeout(function(){banner.style.color='';},1200);
+    return;
+  }
+  // Date not in upcoming list — show inline empty state for that date
+  var existing=document.getElementById('empty-date-card');
+  if(existing)existing.remove();
+
+  var items=getForDate(ds);
+  if(items.length>0)return; // already rendered, just no banner visible
+
+  // Build empty card for this date
+  var card=document.createElement('div');
+  card.id='empty-date-card';
+  card.style.cssText='margin:8px 16px;animation:fadeIn .25s ease';
+
+  var dateLabel=isToday(ds)?'Hoje':isTom(ds)?'Amanhã':fmtD(ds);
+  var dow=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][new Date(ds+'T12:00').getDay()];
+
+  card.innerHTML=
+    '<div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;'
+    +'color:var(--blue);padding:16px 4px 8px;display:flex;align-items:center;gap:6px">'
+    +'<span style="width:6px;height:6px;border-radius:50%;background:var(--blue);display:inline-block"></span>'
+    +dateLabel+' · '+dow+'</div>'
+    +'<div class="card" style="padding:20px 18px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">'
+    +'<div style="font-size:32px">📅</div>'
+    +'<div style="font-size:15px;font-weight:600;color:var(--fg)">Nada programado para este dia</div>'
+    +'<div style="font-size:13px;color:var(--sub)">Deseja planejar algo para '+dateLabel+'?</div>'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">'
+    +'<button onclick="closeEmptyCard();openTaskModalDs()" data-ds="'+ds+'"'
+    +' style="padding:9px 16px;border-radius:12px;border:none;background:rgba(0,122,255,.1);'
+    +'color:var(--blue);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">+ Tarefa</button>'
+    +'<button onclick="closeEmptyCard();openReminderModal()" '
+    +'style="padding:9px 16px;border-radius:12px;border:none;background:rgba(255,149,0,.1);'
+    +'color:var(--orange);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">+ Lembrete</button>'
+    +'<button onclick="closeEmptyCard();openEventModal(null)" '
+    +'style="padding:9px 16px;border-radius:12px;border:none;background:rgba(52,199,89,.1);'
+    +'color:var(--green);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">+ Evento</button>'
+    +'</div></div>';
+
+  // Insert after the "Em breve" section header or at bottom of feed
+  var emSec=feed.querySelector('.sec');
+  if(emSec&&emSec.nextSibling){
+    feed.insertBefore(card,emSec.nextSibling);
+  } else {
+    feed.appendChild(card);
+  }
+  // Scroll to it
+  setTimeout(function(){card.scrollIntoView({behavior:'smooth',block:'center'});},60);
+}
+
+function closeEmptyCard(){
+  var c=document.getElementById('empty-date-card');
+  if(c)c.remove();
+}
 function renderDashboard(){
   var now=new Date();
   var el=document.getElementById('dashboard-feed');if(!el)return;el.innerHTML='';
@@ -1878,14 +1957,37 @@ setTimeout(function(){loadAutoGestData(function(){if(S.page==='dashboard')render
 // ═══════════════════════════════════════════════════════════
 var _claudeHistory = [];
 
-function openClaude(){
+function openClaude(mode){
   document.getElementById('claude-panel').classList.add('on');
-  // Show welcome if empty
   var msgs = document.getElementById('claude-msgs');
   if(!msgs.children.length){
-    _addClaudeMsg('ai','Olá! Sou o Claude. Posso ajudar a criar tarefas, buscar compromissos, resumir suas notas ou responder perguntas. Como posso ajudar?');
+    _addClaudeMsg('ai',
+      'Olá! Sou o Claude integrado ao FocusFlow. Posso:\n\n'
+      +'• **Responder perguntas** sobre suas tarefas e agenda\n'
+      +'• **Criar itens** — diga "crie uma tarefa para amanhã às 10h"\n'
+      +'• **Importar da Apple** — cole seus lembretes ou eventos copiados e eu os importo automaticamente\n\n'
+      +'Como posso ajudar?'
+    );
   }
-  setTimeout(function(){document.getElementById('claude-inp').focus();},200);
+  if(mode==='import'){
+    setTimeout(function(){
+      var inp=document.getElementById('claude-inp');
+      inp.placeholder='Cole aqui seus lembretes ou eventos da Apple…';
+      inp.focus();
+    },200);
+    _addClaudeMsg('ai',
+      '📲 **Importar da Apple**\n\n'
+      +'Cole aqui o conteúdo copiado do **Lembretes** ou **Calendário** do iPhone.\n\n'
+      +'Você pode:\n'
+      +'• Copiar a lista de lembretes do app Lembretes\n'
+      +'• Copiar eventos do Calendário\n'
+      +'• Colar texto livre com datas (ex: "dentista 25/03 às 14h")\n'
+      +'• Colar conteúdo de arquivo .ics\n\n'
+      +'Eu identifico as datas e crio tudo automaticamente no FocusFlow.'
+    );
+  } else {
+    setTimeout(function(){document.getElementById('claude-inp').focus();},200);
+  }
 }
 
 function closeClaude(){
@@ -1958,27 +2060,28 @@ function sendToClaude(){
   var overdueTasks = D.tasks.filter(function(t){return !t.done&&t.dueDate&&t.dueDate<today;});
   var todayTasks = D.tasks.filter(function(t){return !t.done&&t.dueDate===today;});
   var upcoming = D.tasks.filter(function(t){return !t.done&&t.dueDate&&t.dueDate>today;}).slice(0,10);
-  var recentNotes = D.notes.slice(0,5);
 
-  var context = 'Contexto do usuário (FocusFlow App):\n'
-    + '- Data hoje: ' + today + '\n'
-    + '- Tarefas atrasadas (' + overdueTasks.length + '): ' + overdueTasks.slice(0,5).map(function(t){return t.title + (t.dueDate?' ('+t.dueDate+')':'');}).join(', ') + '\n'
-    + '- Tarefas de hoje (' + todayTasks.length + '): ' + todayTasks.map(function(t){return t.title;}).join(', ') + '\n'
-    + '- Próximas tarefas: ' + upcoming.map(function(t){return t.title + ' (' + t.dueDate + ')';}).join(', ') + '\n'
-    + '- Total tarefas: ' + D.tasks.filter(function(t){return !t.done;}).length + '\n'
-    + '- Projetos: ' + D.projects.map(function(p){return p.title;}).join(', ') + '\n'
-    + '- Notas recentes: ' + recentNotes.map(function(n){return n.title;}).join(', ') + '\n'
-    + '\nResponda em português. Seja conciso e direto. Quando criar tarefas ou lembretes, informe que o usuário pode adicioná-los manualmente. Não use markdown excessivo.';
+  // Detect if user is pasting content to import
+  var isImport = text.length > 80 || /\d{1,2}[\/\-]\d{1,2}/.test(text) || /BEGIN:VCALENDAR|BEGIN:VEVENT|BEGIN:VTODO/i.test(text);
 
-  // Build messages for API
-  var messages = [{role:'user', content: context + '\n\n---\nUsuário: ' + text}];
-  // Include recent history (last 6 turns)
-  if(_claudeHistory.length > 2){
-    messages = _claudeHistory.slice(-7, -1).concat([{
-      role: 'user',
-      content: context + '\n\n---\n' + _claudeHistory[_claudeHistory.length-1].content
-    }]);
-  }
+  var sysPrompt = isImport
+    ? 'Você é um assistente de importação de dados para o app FocusFlow. '
+      + 'O usuário vai colar conteúdo do Lembretes ou Calendário da Apple (ou texto livre com datas). '
+      + 'Analise e extraia TODOS os itens com: título, data (formato YYYY-MM-DD), hora (HH:MM), tipo (task/event/reminder). '
+      + 'Responda APENAS com um JSON válido no formato: '
+      + '{"items":[{"title":"...","date":"YYYY-MM-DD","time":"HH:MM","type":"task","notes":"...","priority":"none"}]} '
+      + 'Se não houver data específica, use null. Não inclua texto fora do JSON.'
+    : 'Você é um assistente de produtividade integrado ao FocusFlow. '
+      + 'Ajude o usuário a organizar compromissos e tarefas. '
+      + 'Responda sempre em português, de forma concisa e prática.';
+
+  var context = 'Data hoje: ' + today
+    + ' | Tarefas pendentes: ' + D.tasks.filter(function(t){return !t.done;}).length
+    + ' | Atrasadas: ' + overdueTasks.length;
+
+  var messages = _claudeHistory.length > 1
+    ? _claudeHistory.slice(-6).concat([{role:'user',content:text}])
+    : [{role:'user', content: (isImport ? '' : context + '\n\n') + text}];
 
   fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -1986,20 +2089,57 @@ function sendToClaude(){
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 1000,
-      system: 'Você é um assistente de produtividade integrado ao FocusFlow, app de tarefas e agenda. Ajude o usuário a organizar compromissos, criar tarefas, buscar informações nas suas notas e projetos, e responder perguntas gerais. Seja conciso, amigável e prático. Responda sempre em português.',
+      system: sysPrompt,
       messages: messages
     })
   }).then(function(r){return r.json();})
   .then(function(data){
     typingEl.remove();
-    var reply = (data.content&&data.content[0]&&data.content[0].text) || 'Desculpe, não consegui processar.';
-    _addClaudeMsg('ai', reply);
-    _claudeHistory.push({role:'assistant', content: reply});
-    document.getElementById('claude-send').style.opacity = '1';
+    var reply = (data.content&&data.content[0]&&data.content[0].text)||'Não consegui processar.';
+    document.getElementById('claude-send').style.opacity='1';
+
+    // Try to parse as import JSON
+    var imported=0;
+    try{
+      var clean=reply.replace(/```json|```/g,'').trim();
+      if(clean.charAt(0)==='{'){
+        var parsed=JSON.parse(clean);
+        var items=parsed.items||[];
+        items.forEach(function(item){
+          if(!item.title)return;
+          if(item.type==='event'||item.type==='evento'){
+            D.events.push({id:uid(),title:item.title,date:item.date||td0(),
+              time:item.time||'',endTime:'',location:'',desc:item.notes||''});
+          } else if(item.type==='reminder'||item.type==='lembrete'){
+            D.reminders.push({id:uid(),title:item.title,done:false,
+              datetime:item.date?(item.date+'T'+(item.time||'09:00')):'',
+              notes:item.notes||'',recurrence:'none',createdAt:new Date().toISOString()});
+          } else {
+            D.tasks.push({id:uid(),title:item.title,done:false,
+              dueDate:item.date||td0(),dueTime:item.time||'',
+              notes:item.notes||'',priority:item.priority||'none',
+              recurrence:'none',subtasks:[],attachments:[],tags:['Importado'],
+              createdAt:new Date().toISOString()});
+          }
+          imported++;
+        });
+        if(imported>0){
+          save();render(S.page);
+          reply='✅ **'+imported+' item'+(imported>1?'s importados':' importado')+'** com sucesso!\n\n'
+            +items.map(function(it){
+              return '• '+it.title+(it.date?' — '+fmtD(it.date):'')+(it.time?' '+it.time:'');
+            }).join('\n')
+            +'\n\nJá aparecem na sua agenda. Deseja ajustar algum?';
+        }
+      }
+    } catch(e2){}
+
+    _addClaudeMsg('ai',reply);
+    _claudeHistory.push({role:'assistant',content:reply});
   }).catch(function(e){
     typingEl.remove();
-    _addClaudeMsg('ai', 'Erro de conexão. Verifique sua internet e tente novamente.');
-    document.getElementById('claude-send').style.opacity = '1';
+    _addClaudeMsg('ai','Erro de conexão. Verifique sua internet e tente novamente.');
+    document.getElementById('claude-send').style.opacity='1';
   });
 }
 
