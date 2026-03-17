@@ -758,6 +758,10 @@ body {
 /* Icon background matches page bg to mask the line */
 .tl-ico-bg{background:var(--bg,#f2f2f7);}
 [data-dark="1"] .tl-ico-bg{background:#000000;}
+
+/* Disable text selection on interactive elements */
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+input,textarea{-webkit-user-select:text;user-select:text;}
 </style>
 </head>
 <body>
@@ -1394,20 +1398,21 @@ function renderInicio(){
   // Overdue section
   var overdue=getOverdue();
   var ovSec=document.createElement('div');
-  ovSec.style.cssText='padding:10px 16px 4px;display:flex;align-items:center;justify-content:space-between';
+  ovSec.style.cssText='padding:10px 16px 4px;display:flex;align-items:center;justify-content:space-between;cursor:pointer';
+  ovSec.onclick=function(){S._ovCollapsed=!S._ovCollapsed;renderInicio();};
   var ovLeft=document.createElement('div');
-  ovLeft.style.cssText='display:flex;align-items:center;gap:8px';
-  var ovIco=document.createElement('span');
-  ovIco.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
-  var ovLbl=document.createElement('span');ovLbl.textContent='Atrasados';ovLbl.style.cssText='color:var(--red);font-weight:600;font-size:14px';
-  if(overdue.length){var ovBadge=document.createElement('span');ovBadge.className='badge';ovBadge.textContent=overdue.length;ovLeft.appendChild(ovBadge);}
-  ovLeft.appendChild(ovIco);ovLeft.appendChild(ovLbl);
+  ovLeft.style.cssText='display:flex;align-items:center;gap:6px';
+  ovLeft.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+    +'<span style="color:var(--red);font-weight:600;font-size:14px">'+overdue.length+' Atrasado'+(overdue.length!==1?'s':'')+'</span>';
   var ovRight=document.createElement('div');
   ovRight.style.cssText='display:flex;align-items:center;gap:8px';
   var reBtn=document.createElement('button');
-  reBtn.style.cssText='border:none;background:transparent;color:var(--red);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit';
-  reBtn.textContent='Reagendar';reBtn.onclick=function(){openReagendarModal();};
-  var chevron=document.createElement('span');chevron.textContent='▾';chevron.style.color='var(--sub)';
+  reBtn.style.cssText='border:none;background:transparent;color:var(--red);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit';
+  reBtn.textContent='Reagendar';
+  reBtn.onclick=function(e){e.stopPropagation();openReagendarModal();};
+  var chevron=document.createElement('span');
+  chevron.textContent=S._ovCollapsed?'›':'▾';
+  chevron.style.cssText='color:var(--sub);font-size:16px;transition:transform .2s';
   ovRight.appendChild(reBtn);ovRight.appendChild(chevron);
   ovSec.appendChild(ovLeft);ovSec.appendChild(ovRight);
   el.appendChild(ovSec);
@@ -1417,7 +1422,7 @@ function renderInicio(){
     emOv.style.cssText='padding:4px 16px 12px;font-size:14px;color:var(--sub)';
     emOv.textContent='Nenhum item atrasado ✓';
     el.appendChild(emOv);
-  } else {
+  } else if(!S._ovCollapsed){
     // Overdue in timeline layout (red, 100% progress)
     var ovTl=document.createElement('div');
     ovTl.className='tl-wrap';
@@ -1450,10 +1455,10 @@ function renderInicio(){
     return true;
   });
   // Limit to 14 days unless user expanded
-  var cutoff=addDays(td0(), S._showAll ? 365 : 14);
+  var cutoff=S._showAll?addDays(td0(),365):S._show14?addDays(td0(),14):addDays(td0(),1);
   var byDate={};
   upcoming.forEach(function(item){
-    if(!S._showAll && item.date > cutoff) return;
+    if(item.date > cutoff) return;
     if(!byDate[item.date])byDate[item.date]=[];
     byDate[item.date].push(item);
   });
@@ -1470,7 +1475,8 @@ function renderInicio(){
     banner.dataset.date=ds;
     var dow=WSHORT[new Date(ds+'T12:00').getDay()];
     var label=isToday(ds)?'HOJE · '+dow:isTom(ds)?'AMANHÃ · '+dow:fmtD(ds).toUpperCase()+' · '+dow;
-    banner.innerHTML='<span class="db-dot"></span><span>'+label+'</span>';
+    var labelColor=isToday(ds)?'color:var(--blue);font-weight:800':'';
+    banner.innerHTML='<span class="db-dot" style="'+(isToday(ds)?'background:var(--blue)':'')+'"></span><span style="'+labelColor+'">'+label+'</span>';
     el.appendChild(banner);
     
     var items=byDate[ds];
@@ -1864,8 +1870,9 @@ function nextWeek(){S.selDate=addDays(S.selDate||td0(),7);renderInicio();}
 
 
 function toggleVerTudo(btn){
-  S._showAll=!S._showAll;
-  btn.textContent=S._showAll?'Menos':'Ver tudo';
+  if(!S._showAll&&!S._show14){S._show14=true;}
+  else if(S._show14&&!S._showAll){S._show14=false;S._showAll=true;}
+  else{S._showAll=false;S._show14=false;}
   renderInicio();
 }
 
@@ -1978,6 +1985,10 @@ function buildItemRow(item){
     var chk=document.createElement('div');
     chk.className='chk'+(d.done?' done':'');
     chk.onclick=function(e){e.stopPropagation();d.done=!d.done;save();render(S.page);};
+    // Highlight if past due time and not done
+    var now2=new Date();
+    var isOverdueNow=!d.done&&d.dueDate&&(d.dueDate<td0()||(d.dueDate===td0()&&d.dueTime&&(parseInt(d.dueTime.slice(0,2))*60+parseInt(d.dueTime.slice(3,5)))<(now2.getHours()*60+now2.getMinutes())));
+    if(isOverdueNow)row.style.cssText='border-left:3px solid var(--red);padding-left:10px;';
     // Priority dot
     if(d.priority==='high'){var dot=document.createElement('span');dot.style.cssText='position:absolute;top:6px;left:6px;width:6px;height:6px;border-radius:50%;background:var(--red)';chk.style.position='relative';chk.appendChild(dot);}
     var info=document.createElement('div');info.className='iinfo';
