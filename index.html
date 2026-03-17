@@ -1126,12 +1126,38 @@ function tagColor(name){
 //  PERSISTENCE
 // ═══════════════════════════════════════
 function save(){
-  try{localStorage.setItem('ff-data',JSON.stringify(D));}catch(e){}
+  try{
+    // Safety: never overwrite existing data with empty arrays
+    var raw=localStorage.getItem('ff-data');
+    if(raw){
+      var existing=JSON.parse(raw);
+      var hasExisting=(existing.tasks&&existing.tasks.length>0)||
+                      (existing.events&&existing.events.length>0)||
+                      (existing.reminders&&existing.reminders.length>0);
+      var hasNew=(D.tasks&&D.tasks.length>0)||
+                 (D.events&&D.events.length>0)||
+                 (D.reminders&&D.reminders.length>0);
+      if(hasExisting&&!hasNew){
+        console.warn('[FF] save() blocked - would erase existing data');
+        return;
+      }
+    }
+    localStorage.setItem('ff-data',JSON.stringify(D));
+  }catch(e){}
 }
 function load(){
   try{
     var raw=localStorage.getItem('ff-data');
-    if(raw){var p=JSON.parse(raw);Object.assign(D,p);}
+    if(raw){
+      var p=JSON.parse(raw);
+      Object.assign(D,p);
+      // Mirror to sessionStorage as hot backup
+      sessionStorage.setItem('ff-data-bak',raw);
+    } else {
+      // Try sessionStorage fallback
+      var bak=sessionStorage.getItem('ff-data-bak');
+      if(bak){var p2=JSON.parse(bak);Object.assign(D,p2);localStorage.setItem('ff-data',bak);console.log('[FF] Restored from session backup');}
+    }
   }catch(e){}
 }
 function exportBackup(){
@@ -1354,9 +1380,24 @@ function renderInicio(){
     emOv.textContent='Nenhum item atrasado ✓';
     el.appendChild(emOv);
   } else {
-    var ovCard=document.createElement('div');ovCard.className='card';ovCard.style.margin='0 16px 8px';
-    overdue.forEach(function(item){ovCard.appendChild(buildItemRow(item));});
-    el.appendChild(ovCard);
+    // Overdue in timeline layout (red, 100% progress)
+    var ovTl=document.createElement('div');
+    ovTl.className='tl-wrap';
+    var ovId='tl-ov'+Date.now();
+    ovTl.id=ovId;
+    var ovSty=document.createElement('style');
+    ovSty.textContent='#'+ovId+'::after{height:100%;background:linear-gradient(to bottom,#FF3B30,rgba(255,59,48,.3));}';
+    ovTl.appendChild(ovSty);
+    overdue.forEach(function(item){
+      var tlItem=document.createElement('div');tlItem.className='tl-item';
+      var dot=document.createElement('div');dot.className='tl-dot late';
+      tlItem.appendChild(dot);
+      var tlCard=document.createElement('div');tlCard.className='tl-card past';
+      tlCard.appendChild(buildItemRow(item));
+      tlItem.appendChild(tlCard);
+      ovTl.appendChild(tlItem);
+    });
+    el.appendChild(ovTl);
   }
 
   // Em breve section
