@@ -178,7 +178,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 .prog-meta{display:flex;justify-content:space-between;align-items:center}
 .prog-meta span:first-child{font-size:12px;color:var(--sub)}
 .prog-meta span:last-child{font-size:13px;font-weight:700}
-.date-banner{padding:6px 12px;margin:8px 8px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;display:inline-flex;align-items:center;gap:6px;color:#6e6e73;background:rgba(255,255,255,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:20px;border:.5px solid rgba(255,255,255,0.7);box-shadow:inset 0 1px 0 rgba(255,255,255,0.8);}
+.date-banner{padding:6px 12px;margin:8px 0 4px 16px;width:fit-content;max-width:calc(100% - 78px);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center;gap:6px;color:#6e6e73;background:rgba(255,255,255,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:20px;border:.5px solid rgba(255,255,255,0.7);box-shadow:inset 0 1px 0 rgba(255,255,255,0.8);}
 .date-banner::before{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:#007AFF;flex-shrink:0;opacity:.7}
 #move-sheet-bg{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.32);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:none;align-items:flex-end;justify-content:center}
 #move-sheet-bg.on{display:flex;animation:fadeIn .18s ease}
@@ -3057,7 +3057,7 @@ function buildDashFinanceiro(el){
   var isAllowedHost=currentHost.indexOf('github.io')>=0||currentHost.indexOf('localhost')>=0||currentHost.indexOf('netlify')>=0;
   if(!isAllowedHost&&!AG_DATA.loaded){
     var warn=document.createElement('div');
-    warn.style.cssText='margin:0 16px 8px;padding:12px 14px;background:rgba(255,149,0,.06);border-radius:12px;border:.5px solid rgba(255,149,0,.2);font-size:13px;color:#1c1c1e';
+    warn.style.cssText='margin:0 16px 8px;padding:12px 14px;background:rgba(255,255,255,0.82);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:12px;border:.5px solid rgba(255,255,255,0.7);box-shadow:inset 0 1px 0 rgba(255,255,255,0.9);font-size:13px;color:#1c1c1e';
     warn.innerHTML='<b>⚙️ Configurar Supabase CORS</b><br><small style="color:#636366">No Supabase: Settings → API → CORS Allowed Origins → adicione <b>https://capimglau.github.io</b></small>';
     el.appendChild(warn);
   }
@@ -3074,6 +3074,7 @@ function buildDashFinanceiro(el){
     var loading=document.createElement('div');loading.className='card';loading.style.margin='0 62px 6px 16px';
     var currentUrl=window.location.hostname;
     var isAllowed=currentUrl.indexOf('github.io')>=0||currentUrl.indexOf('localhost')>=0||currentUrl.indexOf('netlify')>=0;
+    loading.style.cssText+='background:rgba(255,255,255,0.82)!important;backdrop-filter:blur(20px)!important;-webkit-backdrop-filter:blur(20px)!important;margin-right:62px!important;';
     loading.innerHTML='<div style="padding:16px;text-align:center;color:var(--sub);font-size:13px">⏳ Carregando…<br><small style="color:'+(isAllowed?'green':'var(--red)')+'">'+currentUrl+'</small></div>';
     el.appendChild(loading);return;
   }
@@ -3083,7 +3084,7 @@ function buildDashFinanceiro(el){
   AG_DATA.orcamento.forEach(function(o){all.push({item:o,tipo:'orcamento'});});
   (AG_DATA.contas||[]).forEach(function(c){all.push({item:c,tipo:'conta'});});
   var debug=document.createElement('div');
-  debug.style.cssText='margin:0 16px 4px;padding:6px 12px;background:rgba(0,0,0,.04);border-radius:8px;font-size:11px;color:var(--sub);cursor:pointer';
+  debug.style.cssText='margin:0 16px 4px;padding:6px 12px;background:rgba(255,255,255,0.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:8px;font-size:11px;color:var(--sub);cursor:pointer;border:.5px solid rgba(255,255,255,0.6)';
   var rawTotal=(AG_DATA._rawDesp||[]).length+(AG_DATA._rawOrc||[]).length;
   var errTxt=AG_DATA._lastError?' ⚠ '+AG_DATA._lastError:'';
   debug.textContent='Raw: desp='+(AG_DATA._rawDesp||[]).length+' orc='+(AG_DATA._rawOrc||[]).length+' → filtrado: '+AG_DATA.despesas.length+' desp, '+AG_DATA.orcamento.length+' orc'+errTxt;
@@ -3104,7 +3105,7 @@ function buildDashFinanceiro(el){
   var total=all.reduce(function(s,x){return s+parseFloat(x.item.valor||0);},0);
   var overdue=all.filter(function(x){return x.item._data&&x.item._data<hoje;});
   var strip=document.createElement('div');
-  strip.style.cssText='margin:0 16px 6px;padding:10px 16px;background:#ffffff;border-radius:12px;border:.5px solid rgba(0,0,0,.07);display:flex;justify-content:space-between;align-items:center';
+  strip.style.cssText='margin:0 16px 6px;padding:10px 16px;background:rgba(255,255,255,0.82);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:12px;border:.5px solid rgba(255,255,255,0.7);box-shadow:inset 0 1px 0 rgba(255,255,255,0.9);display:flex;justify-content:space-between;align-items:center';
   strip.innerHTML='<div style="font-size:12px;color:var(--sub)">'+all.length+' pendente'+(all.length!==1?'s':'')+(overdue.length?'<span style="color:var(--red);font-weight:600"> · '+overdue.length+' atrasada'+(overdue.length!==1?'s':'')+'</span>':'')+'</div>'
     +'<div style="font-size:15px;font-weight:700;color:var(--fg)">'+fmtBRL(total)+'</div>';
   el.appendChild(strip);
