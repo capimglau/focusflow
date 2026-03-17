@@ -27,7 +27,7 @@ updateThemeColor();
 [data-dark="1"] .pages,[data-dark="1"] *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{overscroll-behavior:none;}
 body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:var(--fg);-webkit-font-smoothing:antialiased;min-height:100vh;}
-.pages{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;background:transparent}
+.pages{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;background:transparent;}
 .page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;padding-bottom:88px;display:none;background:transparent;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
 .page.on{display:block!important}
 .page.active{display:block}
@@ -706,7 +706,7 @@ body {
 /* ── Timeline ── */
 .tl-wrap{position:relative;margin:0 8px 8px;padding-left:52px;isolation:isolate;}
 .tl-line-bg{position:absolute;left:27px;top:0;bottom:0;width:2px;background:#e5e5ea;z-index:-1;pointer-events:none;}
-.tl-line-prog{position:absolute;left:27px;top:0;width:2px;background:linear-gradient(to bottom,#aeaeb2,#c7c7cc);transition:height .8s ease;z-index:-1;pointer-events:none;}
+.tl-line-prog{position:absolute;left:27px;top:0;width:2px;background:linear-gradient(to bottom,#c7c7cc,#d1d1d6);transition:height .8s ease;z-index:-1;pointer-events:none;}
 .tl-item{position:relative;margin-bottom:8px;z-index:1;}
 .tl-card{background:#fff;border-radius:12px;border:.5px solid rgba(0,0,0,.07);box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden;}
 .tl-card.past{opacity:.55;}
@@ -762,6 +762,93 @@ body {
 /* Disable text selection on interactive elements */
 body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 input,textarea{-webkit-user-select:text;user-select:text;}
+
+/* Liquid Glass background */
+html:not([data-dark="1"]) body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(180,200,255,0.5) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 10%, rgba(200,180,255,0.4) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 50% 80%, rgba(180,230,200,0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 70% at 90% 70%, rgba(255,200,180,0.3) 0%, transparent 55%),
+    #dde2ec;
+  pointer-events:none;
+}
+[data-dark="1"] body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(40,60,120,0.6) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 10%, rgba(80,40,120,0.5) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 50% 80%, rgba(20,80,60,0.4) 0%, transparent 60%),
+    #0a0a0f;
+  pointer-events:none;
+}
+
+/* Liquid Glass cards */
+.card{
+  background:rgba(255,255,255,0.35)!important;
+  backdrop-filter:blur(20px) saturate(1.8)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(1.8)!important;
+  border:.5px solid rgba(255,255,255,0.8)!important;
+  box-shadow:0 2px 20px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,0.9)!important;
+}
+[data-dark="1"] .card{
+  background:rgba(30,30,45,0.42)!important;
+  backdrop-filter:blur(20px) saturate(1.4)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(1.4)!important;
+  border:.5px solid rgba(255,255,255,0.1)!important;
+  box-shadow:0 2px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,0.08)!important;
+}
+
+/* Glass nav */
+#nav-pill{
+  background:rgba(255,255,255,0.3)!important;
+  backdrop-filter:blur(28px) saturate(2)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(2)!important;
+  border:.5px solid rgba(255,255,255,0.5)!important;
+  box-shadow:0 4px 24px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,0.7)!important;
+}
+[data-dark="1"] #nav-pill{
+  background:rgba(20,20,30,0.45)!important;
+  backdrop-filter:blur(24px) saturate(1.4)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(1.4)!important;
+  border:.5px solid rgba(255,255,255,0.12)!important;
+}
+
+/* Header - transparent */
+.hdr{background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+
+/* Week cal - transparent */
+.week-cal{background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:none!important;box-shadow:none!important;margin:0!important;border-radius:0!important;}
+
+/* Glass modal */
+#modal-box{
+  background:rgba(242,242,247,0.65)!important;
+  backdrop-filter:blur(30px) saturate(1.6)!important;
+  -webkit-backdrop-filter:blur(30px) saturate(1.6)!important;
+}
+[data-dark="1"] #modal-box{
+  background:rgba(18,18,24,0.88)!important;
+}
+
+/* Glass tl-card */
+.tl-card{
+  background:rgba(255,255,255,0.32)!important;
+  backdrop-filter:blur(20px) saturate(1.8)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(1.8)!important;
+  border:.5px solid rgba(255,255,255,0.5)!important;
+  box-shadow:0 1px 12px rgba(0,0,0,.04), inset 0 1px 0 rgba(255,255,255,0.7)!important;
+}
+[data-dark="1"] .tl-card{
+  background:rgba(25,25,38,0.4)!important;
+  border:.5px solid rgba(255,255,255,0.1)!important;
+}
 </style>
 </head>
 <body>
@@ -1567,11 +1654,11 @@ function renderInicio(){
           // Current: fills from bottom as event progresses
           ico.className='tl-ico-bg';ico.style.cssText='position:absolute;left:-40px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;z-index:3;overflow:hidden;border:1.5px solid #c7c7cc;background:var(--bg);display:flex;align-items:center;justify-content:center;';
           var fill=document.createElement('div');
-          fill.style.cssText='position:absolute;bottom:0;left:0;right:0;height:'+fillPct+'%;background:#aeaeb2;transition:height .5s ease;z-index:0;';
+          fill.style.cssText='position:absolute;bottom:0;left:0;right:0;height:'+fillPct+'%;background:#c7c7cc;transition:height .5s ease;z-index:0;';
           ico.appendChild(fill);
         } else if(isPast||isDone){
           // Past: fully filled dark gray
-          ico.className='tl-ico-bg';ico.style.cssText='position:absolute;left:-40px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;z-index:3;background:#aeaeb2;display:flex;align-items:center;justify-content:center;';
+          ico.className='tl-ico-bg';ico.style.cssText='position:absolute;left:-40px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;z-index:3;background:#c7c7cc;display:flex;align-items:center;justify-content:center;';
         } else {
           // Future: outline only light gray
           ico.style.cssText='position:absolute;left:-40px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;z-index:3;background:transparent;border:2px solid '+GRAY_OUT+';display:flex;align-items:center;justify-content:center;';
@@ -1609,7 +1696,9 @@ function renderInicio(){
           }
         }
         var tlCard=document.createElement('div');
-        tlCard.className='tl-card'+(isPast&&!isNow?' past':isNow?' now-card':'');
+        // Only dim events that are past, not overdue tasks
+        var addPast=isPast&&!isNow&&(item.kind==='event'||isDone);
+        tlCard.className='tl-card'+(addPast?' past':isNow?' now-card':'');
         tlCard.appendChild(buildItemRow(item));
         right.appendChild(tlCard);
         tlItem.appendChild(right);
