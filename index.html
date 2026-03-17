@@ -2181,7 +2181,17 @@ function saveClaudeKey(){
   localStorage.setItem('ff-claude-key',key);
   var wrap=document.getElementById('key-setup-wrap');
   if(wrap)wrap.remove();
-  _addClaudeMsg('ai','✅ Chave salva! Pode fazer sua pergunta agora.');
+  // Clear previous key-request messages
+  var msgs=document.getElementById('claude-msgs');
+  if(msgs)msgs.innerHTML='';
+  _claudeHistory=[];
+  _addClaudeMsg('ai','✅ Chave salva! O que deseja fazer?');
+  _addQuickActions([
+    {icon:'✅',label:'Nova Tarefa',fn:'aiStartFlow("task")'},
+    {icon:'📅',label:'Novo Evento',fn:'aiStartFlow("event")'},
+    {icon:'🔔',label:'Novo Lembrete',fn:'aiStartFlow("reminder")'},
+    {icon:'💬',label:'Perguntar',fn:'aiStartFlow("ask")'}
+  ]);
 }
 // ── Claude guided creation state ──
 var _aiFlow={active:false,type:null,step:null,data:{}};
@@ -2613,9 +2623,19 @@ function sendToClaude(){
   }).then(function(r){return r.json();})
   .then(function(data){
     typingEl.remove();
-    var reply = (data.content&&data.content[0]&&data.content[0].text)||'Não consegui processar.';
     document.getElementById('claude-send').style.opacity='1';
-
+    if(data.error){
+      var msg=data.error.message||'Erro desconhecido';
+      if(msg.indexOf('invalid x-api-key')>=0||msg.indexOf('authentication')>=0){
+        localStorage.removeItem('ff-claude-key');
+        _addClaudeMsg('ai','🔑 Chave inválida ou expirada. Toque em 🔑 para inserir uma nova.');
+      } else {
+        _addClaudeMsg('ai','❌ Erro da API: '+msg);
+      }
+      return;
+    }
+    var reply=(data.content&&data.content[0]&&data.content[0].text)||'Sem resposta.';
+    document.getElementById('claude-send').style.opacity='1';
     // Try to parse as import JSON
     var imported=0;
     try{
@@ -2626,37 +2646,26 @@ function sendToClaude(){
         items.forEach(function(item){
           if(!item.title)return;
           if(item.type==='event'||item.type==='evento'){
-            D.events.push({id:uid(),title:item.title,date:item.date||td0(),
-              time:item.time||'',endTime:'',location:'',desc:item.notes||''});
+            D.events.push({id:uid(),title:item.title,date:item.date||td0(),time:item.time||'',endTime:'',location:'',desc:item.notes||''});
           } else if(item.type==='reminder'||item.type==='lembrete'){
-            D.reminders.push({id:uid(),title:item.title,done:false,
-              datetime:item.date?(item.date+'T'+(item.time||'09:00')):'',
-              notes:item.notes||'',recurrence:'none',createdAt:new Date().toISOString()});
+            D.reminders.push({id:uid(),title:item.title,done:false,datetime:item.date?(item.date+'T'+(item.time||'09:00')):'',notes:item.notes||'',recurrence:'none',createdAt:new Date().toISOString()});
           } else {
-            D.tasks.push({id:uid(),title:item.title,done:false,
-              dueDate:item.date||td0(),dueTime:item.time||'',
-              notes:item.notes||'',priority:item.priority||'none',
-              recurrence:'none',subtasks:[],attachments:[],tags:['Importado'],
-              createdAt:new Date().toISOString()});
+            D.tasks.push({id:uid(),title:item.title,done:false,dueDate:item.date||td0(),dueTime:item.time||'',notes:item.notes||'',priority:item.priority||'none',recurrence:'none',subtasks:[],attachments:[],tags:['Importado'],createdAt:new Date().toISOString()});
           }
           imported++;
         });
         if(imported>0){
           save();render(S.page);
-          reply='✅ **'+imported+' item'+(imported>1?'s importados':' importado')+'** com sucesso!\n\n'
-            +items.map(function(it){
-              return '• '+it.title+(it.date?' — '+fmtD(it.date):'')+(it.time?' '+it.time:'');
-            }).join('\n')
-            +'\n\nJá aparecem na sua agenda. Deseja ajustar algum?';
+          reply='✅ '+(imported>1?imported+' itens importados':'1 item importado')+'\n\n'
+            +items.map(function(it){return '• '+it.title+(it.date?' — '+fmtD(it.date):'')+(it.time?' '+it.time:'');}).join(', ');
         }
       }
     } catch(e2){}
-
     _addClaudeMsg('ai',reply);
     _claudeHistory.push({role:'assistant',content:reply});
   }).catch(function(e){
     typingEl.remove();
-    _addClaudeMsg('ai','Erro de conexão. Verifique sua internet e tente novamente.');
+    _addClaudeMsg('ai','Erro: '+(e.message||'verifique sua internet'));
     document.getElementById('claude-send').style.opacity='1';
   });
 }
