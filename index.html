@@ -693,6 +693,9 @@ body {
 .page.on{animation:fadeIn .18s ease}
 /* Modal */
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+@keyframes slideInBanner{from{opacity:0;transform:translateY(-100%)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideOutBanner{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-100%)}}
 </style>
 </head>
 <body>
@@ -1926,14 +1929,72 @@ function saveReminder(){
 }
 function deleteReminder(){if(S.eRem){D.reminders=D.reminders.filter(function(r){return r!==S.eRem;});save();closeModal();render(S.page);toast('Excluído');}}
 function scheduleNotif(title,body,dtStr){
-  if(!('Notification' in window))return;
+  var dt=new Date(dtStr);
+  var now=new Date();
+  var delay=dt-now;
+  if(delay<=0)return;
+  if(delay>7*24*60*60*1000)return; // max 7 days ahead
+
+  // Method 1: Web Notifications API (works on desktop/Android, NOT iOS Safari)
+  if('Notification' in window&&Notification.permission==='granted'){
+    setTimeout(function(){
+      try{new Notification(title,{body:body||'FocusFlow',silent:false});}catch(e){}
+    },delay);
+  }
+  // Method 2: In-app banner (always works, even on iOS)
+  setTimeout(function(){showNotifBanner(title,body);},delay);
+  // Store for persistence across refreshes
+  var stored=JSON.parse(localStorage.getItem('ff-notifs')||'[]');
+  stored.push({title:title,body:body,at:dt.toISOString()});
+  // Keep only future notifs
+  stored=stored.filter(function(n){return new Date(n.at)>new Date();});
+  localStorage.setItem('ff-notifs',JSON.stringify(stored.slice(0,20)));
+}
+
+function showNotifBanner(title,body){
+  haiku(50);
+  var banner=document.createElement('div');
+  banner.style.cssText='position:fixed;top:calc(env(safe-area-inset-top,44px)+8px);left:12px;right:12px;'
+    +'z-index:9999;background:#1c1c1e;color:#fff;border-radius:16px;padding:14px 18px;'
+    +'box-shadow:0 4px 24px rgba(0,0,0,.35);display:flex;align-items:flex-start;gap:12px;'
+    +'animation:slideInBanner .3s cubic-bezier(.34,1.56,.64,1)';
+  banner.innerHTML='<div style="width:36px;height:36px;border-radius:10px;background:#007AFF;display:flex;align-items:center;justify-content:center;flex-shrink:0">'
+    +'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>'
+    +'<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:15px">'+esc(title)+'</div>'
+    +(body?'<div style="font-size:13px;opacity:.75;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(body)+'</div>':'')
+    +'</div>'
+    +'<button onclick="this.parentNode.remove()" style="border:none;background:transparent;color:rgba(255,255,255,.5);font-size:20px;cursor:pointer;padding:0;line-height:1;flex-shrink:0">×</button>';
+  document.body.appendChild(banner);
+  setTimeout(function(){if(banner.parentNode)banner.style.animation='slideOutBanner .3s ease forwards';setTimeout(function(){banner.remove();},300);},5000);
+}
+
+function requestNotifPermission(){
+  if(!('Notification' in window)){
+    toast('Use o app instalado na tela de início para notificações');return;
+  }
   Notification.requestPermission().then(function(p){
-    if(p==='granted'){
-      var dt=new Date(dtStr);var now=new Date();
+    var el=document.getElementById('notif-status');
+    if(el)el.textContent=p==='granted'?'Ativo':'Negado';
+    toast(p==='granted'?'Notificações ativadas ✓':'Permissão negada');
+  });
+}
+
+// Check pending notifs on load
+function checkPendingNotifs(){
+  var stored=JSON.parse(localStorage.getItem('ff-notifs')||'[]');
+  var now=new Date();
+  var future=[];
+  stored.forEach(function(n){
+    var dt=new Date(n.at);
+    if(dt>now){
       var delay=dt-now;
-      if(delay>0)setTimeout(function(){new Notification(title,{body:body,icon:'/icon.png'});},delay);
+      if(delay<7*24*60*60*1000){
+        setTimeout(function(){showNotifBanner(n.title,n.body);},delay);
+        future.push(n);
+      }
     }
   });
+  localStorage.setItem('ff-notifs',JSON.stringify(future));
 }
 
 // ═══════════════════════════════════════
@@ -2350,11 +2411,7 @@ function buildDashFinanceiro(el){
     +'<button onclick="syncAutoGest()" style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:8px;background:rgba(0,122,255,.08);color:var(--blue);border:none;cursor:pointer">↻ Sync</button>'
     +'</div>';
   el.appendChild(hdr);
-  if(AG_DATA._blockedOrigin!==undefined){
-    var warn=document.createElement('div');warn.className='card';warn.style.margin='0 16px';
-    warn.innerHTML='<div style="padding:14px 16px;font-size:13px;color:var(--sub)">📡 Abra em <b>capimglau.github.io/focusflow</b> para carregar as despesas.</div>';
-    el.appendChild(warn);return;
-  }
+
   if(!AG_DATA.loaded){
     var loading=document.createElement('div');loading.className='card';loading.style.margin='0 16px';
     loading.innerHTML='<div style="padding:16px;text-align:center;color:var(--sub);font-size:13px">⏳ Carregando…</div>';
@@ -2751,6 +2808,7 @@ document.addEventListener('DOMContentLoaded',function(){
   setTimeout(function(){loadAutoGestData(function(){render(S.page);});},800);
 
   render('inicio');
+  checkPendingNotifs();
 });
 
 </script>
