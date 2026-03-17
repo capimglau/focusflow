@@ -1854,15 +1854,16 @@ function addSwipe(el,onDone,onDel){
 // ═══════════════════════════════════════
 //  MODAL
 // ═══════════════════════════════════════
-function openModal(html){
+function openModal(content){
   var bg=document.getElementById('modal-bg');
   var box=document.getElementById('modal-body');
-  if(!bg||!box)return;
-  box.innerHTML=html;
-  bg.style.display='flex';
-  bg.style.alignItems='flex-end';
-  bg.style.justifyContent='center';
-  document.getElementById('modal-box').style.animation='sheetUp .3s cubic-bezier(.25,1,.5,1)';
+  var mbox=document.getElementById('modal-box');
+  if(!bg||!box||!mbox)return;
+  box.innerHTML=content;
+  bg.style.cssText='position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.32);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center';
+  mbox.style.animation='sheetUp .3s cubic-bezier(.25,1,.5,1)';
+  // Focus first input
+  setTimeout(function(){var inp=box.querySelector('input:not([type=checkbox]):not([type=date]):not([type=time])');if(inp)inp.focus();},100);
 }
 function closeModal(){
   var bg=document.getElementById('modal-bg');
@@ -2089,7 +2090,10 @@ function saveEvent(){
   var ti=document.getElementById('ev-ti');if(!ti||!ti.value.trim())return;
   var obj={title:ti.value.trim(),date:(document.getElementById('ev-dt')||{}).value||td0(),time:(document.getElementById('ev-hr')||{}).value||'',endDate:(document.getElementById('ev-dt-end')||{}).value||'',endTime:(document.getElementById('ev-end')||{}).value||'',location:(document.getElementById('ev-loc')||{}).value||'',desc:(document.getElementById('ev-ds')||{}).value||'',recurrence:(document.getElementById('ev-rc')||{}).value||'none',allDay:!!(document.getElementById('ev-allday')||{}).checked};
   if(S.eEv)Object.assign(S.eEv,obj);else{obj.id=uid();D.events.push(obj);}
-  save();closeModal();render(S.page);toast('Salvo ✓');
+  save();closeModal();
+  console.log('[FocusFlow] Event saved:',JSON.stringify(obj));
+  console.log('[FocusFlow] Total events:',D.events.length);
+  render('inicio');toast('Salvo ✓');
 }
 function deleteEvent(){if(S.eEv){D.events=D.events.filter(function(e){return e!==S.eEv;});save();closeModal();render(S.page);toast('Excluído');}}
 
