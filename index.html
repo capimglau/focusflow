@@ -703,13 +703,17 @@ body {
 
 .irow.drop-target{background:rgba(0,122,255,.08)!important;border-left:3px solid #007AFF!important;}
 
-/* ── Timeline Structured-style ── */
-.tl-wrap{position:relative;margin:0 16px 8px;padding-left:52px;}
-.tl-wrap::before{content:'';position:absolute;left:26px;top:0;bottom:0;width:2px;background:#d1d1d6;}
-.tl-wrap::after{content:'';position:absolute;left:26px;top:0;width:2px;background:linear-gradient(to bottom,#aeaeb2,#c7c7cc);transition:height .8s ease;}
-.tl-item{position:relative;margin-bottom:8px;display:flex;flex-direction:column;z-index:1;padding-left:0;}
-.tl-ico{position:absolute;left:-42px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:3;transition:all .4s;overflow:hidden;}
-/* Future: outline only */
+/* ── Timeline ── */
+.tl-wrap{position:relative;margin:0 16px 8px;padding-left:58px;}
+.tl-wrap::before{content:'';position:absolute;left:16px;top:0;bottom:0;width:2px;background:#e5e5ea;}
+.tl-wrap::after{content:'';position:absolute;left:16px;top:0;width:2px;background:linear-gradient(to bottom,#aeaeb2,#c7c7cc);transition:height .8s ease;}
+.tl-item{position:relative;margin-bottom:8px;}
+.tl-card{background:#fff;border-radius:12px;border:.5px solid rgba(0,0,0,.07);box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden;}
+.tl-card.past{opacity:.55;}
+.tl-card.now-card{border-color:rgba(0,0,0,.1);box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.tl-meta{font-size:10px;color:#aeaeb2;font-weight:500;margin-bottom:3px;}
+.tl-gap-row{font-size:10px;color:#c7c7cc;padding:2px 0 4px;}
+
 /* Icon states handled via inline style - gray system */
 @keyframes tlpulse{0%,100%{box-shadow:0 0 0 5px rgba(0,122,255,.2);}50%{box-shadow:0 0 0 9px rgba(0,122,255,.07);}}
 .tl-card{flex:1;background:#fff;border-radius:12px;border:.5px solid rgba(0,0,0,.07);box-shadow:0 1px 4px rgba(0,0,0,.04);overflow:hidden;}
@@ -1542,16 +1546,16 @@ function renderInicio(){
 
         if(isNow){
           // Current: fills from bottom as event progresses
-          ico.style.cssText='position:absolute;left:-44px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;z-index:3;overflow:hidden;border:2px solid #aeaeb2;background:#f2f2f7;';
+          ico.style.cssText='position:absolute;left:-57px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;z-index:3;overflow:hidden;border:2px solid #aeaeb2;background:#f2f2f7;';
           var fill=document.createElement('div');
           fill.style.cssText='position:absolute;bottom:0;left:0;right:0;height:'+fillPct+'%;background:#aeaeb2;transition:height .5s ease;';
           ico.appendChild(fill);
         } else if(isPast||isDone){
           // Past: fully filled dark gray
-          ico.style.cssText='position:absolute;left:-44px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;z-index:3;background:#aeaeb2;display:flex;align-items:center;justify-content:center;';
+          ico.style.cssText='position:absolute;left:-57px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;z-index:3;background:#aeaeb2;display:flex;align-items:center;justify-content:center;';
         } else {
           // Future: outline only light gray
-          ico.style.cssText='position:absolute;left:-42px;width:36px;height:36px;border-radius:50%;z-index:3;background:transparent;border:2px solid '+GRAY_OUT+';display:flex;align-items:center;justify-content:center;';
+          ico.style.cssText='position:absolute;left:-57px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;z-index:3;background:transparent;border:2px solid '+GRAY_OUT+';display:flex;align-items:center;justify-content:center;';
         }
         
         // SVG icon inside
