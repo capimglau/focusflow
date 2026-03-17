@@ -1255,12 +1255,12 @@ function renderInicio(){
   // Overdue section
   var overdue=getOverdue();
   var ovSec=document.createElement('div');
-  ovSec.style.cssText='padding:12px 16px 4px;display:flex;align-items:center;justify-content:space-between';
+  ovSec.style.cssText='padding:8px 16px 4px;display:flex;align-items:center;justify-content:space-between';
   var ovLeft=document.createElement('div');
   ovLeft.style.cssText='display:flex;align-items:center;gap:8px';
   var ovIco=document.createElement('span');
-  ovIco.innerHTML='⚠';ovIco.style.color='var(--red)';
-  var ovLbl=document.createElement('b');ovLbl.textContent='Atrasados';ovLbl.style.color='var(--red)';
+  ovIco.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+  var ovLbl=document.createElement('span');ovLbl.textContent='Atrasados';ovLbl.style.cssText='color:var(--red);font-weight:600;font-size:14px';
   if(overdue.length){var ovBadge=document.createElement('span');ovBadge.className='badge';ovBadge.textContent=overdue.length;ovLeft.appendChild(ovBadge);}
   ovLeft.appendChild(ovIco);ovLeft.appendChild(ovLbl);
   var ovRight=document.createElement('div');
@@ -1287,7 +1287,7 @@ function renderInicio(){
   // Em breve section
   var emSec=document.createElement('div');
   emSec.className='sec';
-  emSec.innerHTML='<div class="sec-t"><b>Em breve</b></div><button onclick="goPage(\'navegar\')" style="border:none;background:transparent;color:var(--blue);font-size:14px;font-weight:600;cursor:pointer">Ver tudo</button>';
+  emSec.innerHTML='<div class="sec-t"><b>Em breve</b></div><button onclick="toggleVerTudo(this)" style="border:none;background:transparent;color:var(--blue);font-size:14px;font-weight:600;cursor:pointer">Ver tudo</button>';
   el.appendChild(emSec);
 
   // Group upcoming by date
@@ -1295,8 +1295,11 @@ function renderInicio(){
     // exclude ag items that are already tasks
     return true;
   });
+  // Limit to 14 days unless user expanded
+  var cutoff=addDays(td0(), S._showAll ? 365 : 14);
   var byDate={};
   upcoming.forEach(function(item){
+    if(!S._showAll && item.date > cutoff) return;
     if(!byDate[item.date])byDate[item.date]=[];
     byDate[item.date].push(item);
   });
@@ -1546,6 +1549,12 @@ function buildWeekCal(el){
 function prevWeek(){S.selDate=addDays(S.selDate||td0(),-7);renderInicio();}
 function nextWeek(){S.selDate=addDays(S.selDate||td0(),7);renderInicio();}
 
+
+function toggleVerTudo(btn){
+  S._showAll=!S._showAll;
+  btn.textContent=S._showAll?'Menos':'Ver tudo';
+  renderInicio();
+}
 function scrollToDate(ds){
   var feed=document.getElementById('inicio-feed');
   if(!feed)return;
@@ -1834,7 +1843,11 @@ function saveTask(){
   var ti=_curT.title;if(!ti||!ti.trim())return;
   if(S.eTask){Object.assign(S.eTask,_curT);}
   else{_curT.id=uid();_curT.done=false;_curT.createdAt=new Date().toISOString();D.tasks.unshift(_curT);}
-  save();closeModal();render(S.page);toast('Salvo ✓');
+  save();
+  // Schedule notifications
+  if(_curT.notifyAt)scheduleNotif(_curT.title,_curT.notes||'Tarefa no FocusFlow',_curT.notifyAt);
+  if(_curT.notifyAt2)scheduleNotif(_curT.title,_curT.notes||'Tarefa no FocusFlow',_curT.notifyAt2);
+  closeModal();render(S.page);toast('Salvo ✓');
 }
 function deleteTask(){if(S.eTask){D.tasks=D.tasks.filter(function(t){return t!==S.eTask;});save();closeModal();render(S.page);toast('Excluído');}}
 function deleteTaskItem(d){D.tasks=D.tasks.filter(function(t){return t!==d;});save();render(S.page);}
@@ -2027,17 +2040,45 @@ function requestNotifPermission(){
 
 // Check pending notifs on load
 function checkPendingNotifs(){
-  var stored=JSON.parse(localStorage.getItem('ff-notifs')||'[]');
   var now=new Date();
+  var maxDelay=7*24*60*60*1000;
+
+  // Scan all tasks with notifyAt
+  D.tasks.forEach(function(t){
+    if(t.done)return;
+    [t.notifyAt,t.notifyAt2].forEach(function(at){
+      if(!at)return;
+      var dt=new Date(at);
+      var delay=dt-now;
+      if(delay>0&&delay<maxDelay){
+        (function(title,body,d){
+          setTimeout(function(){showNotifBanner(title,body);},d);
+        })(t.title,t.notes||'Tarefa',delay);
+      }
+    });
+  });
+
+  // Scan all reminders
+  D.reminders.forEach(function(r){
+    if(r.done)return;
+    if(!r.datetime)return;
+    var dt=new Date(r.datetime);
+    var delay=dt-now;
+    if(delay>0&&delay<maxDelay){
+      (function(title,body,d){
+        setTimeout(function(){showNotifBanner(title,body);},d);
+      })(r.title,r.notes||'Lembrete',delay);
+    }
+  });
+
+  // Also from localStorage (legacy)
+  var stored=JSON.parse(localStorage.getItem('ff-notifs')||'[]');
   var future=[];
   stored.forEach(function(n){
-    var dt=new Date(n.at);
-    if(dt>now){
-      var delay=dt-now;
-      if(delay<7*24*60*60*1000){
-        setTimeout(function(){showNotifBanner(n.title,n.body);},delay);
-        future.push(n);
-      }
+    var dt=new Date(n.at);var delay=dt-now;
+    if(delay>0&&delay<maxDelay){
+      setTimeout(function(){showNotifBanner(n.title,n.body);},delay);
+      future.push(n);
     }
   });
   localStorage.setItem('ff-notifs',JSON.stringify(future));
