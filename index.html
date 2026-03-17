@@ -702,6 +702,17 @@ body {
 .menu-item:active{background:rgba(0,0,0,.04)}
 
 .irow.drop-target{background:rgba(0,122,255,.08)!important;border-left:3px solid #007AFF!important;}
+
+/* ── Timeline ── */
+.tl-wrap{position:relative;margin:0 16px 12px;padding-left:44px;}
+.tl-wrap::before{content:'';position:absolute;left:14px;top:16px;bottom:16px;width:1.5px;background:linear-gradient(to bottom,rgba(0,122,255,.3),rgba(0,122,255,.06));}
+.tl-item{position:relative;margin-bottom:4px;}
+.tl-item::before{content:'';position:absolute;left:-22px;top:50%;width:7px;height:7px;border-radius:50%;background:#f2f2f7;border:1.5px solid #c7c7cc;transform:translateY(-50%);z-index:1;}
+.tl-item.ev::before{border-color:#007AFF;background:#007AFF;}
+.tl-item.task::before{border-color:#34C759;background:#fff;}
+.tl-item.reminder::before{border-color:#FF9500;background:#fff;}
+.tl-time-label{position:absolute;left:-44px;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;color:#8e8e93;width:18px;text-align:center;line-height:1.1;letter-spacing:-.3px;}
+.tl-card{background:#fff;border-radius:12px;border:.5px solid rgba(0,0,0,.07);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);}
 </style>
 </head>
 <body>
@@ -1280,7 +1291,13 @@ function getAllUpcoming(){
     }
   });
 
-  a.sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0;});
+  // Sort by date then time
+  a.sort(function(a,b){
+    if(a.date!==b.date)return a.date<b.date?-1:1;
+    var ta=a.data.time||a.data.dueTime||'';
+    var tb=b.data.time||b.data.dueTime||'';
+    return ta<tb?-1:ta>tb?1:0;
+  });
   return a;
 }
 function getOverdue(){
@@ -1369,9 +1386,43 @@ function renderInicio(){
     var label=isToday(ds)?'HOJE · '+dow:isTom(ds)?'AMANHÃ · '+dow:fmtD(ds).toUpperCase()+' · '+dow;
     banner.innerHTML='<span class="db-dot"></span><span>'+label+'</span>';
     el.appendChild(banner);
-    var card=document.createElement('div');card.className='card fade-in';card.style.margin='0 16px 8px';
-    byDate[ds].forEach(function(item){card.appendChild(buildItemRow(item));});
-    el.appendChild(card);
+    
+    var items=byDate[ds];
+    var hasTime=items.some(function(i){return i.data.time||i.data.dueTime;});
+    
+    var card=document.createElement('div');
+    card.className='card fade-in';
+    card.style.cssText='margin:0 16px 8px;'+(hasTime?'padding-left:0':'');
+    
+    if(hasTime){
+      // Timeline layout
+      card.remove(); // don't use the flat card
+      var tlWrap=document.createElement('div');
+      tlWrap.className='tl-wrap';
+      items.forEach(function(item){
+        var t=item.data.time||item.data.dueTime||'';
+        var tlItem=document.createElement('div');
+        tlItem.className='tl-item '+(item.kind==='event'?'ev':item.kind==='reminder'?'reminder':'task');
+        // Time label
+        if(t){
+          var tlTime=document.createElement('div');
+          tlTime.className='tl-time-label';
+          var parts=t.slice(0,5).split(':');
+          tlTime.innerHTML='<span style="display:block">'+parts[0]+'</span><span style="display:block;opacity:.7">'+parts[1]+'</span>';
+          tlItem.appendChild(tlTime);
+        }
+        // Row inside mini card
+        var tlCard=document.createElement('div');
+        tlCard.className='tl-card';
+        tlCard.appendChild(buildItemRow(item));
+        tlItem.appendChild(tlCard);
+        tlWrap.appendChild(tlItem);
+      });
+      el.appendChild(tlWrap);
+    } else {
+      items.forEach(function(item){card.appendChild(buildItemRow(item));});
+      el.appendChild(card);
+    }
   });
 
   // ── Notas recentes ──
@@ -2573,7 +2624,8 @@ var AG={
     return fetch(url,{method:'GET',mode:'cors',credentials:'omit',headers:{
       'apikey':AG.key,
       'Authorization':'Bearer '+AG.key,
-      'Accept':'application/json'
+      'Accept':'application/json',
+      'Origin':'https://capimglau.github.io'
     }}).then(function(r){
       if(!r.ok){
         AG_DATA._lastError='HTTP '+r.status+' na tabela '+table;
@@ -2676,7 +2728,7 @@ function agTestConnection(){
       alert(msg);
     });
   }).catch(function(e){
-    alert('❌ ERRO CORS/REDE\n\nMensagem: '+e.message+'\nHost atual: '+window.location.hostname+'\n\nVá em:\nSupabase → Settings → API\n→ CORS Allowed Origins\n→ Adicione: https://capimglau.github.io');
+    alert('❌ ERRO CORS (Load failed)\n\nNo Supabase.com:\n1. Abra seu projeto\n2. Settings → API\n3. CORS Allowed Origins\n4. Adicione: https://capimglau.github.io\n5. Save');
   });
 }
 function syncAutoGest(){
@@ -2696,8 +2748,8 @@ function buildDashFinanceiro(el){
   var isAllowedHost=currentHost.indexOf('github.io')>=0||currentHost.indexOf('localhost')>=0||currentHost.indexOf('netlify')>=0;
   if(!isAllowedHost&&!AG_DATA.loaded){
     var warn=document.createElement('div');
-    warn.style.cssText='margin:0 16px 8px;padding:12px 14px;background:rgba(255,59,48,.06);border-radius:12px;border:.5px solid rgba(255,59,48,.15);font-size:13px;color:var(--red)';
-    warn.innerHTML='⚠️ <b>AutoGest bloqueado</b> por CORS.<br>Abra via <b>capimglau.github.io/focusflow</b><br><small style="color:var(--sub)">Atual: '+currentHost+'</small>';
+    warn.style.cssText='margin:0 16px 8px;padding:12px 14px;background:rgba(255,149,0,.06);border-radius:12px;border:.5px solid rgba(255,149,0,.2);font-size:13px;color:#1c1c1e';
+    warn.innerHTML='<b>⚙️ Configurar Supabase CORS</b><br><small style="color:#636366">No Supabase: Settings → API → CORS Allowed Origins → adicione <b>https://capimglau.github.io</b></small>';
     el.appendChild(warn);
   }
   var syncTxt=AG_DATA.lastSync?AG_DATA.lastSync.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'--:--';
