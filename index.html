@@ -1996,7 +1996,9 @@ function scheduleNotif(title,body,dtStr){
 }
 
 function showNotifBanner(title,body){
-  haiku(50);
+  haiku(100);
+  // Also try native notification if allowed
+  if('Notification' in window&&Notification.permission==='granted'){try{new Notification(title,{body:body||'FocusFlow'});}catch(e){}}
   var banner=document.createElement('div');
   banner.style.cssText='position:fixed;top:calc(env(safe-area-inset-top,44px)+8px);left:12px;right:12px;'
     +'z-index:9999;background:#1c1c1e;color:#fff;border-radius:16px;padding:14px 18px;'
@@ -2363,11 +2365,15 @@ var AG={
       'apikey':AG.key,
       'Authorization':'Bearer '+AG.key,
       'Accept':'application/json'
-      // No Content-Type on GET - causes CORS preflight failure
     }}).then(function(r){
-      if(!r.ok){console.error('[AG] HTTP '+r.status+' on '+table);return [];}
+      if(!r.ok){
+        AG_DATA._lastError='HTTP '+r.status+' na tabela '+table;
+        console.error('[AG]',AG_DATA._lastError);
+        return [];
+      }
       return r.json();
     }).catch(function(e){
+      AG_DATA._lastError='Rede: '+e.message+' ('+table+')';
       console.error('[AG] fetch error on '+table+':',e.message);
       return [];
     });
@@ -2449,6 +2455,21 @@ function _autoImportar(){
   save();
 }
 
+
+function agTestConnection(){
+  var url=AG.url+'/rest/v1/despesas?limit=3';
+  toast('Testando...');
+  fetch(url,{method:'GET',mode:'cors',credentials:'omit',headers:{
+    'apikey':AG.key,'Authorization':'Bearer '+AG.key,'Accept':'application/json'
+  }}).then(function(r){
+    return r.text().then(function(body){
+      var msg='HTTP: '+r.status+'\nHost: '+window.location.hostname+'\nDados: '+body.slice(0,400);
+      alert(msg);
+    });
+  }).catch(function(e){
+    alert('❌ ERRO CORS/REDE\n\nMensagem: '+e.message+'\nHost atual: '+window.location.hostname+'\n\nVá em:\nSupabase → Settings → API\n→ CORS Allowed Origins\n→ Adicione: https://capimglau.github.io');
+  });
+}
 function syncAutoGest(){
   D.tasks=D.tasks.filter(function(t){return !t.agRef;});
   AG_DATA.loaded=false;AG_DATA.loading=false;
@@ -2462,17 +2483,28 @@ function importarItemComoTarefa(item,tipo){
 
 function buildDashFinanceiro(el){
   var hdr=document.createElement('div');hdr.className='sec';
+  var currentHost=window.location.hostname||'';
+  var isAllowedHost=currentHost.indexOf('github.io')>=0||currentHost.indexOf('localhost')>=0||currentHost.indexOf('netlify')>=0;
+  if(!isAllowedHost&&!AG_DATA.loaded){
+    var warn=document.createElement('div');
+    warn.style.cssText='margin:0 16px 8px;padding:12px 14px;background:rgba(255,59,48,.06);border-radius:12px;border:.5px solid rgba(255,59,48,.15);font-size:13px;color:var(--red)';
+    warn.innerHTML='⚠️ <b>AutoGest bloqueado</b> por CORS.<br>Abra via <b>capimglau.github.io/focusflow</b><br><small style="color:var(--sub)">Atual: '+currentHost+'</small>';
+    el.appendChild(warn);
+  }
   var syncTxt=AG_DATA.lastSync?AG_DATA.lastSync.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'--:--';
   hdr.innerHTML='<div class="sec-t"><b>💰 Financeiro</b></div>'
     +'<div style="display:flex;align-items:center;gap:6px">'
     +'<span style="font-size:11px;color:var(--sub)">'+syncTxt+'</span>'
     +'<button onclick="syncAutoGest()" style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:8px;background:rgba(0,122,255,.08);color:var(--blue);border:none;cursor:pointer">↻ Sync</button>'
+    +'<button onclick="agTestConnection()" style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:8px;background:rgba(255,149,0,.1);color:var(--orange);border:none;cursor:pointer;margin-left:4px">🔍 Testar</button>'
     +'</div>';
   el.appendChild(hdr);
 
   if(!AG_DATA.loaded){
     var loading=document.createElement('div');loading.className='card';loading.style.margin='0 16px';
-    loading.innerHTML='<div style="padding:16px;text-align:center;color:var(--sub);font-size:13px">⏳ Carregando…</div>';
+    var currentUrl=window.location.hostname;
+    var isAllowed=currentUrl.indexOf('github.io')>=0||currentUrl.indexOf('localhost')>=0||currentUrl.indexOf('netlify')>=0;
+    loading.innerHTML='<div style="padding:16px;text-align:center;color:var(--sub);font-size:13px">⏳ Carregando…<br><small style="color:'+(isAllowed?'green':'var(--red)')+'">'+currentUrl+'</small></div>';
     el.appendChild(loading);return;
   }
   var hoje=td0();
@@ -2483,7 +2515,8 @@ function buildDashFinanceiro(el){
   var debug=document.createElement('div');
   debug.style.cssText='margin:0 16px 4px;padding:6px 12px;background:rgba(0,0,0,.04);border-radius:8px;font-size:11px;color:var(--sub);cursor:pointer';
   var rawTotal=(AG_DATA._rawDesp||[]).length+(AG_DATA._rawOrc||[]).length;
-  debug.textContent='Raw: desp='+(AG_DATA._rawDesp||[]).length+' orc='+(AG_DATA._rawOrc||[]).length+' → filtrado: '+AG_DATA.despesas.length+' desp, '+AG_DATA.orcamento.length+' orc';
+  var errTxt=AG_DATA._lastError?' ⚠ '+AG_DATA._lastError:'';
+  debug.textContent='Raw: desp='+(AG_DATA._rawDesp||[]).length+' orc='+(AG_DATA._rawOrc||[]).length+' → filtrado: '+AG_DATA.despesas.length+' desp, '+AG_DATA.orcamento.length+' orc'+errTxt;
   debug.onclick=function(){
     var info='DESPESAS ('+AG_DATA.despesas.length+'):\n'+
       (AG_DATA._rawDesp||[]).slice(0,2).map(function(d){return JSON.stringify(d).slice(0,100);}).join('\n')+
