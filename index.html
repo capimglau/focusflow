@@ -235,7 +235,8 @@ body .nb{flex:0 0 33.333%;min-width:0;height:50px;padding:0;border-radius:0;bord
 body .nb svg{width:26px;height:26px;flex-shrink:0}
 body .nb span{font-size:10px;font-weight:500;white-space:nowrap;letter-spacing:.1px}
 body .nb:not(.on) svg,body .nb:not(.on) span{color:#8e8e93}
-body .nb.on svg,body .nb.on span{color:var(--blue)}
+body .nb.on{color:var(--blue)}
+.nb.on svg,body .nb.on span{color:var(--blue)}
 [data-dark="1"] body .nb:not(.on) svg,[data-dark="1"] body .nb:not(.on) span{color:rgba(255,255,255,.45)}
 [data-dark="1"] body .nb.on svg,[data-dark="1"] body .nb.on span{color:#fff}
 .nb.on::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%) scale(1);width:4px;height:4px;border-radius:50%;background:var(--blue);opacity:1}
@@ -737,12 +738,12 @@ body {
   </div>
   <div class="page" id="p-projetos">
     <div class="hdr"><div class="hdr-left"><h1>Projetos</h1></div>
-      <div class="hdr-act"><button class="hdr-btn" onclick="goPage('inicio')" title="Início"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg></button></div></div>
+      <div class="hdr-act"><button class="hdr-btn" onclick="openProjectEditor(null)" style="font-size:22px;font-weight:300">+</button><button class="hdr-btn" onclick="goPage('inicio')" title="Início"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg></button></div></div>
     <div id="projetos-feed"></div>
   </div>
   <div class="page" id="p-notas">
     <div class="hdr"><div class="hdr-left"><h1>Notas</h1></div>
-      <div class="hdr-act"><button class="hdr-btn" onclick="goPage('inicio')" title="Início"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg></button></div></div>
+      <div class="hdr-act"><button class="hdr-btn" onclick="openNoteEditor(null)" style="font-size:22px;font-weight:300">+</button><button class="hdr-btn" onclick="goPage('inicio')" title="Início"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg></button></div></div>
     <div id="notas-feed"></div>
   </div>
   <div class="page" id="p-navegar">
@@ -1220,15 +1221,65 @@ function getForDate(ds){
   var a=[];
   D.tasks.forEach(function(t){if(t.dueDate===ds&&!t.done)a.push({kind:'task',data:t,date:ds});});
   D.reminders.forEach(function(r){if(r.datetime&&r.datetime.slice(0,10)===ds&&!r.done)a.push({kind:'reminder',data:r,date:ds});});
-  D.events.forEach(function(e){if(e.date===ds)a.push({kind:'event',data:e,date:ds});});
+  D.events.forEach(function(e){
+    if(e.date===ds){a.push({kind:'event',data:e,date:ds});return;}
+    // Check if recurring event falls on this date
+    if(!e.recurrence||e.recurrence==='none')return;
+    var cur=e.date;
+    for(var i=0;i<365;i++){
+      var next=cur;
+      if(e.recurrence==='daily')next=addDays(cur,1);
+      else if(e.recurrence==='weekly')next=addDays(cur,7);
+      else if(e.recurrence==='monthly'){var d=new Date(cur+'T12:00');d.setMonth(d.getMonth()+1);next=iso(d);}
+      else if(e.recurrence==='yearly'){var d2=new Date(cur+'T12:00');d2.setFullYear(d2.getFullYear()+1);next=iso(d2);}
+      else break;
+      if(next>ds)break;
+      if(next===ds){a.push({kind:'event',data:Object.assign({},e,{date:next,_virtual:true}),date:ds});break;}
+      cur=next;
+    }
+  });
   return a;
 }
 function getAllUpcoming(){
   var today=td0();
+  var horizon=addDays(today, S._showAll?365:60);
   var a=[];
-  D.tasks.forEach(function(t){if(!t.done&&t.dueDate&&t.dueDate>=today)a.push({kind:'task',data:t,date:t.dueDate});});
-  D.reminders.forEach(function(r){if(!r.done&&r.datetime){var d=r.datetime.slice(0,10);if(d>=today)a.push({kind:'reminder',data:r,date:d});}});
-  D.events.forEach(function(e){if(e.date>=today)a.push({kind:'event',data:e,date:e.date});});
+
+  D.tasks.forEach(function(t){
+    if(!t.done&&t.dueDate&&t.dueDate>=today&&t.dueDate<=horizon)
+      a.push({kind:'task',data:t,date:t.dueDate});
+  });
+
+  D.reminders.forEach(function(r){
+    if(!r.done&&r.datetime){
+      var d=r.datetime.slice(0,10);
+      if(d>=today&&d<=horizon)a.push({kind:'reminder',data:r,date:d});
+    }
+  });
+
+  // Events: expand recurrence
+  D.events.forEach(function(e){
+    if(!e.date)return;
+    // Add base occurrence
+    if(e.date>=today&&e.date<=horizon)
+      a.push({kind:'event',data:e,date:e.date});
+    // Generate future recurrences
+    if(e.recurrence&&e.recurrence!=='none'){
+      var cur=e.date;
+      for(var i=0;i<52;i++){
+        var next=cur;
+        if(e.recurrence==='daily')next=addDays(cur,1);
+        else if(e.recurrence==='weekly')next=addDays(cur,7);
+        else if(e.recurrence==='monthly'){var d=new Date(cur+'T12:00');d.setMonth(d.getMonth()+1);next=iso(d);}
+        else if(e.recurrence==='yearly'){var d2=new Date(cur+'T12:00');d2.setFullYear(d2.getFullYear()+1);next=iso(d2);}
+        else break;
+        if(next>horizon)break;
+        if(next>today)a.push({kind:'event',data:Object.assign({},e,{date:next,_virtual:true}),date:next});
+        cur=next;
+      }
+    }
+  });
+
   a.sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0;});
   return a;
 }
@@ -1380,17 +1431,30 @@ function renderInicio(){
 // ═══════════════════════════════════════
 function renderHoje(){
   var el=document.getElementById('hoje-feed');
-  if(!el)return;
-  el.innerHTML='';
+  if(!el){el=document.getElementById('p-hoje');if(!el)return;}
+  // Clear only the feed, not header
+  var feed=el.querySelector('#hoje-feed')||el;
+  feed.innerHTML='';
   var today=td0();
   var items=getForDate(today);
-  if(!items.length){
-    el.innerHTML='<div style="padding:40px 20px;text-align:center;color:var(--sub)">Nada para hoje ✓</div>';
+  
+  // Add overdue section to hoje too
+  var overdue=getOverdue();
+  if(overdue.length){
+    var ovCard=document.createElement('div');ovCard.className='card fade-in';ovCard.style.cssText='margin:8px 16px;border-left:3px solid var(--red)';
+    overdue.forEach(function(item){ovCard.appendChild(buildItemRow(item));});
+    feed.appendChild(ovCard);
+  }
+  
+  if(!items.length&&!overdue.length){
+    feed.innerHTML='<div style="padding:40px;text-align:center;color:var(--sub);font-size:15px">Nada para hoje ✓</div>';
     return;
   }
-  var card=document.createElement('div');card.className='card';card.style.margin='0 16px';
-  items.forEach(function(item){card.appendChild(buildItemRow(item));});
-  el.appendChild(card);
+  if(items.length){
+    var card=document.createElement('div');card.className='card fade-in';card.style.margin='0 16px';
+    items.forEach(function(item){card.appendChild(buildItemRow(item));});
+    feed.appendChild(card);
+  }
 }
 
 // ═══════════════════════════════════════
@@ -1421,7 +1485,10 @@ function renderEntrada(){
     return !t.done;
   });
   tasks.sort(function(a,b){var da=a.dueDate||'9999',db=b.dueDate||'9999';return da<db?-1:da>db?1:0;});
-  if(!tasks.length){el.innerHTML='<div style="padding:40px;text-align:center;color:var(--sub)">Nenhuma tarefa ✓</div>';return;}
+  if(!tasks.length){
+    el.innerHTML='<div style="padding:60px 20px;text-align:center"><div style="font-size:40px;margin-bottom:12px">✅</div><div style="font-size:16px;font-weight:500;color:var(--fg);margin-bottom:6px">Tudo em dia!</div><div style="font-size:14px;color:var(--sub);margin-bottom:20px">Nenhuma tarefa pendente</div></div>';
+    return;
+  }
   var card=document.createElement('div');card.className='card';card.style.margin='0 16px';
   tasks.forEach(function(t){
     var item={kind:'task',data:t,date:t.dueDate||''};
@@ -1453,7 +1520,10 @@ function renderProjetos(){
   var el=document.getElementById('projects-feed');
   if(!el)return;
   el.innerHTML='';
-  if(!D.projects.length){el.innerHTML='<div style="padding:40px;text-align:center;color:var(--sub)">Nenhum projeto ainda.<br><button onclick="openProjectEditor(null)" style="margin-top:12px;border:none;background:var(--blue);color:#fff;padding:10px 24px;border-radius:12px;font-family:inherit;font-size:15px;cursor:pointer">+ Criar projeto</button></div>';return;}
+  if(!D.projects.length){
+    el.innerHTML='<div style="padding:60px 20px;text-align:center"><div style="font-size:40px;margin-bottom:12px">📁</div><div style="font-size:16px;font-weight:500;color:var(--fg);margin-bottom:6px">Nenhum projeto</div><div style="font-size:14px;color:var(--sub);margin-bottom:20px">Organize suas tarefas em projetos</div><button onclick="openProjectEditor(null)" style="border:none;background:#007AFF;color:#fff;padding:11px 24px;border-radius:12px;font-family:inherit;font-size:15px;font-weight:500;cursor:pointer">+ Novo Projeto</button></div>';
+    return;
+  }
   D.projects.forEach(function(proj){
     var card=document.createElement('div');
     card.className='card proj-card';card.style.cssText='margin:0 16px 10px;cursor:pointer;padding:16px';
@@ -1479,7 +1549,10 @@ function renderNotas(){
   var el=document.getElementById('notes-feed');
   if(!el)return;
   el.innerHTML='';
-  if(!D.notes.length){el.innerHTML='<div style="padding:40px;text-align:center;color:var(--sub)">Nenhuma nota ainda.</div>';return;}
+  if(!D.notes.length){
+    el.innerHTML='<div style="padding:60px 20px;text-align:center"><div style="font-size:40px;margin-bottom:12px">📝</div><div style="font-size:16px;font-weight:500;color:var(--fg);margin-bottom:6px">Nenhuma nota</div><div style="font-size:14px;color:var(--sub);margin-bottom:20px">Guarde ideias, informações e lembretes</div><button onclick="openNoteEditor(null)" style="border:none;background:#007AFF;color:#fff;padding:11px 24px;border-radius:12px;font-family:inherit;font-size:15px;font-weight:500;cursor:pointer">+ Nova Nota</button></div>';
+    return;
+  }
   D.notes.forEach(function(note){
     var card=document.createElement('div');
     card.className='card';card.style.cssText='margin:0 16px 10px;cursor:pointer;padding:16px';
