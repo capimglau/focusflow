@@ -704,7 +704,7 @@ body {
 .irow.drop-target{background:rgba(0,122,255,.08)!important;border-left:3px solid #007AFF!important;}
 
 /* ── Timeline ── */
-.tl-wrap{position:relative;margin:0 16px 8px;padding-left:56px;}
+.tl-wrap{position:relative;margin:0 8px 8px;padding-left:52px;}
 .tl-wrap::before{content:'';position:absolute;left:31px;top:0;bottom:0;width:2px;background:#e5e5ea;}
 .tl-wrap::after{content:'';position:absolute;left:31px;top:0;width:2px;background:linear-gradient(to bottom,#aeaeb2,#c7c7cc);transition:height .8s ease;}
 .tl-item{position:relative;margin-bottom:8px;}
@@ -1504,8 +1504,10 @@ function renderInicio(){
         var t=item.data.time||item.data.dueTime||'';
         var endT=item.data.endTime||'';
         var itemMins=t?parseInt(t.slice(0,2))*60+parseInt(t.slice(3,5)):0;
-        var isPast=isLate(ds)||(isToday(ds)&&t&&itemMins+30<nowMins);
-        var isNow=isToday(ds)&&t&&Math.abs(itemMins-nowMins)<30;
+        // Use end time to determine if event is past
+        var endMins=endT?parseInt(endT.slice(0,2))*60+parseInt(endT.slice(3,5)):itemMins+60;
+        var isPast=isLate(ds)||(isToday(ds)&&t&&endMins<nowMins);
+        var isNow=isToday(ds)&&t&&itemMins<=nowMins&&nowMins<endMins;
         var isDone=item.kind==='task'&&item.data.done;
 
         // Gap between items showing duration
