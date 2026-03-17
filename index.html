@@ -178,7 +178,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 .prog-meta{display:flex;justify-content:space-between;align-items:center}
 .prog-meta span:first-child{font-size:12px;color:var(--sub)}
 .prog-meta span:last-child{font-size:13px;font-weight:700}
-.date-banner{padding:16px 16px 6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center;gap:6px;color:#6e6e73}
+.date-banner{padding:6px 12px;margin:8px 8px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;display:inline-flex;align-items:center;gap:6px;color:#6e6e73;background:rgba(255,255,255,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:20px;border:.5px solid rgba(255,255,255,0.7);box-shadow:inset 0 1px 0 rgba(255,255,255,0.8);}
 .date-banner::before{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:#007AFF;flex-shrink:0;opacity:.7}
 #move-sheet-bg{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.32);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:none;align-items:flex-end;justify-content:center}
 #move-sheet-bg.on{display:flex;animation:fadeIn .18s ease}
@@ -770,11 +770,11 @@ html:not([data-dark="1"]) body::before{
   inset:0;
   z-index:-1;
   background:
-    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(180,200,255,0.5) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 10%, rgba(200,180,255,0.4) 0%, transparent 55%),
-    radial-gradient(ellipse 70% 50% at 50% 80%, rgba(180,230,200,0.35) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 70% at 90% 70%, rgba(255,200,180,0.3) 0%, transparent 55%),
-    #dde2ec;
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(200,215,255,0.45) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 10%, rgba(215,200,255,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 50% 80%, rgba(200,240,215,0.3) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 70% at 90% 70%, rgba(255,215,200,0.25) 0%, transparent 55%),
+    #eef0f5;
   pointer-events:none;
 }
 [data-dark="1"] body::before{
@@ -792,14 +792,14 @@ html:not([data-dark="1"]) body::before{
 
 /* Liquid Glass cards */
 .card{
-  background:rgba(255,255,255,0.35)!important;
+  background:rgba(255,255,255,0.82)!important;
   backdrop-filter:blur(20px) saturate(1.8)!important;
   -webkit-backdrop-filter:blur(20px) saturate(1.8)!important;
   border:.5px solid rgba(255,255,255,0.8)!important;
   box-shadow:0 2px 20px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,0.9)!important;
 }
 [data-dark="1"] .card{
-  background:rgba(30,30,45,0.42)!important;
+  background:rgba(30,30,45,0.72)!important;
   backdrop-filter:blur(20px) saturate(1.4)!important;
   -webkit-backdrop-filter:blur(20px) saturate(1.4)!important;
   border:.5px solid rgba(255,255,255,0.1)!important;
@@ -839,16 +839,18 @@ html:not([data-dark="1"]) body::before{
 
 /* Glass tl-card */
 .tl-card{
-  background:rgba(255,255,255,0.32)!important;
+  background:rgba(255,255,255,0.78)!important;
   backdrop-filter:blur(20px) saturate(1.8)!important;
   -webkit-backdrop-filter:blur(20px) saturate(1.8)!important;
   border:.5px solid rgba(255,255,255,0.5)!important;
   box-shadow:0 1px 12px rgba(0,0,0,.04), inset 0 1px 0 rgba(255,255,255,0.7)!important;
 }
 [data-dark="1"] .tl-card{
-  background:rgba(25,25,38,0.4)!important;
+  background:rgba(25,25,38,0.72)!important;
   border:.5px solid rgba(255,255,255,0.1)!important;
 }
+
+[data-dark="1"] .date-banner{background:rgba(255,255,255,0.08);border:.5px solid rgba(255,255,255,0.12);box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);}
 </style>
 </head>
 <body>
@@ -1559,11 +1561,14 @@ function renderInicio(){
   dates.forEach(function(ds){try{
     var banner=document.createElement('div');
     banner.className='date-banner';
+    banner.style.display='inline-flex';
     banner.dataset.date=ds;
     var dow=WSHORT[new Date(ds+'T12:00').getDay()];
     var label=isToday(ds)?'HOJE · '+dow:isTom(ds)?'AMANHÃ · '+dow:fmtD(ds).toUpperCase()+' · '+dow;
-    var labelColor=isToday(ds)?'color:var(--blue);font-weight:800':'';
-    banner.innerHTML='<span class="db-dot" style="'+(isToday(ds)?'background:var(--blue)':'')+'"></span><span style="'+labelColor+'">'+label+'</span>';
+    var isPastDay=ds<td0()&&!isToday(ds);
+    var labelColor=isToday(ds)?'color:var(--blue);font-weight:800':isPastDay?'color:var(--sub);opacity:.5':'color:var(--sub)';
+    var dotColor=isToday(ds)?'background:var(--blue)':isPastDay?'background:rgba(0,0,0,.15)':'background:var(--sub)';
+    banner.innerHTML='<span class="db-dot" style="'+dotColor+'"></span><span style="'+labelColor+'">'+label+'</span>';
     el.appendChild(banner);
     
     var items=byDate[ds];
@@ -1581,6 +1586,8 @@ function renderInicio(){
       tlWrap.className='tl-wrap';
       var tlId='tl-'+ds.replace(/-/g,'');
       tlWrap.id=tlId;
+      // Dim past days slightly
+      if(isLate(ds))tlWrap.style.opacity='.65';
 
       // Calculate progress
       var pct=0;
