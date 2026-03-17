@@ -3023,21 +3023,7 @@ document.addEventListener('DOMContentLoaded',function(){
   // Go to inicio page
   goPage('inicio');
 
-  // Seed demo data if empty
-  if(!D.tasks.length&&!D.events.length&&!D.reminders.length){
-    var today=td0();
-    D.tasks=[
-      {id:uid(),title:'Reunião de alinhamento',done:false,dueDate:today,dueTime:'10:00',notes:'Google Meet às 10h',priority:'none',recurrence:'none',subtasks:[],tags:['Trabalho'],createdAt:new Date().toISOString()},
-      {id:uid(),title:'Compras do mês',done:false,dueDate:addDays(today,1),dueTime:'09:44',notes:'Arroz, feijão, café, leite',priority:'none',recurrence:'none',subtasks:[{id:uid(),title:'Arroz',done:false},{id:uid(),title:'Feijão',done:false}],tags:['Compras','Pessoal'],createdAt:new Date().toISOString()},
-      {id:uid(),title:'Implementar telas',done:false,dueDate:addDays(today,1),dueTime:'',notes:'',priority:'none',recurrence:'none',subtasks:[],tags:[],createdAt:new Date().toISOString()},
-      {id:uid(),title:'Renovar seguro do carro',done:false,dueDate:addDays(today,3),dueTime:'',notes:'',priority:'none',recurrence:'none',subtasks:[],tags:['Financeiro','Pessoal'],createdAt:new Date().toISOString()}
-    ];
-    D.events=[
-      {id:uid(),title:'Dentista',date:addDays(today,1),time:'14:30',endTime:'15:30',location:'Clínica Saúde',desc:'Consulta de rotina'},
-      {id:uid(),title:'Consulta médica',date:addDays(today,7),time:'14:00',endTime:'',location:'',desc:'Check-up anual'}
-    ];
-    save();
-  }
+  // Do NOT seed demo data - preserve real user data
 
   // Auto-load AutoGest after 800ms
   setTimeout(function(){loadAutoGestData(function(){render(S.page);});},800);
