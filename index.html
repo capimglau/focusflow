@@ -1385,7 +1385,7 @@ function renderInicio(){
     em.textContent='Nada programado ✓';
     el.appendChild(em);
   }
-  dates.forEach(function(ds){
+  dates.forEach(function(ds){try{
     var banner=document.createElement('div');
     banner.className='date-banner';
     banner.dataset.date=ds;
@@ -1403,7 +1403,7 @@ function renderInicio(){
     
     // ALL days use timeline layout
     {
-      card.remove();
+      // card not used in timeline mode
       var now=new Date();
       var nowMins=now.getHours()*60+now.getMinutes();
       var tlWrap=document.createElement('div');
@@ -1452,7 +1452,7 @@ function renderInicio(){
       tlWrap.appendChild(style);
       el.appendChild(tlWrap);
     }
-  });
+  }catch(e){console.error('[TL]',ds,e);}});
 
   // ── Notas recentes ──
   var recentNotes=D.notes.slice(0,5);
