@@ -228,7 +228,7 @@ body #nav-add{
   color:#fff;
 }
 #nav-add:active{transform:scale(.93);opacity:.78;}
-body #nav-pill{pointer-events:auto;display:flex;align-items:center;width:calc(100vw - 120px);max-width:calc(100vw - 120px);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding:5px;border-radius:26px;background:rgba(255,255,255,.82);backdrop-filter:blur(60px) saturate(2.5) brightness(1.08);-webkit-backdrop-filter:blur(60px) saturate(2.5) brightness(1.08);border:.5px solid rgba(255,255,255,.82);box-shadow:0 1.5px 0 rgba(255,255,255,.90) inset,0 6px 24px rgba(0,0,0,.12),0 1px 4px rgba(0,0,0,.08);position:relative}
+body #nav-pill{pointer-events:auto;display:flex;align-items:center;width:calc(100vw - 120px);max-width:calc(100vw - 120px);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding:5px;border-radius:26px;background:rgba(255,255,255,0.08);backdrop-filter:blur(60px) saturate(2.5) brightness(1.08);-webkit-backdrop-filter:blur(60px) saturate(2.5) brightness(1.08);border:.5px solid rgba(255,255,255,.82);box-shadow:0 1.5px 0 rgba(255,255,255,.90) inset,0 6px 24px rgba(0,0,0,.12),0 1px 4px rgba(0,0,0,.08);position:relative}
 [data-dark="1"] body #nav-pill{background:rgba(28,28,30,.88);border-color:rgba(255,255,255,.15);box-shadow:0 1px 0 rgba(255,255,255,.1) inset,0 8px 28px rgba(0,0,0,.4)}
 body #nav-pill::-webkit-scrollbar{display:none}
 body .nb{flex:0 0 33.333%;min-width:0;height:50px;padding:0;border-radius:0;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;scroll-snap-align:start;cursor:pointer;flex-shrink:0;position:relative;z-index:1;user-select:none;-webkit-user-select:none}
@@ -666,7 +666,7 @@ body {
 [data-dark="1"] .a-close,[data-dark="1"] .a-save{background:rgba(255,255,255,.1);color:#fff}
 [data-dark="1"] .a-title{color:#ffffff}
 
-.week-cal{padding:2px 0 4px;border-bottom:.5px solid var(--line)}
+.week-cal{padding:2px 0 4px;border:none}
 .week-wrap{display:flex;align-items:center;padding:10px 14px 8px;gap:0}
 .wdays{display:flex;flex:1;gap:0}
 .wday{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 2px;border-radius:10px;-webkit-tap-highlight-color:transparent}
@@ -824,42 +824,28 @@ html:not([data-dark="1"]) body::after{
   box-shadow:0 2px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,0.08)!important;
 }
 
-/* Glass nav - iOS Dock style */
+/* Glass nav - iOS Dock */
 #nav-pill{
-  background:rgba(220,225,235,0.28)!important;
-  backdrop-filter:blur(50px) saturate(3) brightness(1.08)!important;
-  -webkit-backdrop-filter:blur(50px) saturate(3) brightness(1.08)!important;
-  border:.5px solid rgba(255,255,255,0.55)!important;
-  box-shadow:
-    0 0 0 .5px rgba(255,255,255,0.25),
-    0 2px 24px rgba(0,0,0,.08),
-    inset 0 1px 0 rgba(255,255,255,0.75),
-    inset 0 -1px 0 rgba(0,0,0,.04)!important;
+  background:rgba(255,255,255,0.12)!important;
+  backdrop-filter:blur(40px)!important;
+  -webkit-backdrop-filter:blur(40px)!important;
+  border:.5px solid rgba(255,255,255,0.45)!important;
+  box-shadow:none!important;
 }
 [data-dark="1"] #nav-pill{
-  background:rgba(30,32,42,0.38)!important;
-  backdrop-filter:blur(50px) saturate(2) brightness(1.06)!important;
-  -webkit-backdrop-filter:blur(50px) saturate(2) brightness(1.06)!important;
-  border:.5px solid rgba(255,255,255,0.18)!important;
-  box-shadow:
-    0 0 0 .5px rgba(255,255,255,0.1),
-    0 2px 24px rgba(0,0,0,.25),
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    inset 0 -1px 0 rgba(0,0,0,.15)!important;
+  background:rgba(60,60,70,0.35)!important;
+  backdrop-filter:blur(40px)!important;
+  -webkit-backdrop-filter:blur(40px)!important;
+  border:.5px solid rgba(255,255,255,0.15)!important;
+  box-shadow:none!important;
 }
 
-/* Header - frosted smoked */
+/* Header - fully transparent */
 .hdr{
-  background:rgba(255,255,255,0.15)!important;
-  backdrop-filter:blur(40px) saturate(2.5) brightness(1.1)!important;
-  -webkit-backdrop-filter:blur(40px) saturate(2.5) brightness(1.1)!important;
-  border-bottom:.5px solid rgba(255,255,255,0.35)!important;
-}
-[data-dark="1"] .hdr{
-  background:rgba(10,10,20,0.3)!important;
-  backdrop-filter:blur(40px) saturate(1.8) brightness(1.05)!important;
-  -webkit-backdrop-filter:blur(40px) saturate(1.8) brightness(1.05)!important;
-  border-bottom:.5px solid rgba(255,255,255,0.08)!important;
+  background:transparent!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  border-bottom:none!important;
 }
 
 /* Week cal - transparent */
@@ -3120,19 +3106,7 @@ function buildDashFinanceiro(el){
   AG_DATA.despesas.forEach(function(d){all.push({item:d,tipo:'despesa'});});
   AG_DATA.orcamento.forEach(function(o){all.push({item:o,tipo:'orcamento'});});
   (AG_DATA.contas||[]).forEach(function(c){all.push({item:c,tipo:'conta'});});
-  var debug=document.createElement('div');
-  debug.style.cssText='margin:0 62px 4px 16px;padding:6px 12px;background:rgba(255,255,255,0.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:8px;font-size:11px;color:var(--sub);cursor:pointer;border:.5px solid rgba(255,255,255,0.6)';
-  var rawTotal=(AG_DATA._rawDesp||[]).length+(AG_DATA._rawOrc||[]).length;
-  var errTxt=AG_DATA._lastError?' ⚠ '+AG_DATA._lastError:'';
-  debug.textContent='Raw: desp='+(AG_DATA._rawDesp||[]).length+' orc='+(AG_DATA._rawOrc||[]).length+' → filtrado: '+AG_DATA.despesas.length+' desp, '+AG_DATA.orcamento.length+' orc'+errTxt;
-  debug.onclick=function(){
-    var info='DESPESAS ('+AG_DATA.despesas.length+'):\n'+
-      (AG_DATA._rawDesp||[]).slice(0,2).map(function(d){return JSON.stringify(d).slice(0,100);}).join('\n')+
-      '\n\nORÇAMENTO ('+AG_DATA.orcamento.length+'):\n'+
-      (AG_DATA._rawOrc||[]).slice(0,2).map(function(o){return JSON.stringify(o).slice(0,100);}).join('\n');
-    alert(info||'Sem dados');
-  };
-  el.appendChild(debug);
+
   if(!all.length){
     var vazio=document.createElement('div');vazio.className='card';vazio.style.margin='0 62px 6px 16px';
     vazio.innerHTML='<div style="padding:14px 16px;font-size:13px;color:var(--sub)">✅ Sem despesas pendentes</div>';
