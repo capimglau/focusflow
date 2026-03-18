@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="FocusFlow">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#ffffff" id="themeColor">
@@ -70,7 +70,7 @@ html,body,.app{
 
 /* ─── TOP BAR ────────────────────────── */
 .topbar{
-  padding:12px 16px 8px;
+  padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 8px;
   display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;background:transparent;
   position:sticky;top:0;z-index:90;
@@ -229,7 +229,7 @@ html,body,.app{
 /* ─── BOTTOM NAV — Liquid Glass ────────── */
 .nav{
   position:fixed;
-  bottom:calc(var(--safe-bot) + 4px);
+  bottom:calc(var(--safe-bot) - 11px);
   left:50%;transform:translateX(-50%);
   width:auto;min-width:336px;max-width:408px;
   background:rgba(255,255,255,0.55);
@@ -823,6 +823,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 [data-dark="1"] .overdue-hdr{background:transparent;}
 [data-dark="1"] .month-hdr,[data-dark="1"] .week-strip{background:transparent;}
 [data-dark="1"] .snack{background:rgba(100,100,100,.95);}
+#notifBanner.show{transform:translateY(0) !important;}
 </style>
 </head>
 <body>
@@ -1564,6 +1565,21 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   </div><!-- /det-card -->
 </div>
 
+<!-- ── NOTIFICATION BANNER ──────────────── -->
+<div id="notifBanner" style="display:none;position:fixed;top:calc(env(safe-area-inset-top,0px)+12px);left:16px;right:16px;z-index:900;
+  background:#1c1c1e;border-radius:16px;padding:14px 16px;
+  align-items:center;gap:12px;
+  box-shadow:0 4px 24px rgba(0,0,0,.35);
+  transform:translateY(-120%);transition:transform .35s cubic-bezier(.32,1,.65,1);">
+  <div style="font-size:24px">🔔</div>
+  <div style="flex:1">
+    <div style="font-size:14px;font-weight:600;color:#fff">Ativar notificações</div>
+    <div style="font-size:12px;color:#8e8e93;margin-top:2px">Receba alarmes dos seus lembretes</div>
+  </div>
+  <button onclick="enableNotifFromBanner()" style="background:#0a84ff;color:#fff;border:none;border-radius:10px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Ativar</button>
+  <button onclick="closeNotifBanner()" style="background:none;border:none;color:#8e8e93;font-size:20px;cursor:pointer;padding:0 4px;line-height:1">✕</button>
+</div>
+
 <!-- ── RECURRENCE PICKER ──────────────────── -->
 <div class="overlay" id="repOverlay" onclick="closeRep(event)" style="z-index:700">
   <div class="sheet" style="padding-bottom:calc(var(--safe-bot)+16px)">
@@ -1598,6 +1614,10 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
       <div class="set-group" style="margin-top:20px">
         <div class="set-label">AutoGest</div>
         <div class="set-card">
+          <div class="set-row" onclick="requestNotifNow()">
+            <span class="set-ico">🔔</span><span class="set-txt">Ativar notificações</span>
+            <span class="set-val" id="notifStatus">—</span>
+          </div>
           <div class="set-row" onclick="syncAutoGest()">
             <span class="set-ico">🔄</span><span class="set-txt">Sincronizar despesas</span>
             <span class="set-val" id="syncLabel">—</span>
@@ -2989,6 +3009,28 @@ function spawnNextRecurrence(it){
 }
 
 
+async function requestNotifNow(){
+  if(!('Notification' in window)){showSnack('Notificações não suportadas');return;}
+  if(Notification.permission==='granted'){showSnack('Notificações já ativas ✓');return;}
+  if(Notification.permission==='denied'){showSnack('Bloqueado — ative em Ajustes > FocusFlow');return;}
+  const p=await Notification.requestPermission();
+  const el=document.getElementById('notifStatus');
+  if(p==='granted'){if(el)el.textContent='Ativo';showSnack('Notificações ativadas ✓');scheduleAlarms();}
+  else{if(el)el.textContent='Negado';showSnack('Permissão negada');}
+}
+
+function showNotifBanner(){
+  const b=document.getElementById('notifBanner');
+  if(b){b.style.display='flex';setTimeout(()=>b.classList.add('show'),50);}
+}
+function closeNotifBanner(){
+  const b=document.getElementById('notifBanner');
+  if(b){b.classList.remove('show');setTimeout(()=>b.style.display='none',300);}
+}
+async function enableNotifFromBanner(){
+  closeNotifBanner();
+  await requestNotifNow();
+}
 function openSettings(){document.getElementById('settingsOverlay').classList.add('show');}
 function closeSettings(e){if(e.target===document.getElementById('settingsOverlay'))document.getElementById('settingsOverlay').classList.remove('show');}
 function exportData(){
@@ -3180,14 +3222,18 @@ window.addEventListener('DOMContentLoaded',()=>{
   buildWeek();
   renderAll();
   initDrums();
-  // Request notification permission on first load
-  setTimeout(async()=>{
-    const granted=await requestNotifPermission();
-    if(!granted&&Notification.permission!=='denied'){
-      showSnack('Ative notificações para receber alarmes');
-    }
+// Schedule alarms silently
+  setTimeout(()=>{
     scheduleAlarms();
-  },1500);
+    const el=document.getElementById('notifStatus');
+    if(el&&'Notification' in window)
+      el.textContent=Notification.permission==='granted'?'Ativo':Notification.permission==='denied'?'Negado':'Toque para ativar';
+    // Show in-app banner once to request notifications
+    if('Notification' in window && Notification.permission==='default' && !S.notifBannerShown){
+      S.notifBannerShown=true; save();
+      showNotifBanner();
+    }
+  }, 1000);
   // Reschedule alarms every time app is focused
   document.addEventListener('visibilitychange',()=>{
     if(!document.hidden)scheduleAlarms();
