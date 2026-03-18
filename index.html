@@ -67,7 +67,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 .sec-t b{color:var(--fg);font-weight:700;font-size:13px}
 .sec-act{border:none;background:rgba(0,0,0,.04);color:#6e6e73;font-family:inherit;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:3px;font-weight:600;padding:4px 10px;border-radius:8px}
 .card{background:rgba(255,255,255,.96);border-radius:14px;margin:0 62px 6px 16px;overflow:hidden;border:.5px solid rgba(180,210,255,.25);box-shadow:0 1px 0 rgba(255,255,255,1) inset,0 2px 10px rgba(80,140,255,.06),0 6px 20px rgba(60,100,220,.05)}
-[data-dark="1"] .card{background:rgba(30,30,45,0.72)!important;backdrop-filter:blur(20px) saturate(1.4)!important;-webkit-backdrop-filter:blur(20px) saturate(1.4)!important;border:.5px solid rgba(255,255,255,0.1)!important;box-shadow:0 2px 20px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,0.08)!important;}
+[data-dark="1"] .card{background:#1c1c1e!important;backdrop-filter:blur(20px) saturate(1.4)!important;-webkit-backdrop-filter:blur(20px) saturate(1.4)!important;border:.5px solid rgba(255,255,255,0.1)!important;box-shadow:0 2px 20px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,0.08)!important;}
 .irow{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:.5px solid rgba(0,0,0,.05);cursor:pointer;transition:background .1s;position:relative;overflow:hidden;background:transparent;touch-action:pan-y;min-height:52px}
 .irow:last-child{border-bottom:none!important}
 .irow:active{background:rgba(0,122,255,.06)!important}
@@ -714,8 +714,8 @@ body {
 
 /* ── Timeline ── */
 .tl-wrap{position:relative;margin:0 8px 8px;padding-left:52px;isolation:isolate;}
-.tl-line-bg{position:absolute;left:27px;top:0;bottom:0;width:2px;background:#e5e5ea;z-index:-1;pointer-events:none;}
-.tl-line-prog{position:absolute;left:27px;top:0;width:2px;background:linear-gradient(to bottom,#c7c7cc,#d1d1d6);transition:height .8s ease;z-index:-1;pointer-events:none;}
+.tl-line-bg{position:absolute;left:27px;top:0;bottom:0;width:2px;background:#c7c7cc;z-index:-1;pointer-events:none;}
+.tl-line-prog{position:absolute;left:27px;top:0;width:2px;background:linear-gradient(to bottom,#636366,#8e8e93);transition:height .8s ease;z-index:-1;pointer-events:none;}
 .tl-item{position:relative;margin-bottom:8px;z-index:1;}
 .tl-card{background:#fff;border-radius:12px;border:.5px solid rgba(0,0,0,.07);box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden;}
 .tl-card.past{opacity:.55;}
@@ -813,7 +813,7 @@ html:not([data-dark="1"]) body::after{
 
 /* Liquid Glass cards */
 .card{
-  background:rgba(255,255,255,0.82)!important;
+  background:#ffffff!important;
   backdrop-filter:blur(20px) saturate(1.8)!important;
   -webkit-backdrop-filter:blur(20px) saturate(1.8)!important;
   border:.5px solid rgba(255,255,255,0.8)!important;
@@ -892,7 +892,14 @@ html:not([data-dark="1"]) body::after{
 }
 
 
-[data-dark="1"] .sec{padding:10px 16px 6px;display:flex;align-items:center;justify-content:space-between;}</style>
+[data-dark="1"] .sec{padding:10px 16px 6px;display:flex;align-items:center;justify-content:space-between;}
+/* All pages same background */
+.page{background:transparent!important;}
+html:not([data-dark="1"]) .page,
+html:not([data-dark="1"]) #modal-overlay{
+  background:transparent!important;
+}
+</style>
 </head>
 <body>
 <div class="pages">
@@ -1559,7 +1566,7 @@ function renderInicio(){
     var ovId='tl-ov'+Date.now();
     ovTl.id=ovId;
     var ovSty=document.createElement('style');
-    ovSty.textContent='#'+ovId+'::after{height:100%;background:linear-gradient(to bottom,#c7c7cc,#d1d1d6);}'; // gray, no red
+    ovSty.textContent='#'+ovId+'::after{height:100%;background:linear-gradient(to bottom,#636366,#8e8e93);}'; // gray, no red
     ovTl.appendChild(ovSty);
     overdue.forEach(function(item){
       var tlItem=document.createElement('div');tlItem.className='tl-item';
@@ -1628,7 +1635,7 @@ function renderInicio(){
       var tlId='tl-'+ds.replace(/-/g,'');
       tlWrap.id=tlId;
       // Dim past days slightly
-      if(isLate(ds))tlWrap.style.opacity='.65';
+      // No dimming for past days
 
       // Calculate progress
       var pct=0;
@@ -1702,7 +1709,7 @@ function renderInicio(){
           // Current: fills from bottom as event progresses
           ico.className='tl-ico-bg';ico.style.cssText='position:absolute;left:-40px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;z-index:3;overflow:hidden;border:1.5px solid #c7c7cc;background:var(--bg);display:flex;align-items:center;justify-content:center;';
           var fill=document.createElement('div');
-          fill.style.cssText='position:absolute;bottom:0;left:0;right:0;height:'+fillPct+'%;background:#c7c7cc;transition:height .5s ease;z-index:0;';
+          fill.style.cssText='position:absolute;bottom:0;left:0;right:0;height:'+fillPct+'%;background:#636366;transition:height .5s ease;z-index:0;';
           ico.appendChild(fill);
         } else if(isPast||isDone){
           // Past: fully filled dark gray
@@ -1784,6 +1791,12 @@ function renderInicio(){
   var pSec2=document.createElement('div');pSec2.className='sec';
   pSec2.innerHTML='<div class="sec-t"><b>📁 Projetos</b></div><button onclick="goPage(\"projetos\")" style="border:none;background:transparent;color:var(--blue);font-size:14px;font-weight:600;cursor:pointer">Ver todos</button>';
   el.appendChild(pSec2);
+  if(!activeProjs.length){
+    var pEmpty=document.createElement('div');pEmpty.className='card';
+    pEmpty.style.margin='0 16px 8px';
+    pEmpty.innerHTML='<div style="padding:12px 16px;color:var(--sub);font-size:14px">Nenhum projeto. Toque em + para criar.</div>';
+    el.appendChild(pEmpty);
+  }
   if(activeProjs.length){
     var pSec=document.createElement('div');pSec.className='sec';
     pSec.innerHTML='<div class="sec-t"><b>📁 Projetos</b></div><button onclick="goPage(\"projetos\")" style="border:none;background:transparent;color:var(--blue);font-size:14px;font-weight:600;cursor:pointer">Ver todos</button>';
