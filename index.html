@@ -68,7 +68,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 .sec-act{border:none;background:rgba(0,0,0,.04);color:#6e6e73;font-family:inherit;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:3px;font-weight:600;padding:4px 10px;border-radius:8px}
 .card{background:#ffffff;border-radius:14px;margin:0 16px 6px;overflow:hidden;border:.5px solid rgba(0,0,0,.07);box-shadow:0 1px 3px rgba(0,0,0,.05);}
 [data-dark="1"] 
-.irow{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:.5px solid rgba(0,0,0,.05);cursor:pointer;transition:background .1s;position:relative;overflow:hidden;background:transparent;touch-action:pan-y;min-height:52px}
+.irow{display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:10px;padding:11px 16px;border-bottom:.5px solid rgba(0,0,0,.05);cursor:pointer;position:relative;overflow:hidden;background:transparent;touch-action:pan-y;}
 .irow:last-child{border-bottom:none!important}
 .irow:active{background:rgba(0,122,255,.06)!important}
 .irow .swipe-bg-l,.irow .swipe-bg-r{position:absolute;top:0;bottom:0;width:100%;display:flex;align-items:center;padding:0 22px;font-size:13px;font-weight:700;color:#fff;pointer-events:none;opacity:0;transition:opacity .12s}
@@ -1611,141 +1611,15 @@ function renderInicio(){
     card.className='card fade-in';
     card.style.cssText='margin:0 16px 8px;'+(hasTime?'padding-left:0':'');
     
-    // ALL days use Structured-style timeline
+    // Simple flat card per item
     {
-      var now=new Date();
-      var nowMins=now.getHours()*60+now.getMinutes();
-      var tlWrap=document.createElement('div');
-      tlWrap.className='tl-wrap';
-      var tlId='tl-'+ds.replace(/-/g,'');
-      tlWrap.id=tlId;
-      // Dim past days slightly
-      
-
-      // Calculate progress
-      var pct=0;
-      if(isLate(ds)){pct=100;}
-      else if(isToday(ds)){
-        var timedItems=items.filter(function(i){return i.data.time||i.data.dueTime;});
-        if(timedItems.length>=2){
-          var firstT=timedItems[0].data.time||timedItems[0].data.dueTime||'00:00';
-          var lastT=timedItems[timedItems.length-1].data.time||timedItems[timedItems.length-1].data.dueTime||'23:59';
-          var fM=parseInt(firstT.slice(0,2))*60+parseInt(firstT.slice(3,5));
-          var lM=parseInt(lastT.slice(0,2))*60+parseInt(lastT.slice(3,5));
-          pct=lM>fM?Math.min(100,Math.max(0,(nowMins-fM)/(lM-fM)*100)):0;
-        }
-      }
-      // Real line divs instead of pseudo-elements
-      var lineBg=document.createElement('div');
-      lineBg.className='tl-line-bg';
-      tlWrap.appendChild(lineBg);
-      var lineProg=document.createElement('div');
-      lineProg.className='tl-line-prog';
-      lineProg.style.height=pct+'%';
-      tlWrap.appendChild(lineProg);
-
-      items.forEach(function(item,idx){
-        var t=item.data.time||item.data.dueTime||'';
-        var endT=item.data.endTime||'';
-        var itemMins=t?parseInt(t.slice(0,2))*60+parseInt(t.slice(3,5)):0;
-        // Use end time to determine if event is past
-        var endMins=endT?parseInt(endT.slice(0,2))*60+parseInt(endT.slice(3,5)):itemMins+60;
-        var isPast=isLate(ds)||(isToday(ds)&&t&&endMins<nowMins);
-        var isNow=isToday(ds)&&t&&itemMins<=nowMins&&nowMins<endMins;
-        var isDone=item.kind==='task'&&item.data.done;
-
-        // Gap between items showing duration
-        if(idx>0){
-          var prevT=items[idx-1].data.time||items[idx-1].data.dueTime||'';
-          var prevEnd=items[idx-1].data.endTime||'';
-          if(prevEnd&&t){
-            var gapStart=parseInt(prevEnd.slice(0,2))*60+parseInt(prevEnd.slice(3,5));
-            var gapEnd=parseInt(t.slice(0,2))*60+parseInt(t.slice(3,5));
-            var gapMins=gapEnd-gapStart;
-            if(gapMins>0){
-              var gap=document.createElement('div');
-              gap.className='tl-gap';
-              gap.textContent=gapMins+'min livre';
-              tlWrap.appendChild(gap);
-            }
-          }
-        }
-
-        var tlItem=document.createElement('div');
-        tlItem.className='tl-item';
-
-        // Circle icon: future=outline, current=filling, past=filled
-        var ico=document.createElement('div');
-        var evColor=item.data.color||'#007AFF';
-        
-        // Calculate fill percentage for current event
-        var fillPct=0;
-        if(isNow&&t&&endT&&isToday(ds)){
-          var eStart=parseInt(t.slice(0,2))*60+parseInt(t.slice(3,5));
-          var eEnd=parseInt(endT.slice(0,2))*60+parseInt(endT.slice(3,5));
-          fillPct=eEnd>eStart?Math.min(100,Math.max(0,(nowMins-eStart)/(eEnd-eStart)*100)):50;
-        }
-        
-        var GRAY_FILL='#8e8e93';
-        var GRAY_OUT='#e5e5ea';
-        var svgStroke=isPast||isDone?'#fff':isNow?'#fff':'#8e8e93';
-
-        if(isNow){
-          // Current: fills from bottom as event progresses
-          ico.className='tl-ico-bg';ico.style.cssText='position:absolute;left:-40px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;z-index:3;overflow:hidden;border:1.5px solid #c7c7cc;background:var(--bg);display:flex;align-items:center;justify-content:center;';
-          var fill=document.createElement('div');
-          fill.style.cssText='position:absolute;bottom:0;left:0;right:0;height:'+fillPct+'%;background:#636366;transition:height .5s ease;z-index:0;';
-          ico.appendChild(fill);
-        } else if(isPast||isDone){
-          // Past: fully filled dark gray
-          ico.className='tl-ico-bg';ico.style.cssText='position:absolute;left:-40px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;z-index:3;background:#c7c7cc;display:flex;align-items:center;justify-content:center;';
-        } else {
-          // Future: outline only light gray
-          ico.style.cssText='position:absolute;left:-40px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;z-index:3;background:transparent;border:2px solid '+GRAY_OUT+';display:flex;align-items:center;justify-content:center;';
-        }
-        
-        // SVG icon: always on top via z-index:2, positioned relative
-        var svgWrap=document.createElement('div');
-        svgWrap.style.cssText='position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:100%;height:100%;';
-        var svgContent='';
-        if(item.kind==='event'){
-          svgContent='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="'+svgStroke+'" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
-        } else if(item.kind==='reminder'){
-          svgContent='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="'+svgStroke+'" stroke-width="2.2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>';
-        } else {
-          svgContent=(isDone||isPast)
-            ?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="'+svgStroke+'" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>'
-            :'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="'+svgStroke+'" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/></svg>';
-        }
-        svgWrap.innerHTML=svgContent;
-        ico.appendChild(svgWrap);
-        tlItem.appendChild(ico);
-
-        // Right content
-        var right=document.createElement('div');
-        right.style.cssText='width:100%;min-width:0';
-        if(t&&endT){
-          var sMins=parseInt(t.slice(0,2))*60+parseInt(t.slice(3,5));
-          var eMins=parseInt(endT.slice(0,2))*60+parseInt(endT.slice(3,5));
-          var dur=eMins-sMins;
-          if(dur>0){
-            var durEl=document.createElement('div');
-            durEl.style.cssText='font-size:10px;color:#aeaeb2;font-weight:500;padding:0 2px 2px;';
-            durEl.textContent=t.slice(0,5)+(endT?' – '+endT.slice(0,5):'')+' · '+(dur>=60?(Math.floor(dur/60)+'h'+(dur%60?dur%60+'min':'')):(dur+'min'));
-            right.appendChild(durEl);
-          }
-        }
-        var tlCard=document.createElement('div');
-        // Only dim events that are past, not overdue tasks
-        var addPast=isPast&&!isNow&&(item.kind==='event'||isDone);
-        tlCard.className='tl-card'+(addPast?' past':isNow?' now-card':'');
-        tlCard.appendChild(buildItemRow(item));
-        right.appendChild(tlCard);
-        tlItem.appendChild(right);
-        tlWrap.appendChild(tlItem);
+      items.forEach(function(item){
+        var itemCard=document.createElement('div');
+        itemCard.className='card';
+        itemCard.style.margin='0 16px 6px';
+        itemCard.appendChild(buildItemRow(item));
+        el.appendChild(itemCard);
       });
-
-      el.appendChild(tlWrap);
     }
   }catch(e){console.error('[TL]',ds,e);}});
 
@@ -1764,7 +1638,7 @@ function renderInicio(){
       ico.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFCC00" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>';
       var info=document.createElement('div');info.className='iinfo';
       info.innerHTML='<div class="ititle">'+esc(note.title||'Sem título')+'</div>'
-        +'<div class="imeta"><span style="color:var(--orange)">🔔 '+fmtD(note.reminder.date)+(note.reminder.time?' · '+note.reminder.time:'')+'</span></div>';
+        +(note.reminder&&note.reminder.date?'<div class="imeta"><span style="color:var(--orange)">🔔 '+fmtD(note.reminder.date)+(note.reminder.time?' · '+note.reminder.time:'')+'</span></div>':'');
       row.appendChild(ico);row.appendChild(info);
       nCard.appendChild(row);
     });
@@ -2150,7 +2024,7 @@ function buildItemRow(item){
     enableDrag(row,d,D.tasks);
   } else if(item.kind==='event'){
     var evIco=document.createElement('div');
-    evIco.style.cssText='width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0';
+    evIco.style.cssText='width:24px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0';
     evIco.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
     var info=document.createElement('div');info.className='iinfo';
     var title=document.createElement('div');title.className='ititle';title.textContent=d.title;
@@ -2171,7 +2045,7 @@ function buildItemRow(item){
     addDragToRow(row,d,'event');
   } else if(item.kind==='reminder'){
     var remIco=document.createElement('div');
-    remIco.style.cssText='width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0';
+    remIco.style.cssText='width:24px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0';
     remIco.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>';
     var info=document.createElement('div');info.className='iinfo';
     var title=document.createElement('div');title.className='ititle';title.textContent=d.title;
