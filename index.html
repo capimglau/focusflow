@@ -129,6 +129,8 @@ html,body,.app{
 .scroll{
   flex:1;overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
+  /* Ensure content is never hidden behind the floating dock */
+  padding-bottom:calc(var(--safe-bot) + 90px);
 }
 .scroll::-webkit-scrollbar{display:none}
 
