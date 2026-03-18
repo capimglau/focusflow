@@ -416,9 +416,9 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 
 /* row icon — exact SF Symbols sizes */
 .ios-row-ico{
-  flex-shrink:0;width:28px;height:28px;
+  flex-shrink:0;width:30px;height:30px;
   display:flex;align-items:center;justify-content:center;
-  border-radius:6px;
+  border-radius:8px;
 }
 .ios-row-ico svg{width:18px;height:18px;color:#8e8e93;}
 .ios-row-ico.yellow{background:#FFD60A;}
@@ -426,7 +426,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 
 .ios-row-lbl{flex:1;font-size:17px;color:#000;letter-spacing:-.2px;}
 [data-dark="1"] .ios-row-lbl{color:#fff;}
-.ios-row-val{font-size:17px;color:#8e8e93;flex-shrink:0;}
+.ios-row-val{font-size:17px;color:#8e8e93;flex-shrink:0;letter-spacing:-.1px;}
 .ios-row-chev{
   flex-shrink:0;margin-left:4px;
   font-size:13px;color:#c7c7cc;font-weight:500;
@@ -457,11 +457,11 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 
 /* ── URL input ── */
 .ios-url-in{
-  flex:1;font-size:17px;color:#000;background:none;
+  flex:1;font-size:17px;color:#3c3c43;background:none;
   border:none;outline:none;font-family:inherit;-webkit-appearance:none;
   caret-color:#007aff;
 }
-[data-dark="1"] .ios-url-in{color:#fff;}
+[data-dark="1"] .ios-url-in{color:#ebebf5;}
 .ios-url-in::placeholder{color:#c7c7cc;}
 
 /* ── Generic text input in row ── */
@@ -495,14 +495,15 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 /* ── Date/time pills (iOS Calendar style) ── */
 .dt-pill{
   background:#e9e9eb;border-radius:8px;
-  padding:5px 11px;font-size:15px;color:#000;
+  padding:5px 11px;font-size:15px;color:#3c3c43;
   font-weight:400;cursor:pointer;
   transition:opacity .12s;user-select:none;
   -webkit-tap-highlight-color:transparent;
 }
-[data-dark="1"] .dt-pill{background:#3a3a3c;color:#fff;}
+[data-dark="1"] .dt-pill{background:#3a3a3c;color:#ebebf5;}
 .dt-pill:active{opacity:.6;}
-.dt-pill.active-pill{background:#007aff;color:#fff;}
+.dt-pill.active-pill{background:#d1d1d6;color:#000;}
+[data-dark="1"] .dt-pill.active-pill{background:#48484a;}
 .dt-pills{display:flex;gap:6px;flex-shrink:0;}
 
 /* ── Drum roll picker — iOS UIDatePicker pixel-perfect ── */
@@ -602,22 +603,86 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   text-align:center;padding:5px 0 7px;
 }
 
-/* ── Hint text ── */
-.ios-hint{
+/* ── Blue subtitle under toggle label ── */
+.ios-row-sub{
+  font-size:13px;color:#007aff;margin-top:1px;font-weight:400;
+}
+
+/* ── Calendar grid picker (iOS Reminders style) ── */
+.cal-picker{
+  overflow:hidden;background:#fff;
+  border-top:.5px solid #c6c6c8;
+  max-height:0;transition:max-height .32s cubic-bezier(.4,0,.2,1);
+}
+[data-dark="1"] .cal-picker{background:#1c1c1e;border-top-color:#38383a;}
+.cal-picker.open{max-height:380px;}
+
+.cal-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px 8px;
+}
+.cal-nav-month{
+  background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;
+  font-size:17px;font-weight:700;color:#000;
+  font-family:inherit;padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+[data-dark="1"] .cal-nav-month{color:#fff;}
+.cal-nav-arr{
+  background:none;border:none;cursor:pointer;
+  padding:4px;-webkit-tap-highlight-color:transparent;
+}
+.cal-nav-arr svg{width:10px;height:16px;}
+
+.cal-dow-row{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  padding:0 8px 4px;
+}
+.cal-dow-row span{
+  text-align:center;font-size:11px;font-weight:600;
+  color:#8e8e93;letter-spacing:.3px;
+  padding:4px 0;
+}
+
+.cal-grid{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  padding:0 8px 12px;gap:2px 0;
+}
+.cal-day{
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:400;color:#000;
+  border-radius:50%;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .1s;
+}
+[data-dark="1"] .cal-day{color:#fff;}
+.cal-day:active{background:#e5e5ea;}
+.cal-day.empty{pointer-events:none;}
+.cal-day.today{color:#007aff;font-weight:600;}
+.cal-day.selected{background:#007aff !important;color:#fff !important;font-weight:600;}
+.cal-day.other-month{color:#c7c7cc;}
+
+/* ── Repetição row (below time card) ── */
+.rep-card{
+  background:#fff;border-radius:12px;margin-bottom:12px;overflow:hidden;
+}
+[data-dark="1"] .rep-card{background:#1c1c1e;}
+
   font-size:13px;color:#8e8e93;
   padding:6px 4px 4px;line-height:1.4;
 }
 
-/* ── Tags ── */
-.ios-tags{display:flex;flex-wrap:wrap;gap:7px;padding:4px 0 6px;}
+/* ── Tags — pure iOS gray, no colors ── */
+.ios-tags{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 8px;}
 .ios-tag{
-  padding:6px 14px;border-radius:20px;font-size:14px;font-weight:500;
-  border:.5px solid #c6c6c8;cursor:pointer;transition:all .12s;
-  background:#fff;color:#636366;
+  padding:6px 14px;border-radius:20px;font-size:14px;font-weight:600;
+  border:1.5px solid currentColor;cursor:pointer;
+  background:transparent;
   -webkit-tap-highlight-color:transparent;
+  transition:all .14s;
 }
-[data-dark="1"] .ios-tag{background:#2c2c2e;border-color:#3a3a3c;}
-.ios-tag.on{color:#fff;border-color:transparent;}
+.ios-tag.on{background:currentColor;color:#fff !important;}
 
 /* ── Attachments ── */
 .att-item{
@@ -635,16 +700,32 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   font-size:17px;font-weight:400;flex:1;
 }
 
-/* ── Bottom toolbar — exact iOS Reminders style ── */
+/* ── Type selector (4 buttons) ── */
+.type-sel-btn{
+  flex:1;text-align:center;
+  padding:7px 4px;font-size:13.5px;font-weight:500;
+  color:#8e8e93;cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:color .15s, border-color .15s;
+  -webkit-tap-highlight-color:transparent;
+  white-space:nowrap;
+}
+.type-sel-btn.on{
+  color:#000;font-weight:600;
+  border-bottom-color:#000;
+}
+[data-dark="1"] .type-sel-btn.on{color:#fff;border-bottom-color:#fff;}
+
+/* ── Bottom toolbar — raised up from edge ── */
 .det-toolbar{
   display:flex;align-items:center;justify-content:space-around;
-  background:#fff;border-top:.5px solid #c6c6c8;
-  padding:10px 10px calc(var(--safe-bot)+10px);flex-shrink:0;
+  background:#f2f2f7;border-top:.5px solid #c6c6c8;
+  padding:8px 10px calc(var(--safe-bot)+18px);flex-shrink:0;
 }
 [data-dark="1"] .det-toolbar{background:#1c1c1e;border-top-color:#3a3a3c;}
 .det-tb-btn{
   display:flex;align-items:center;justify-content:center;
-  width:40px;height:38px;cursor:pointer;
+  width:44px;height:36px;cursor:pointer;
   -webkit-tap-highlight-color:transparent;transition:opacity .12s;
 }
 .det-tb-btn:active{opacity:.4;}
@@ -810,7 +891,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
           <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </div>
-      <span class="det-hdr-title" id="detNavTitle">Novo Lembrete</span>
+      <span class="det-hdr-title" id="detNavTitle">Nova Tarefa</span>
       <div class="det-hdr-circ" style="background:#e5e5ea" onclick="saveItem()">
         <svg viewBox="0 0 16 14" fill="none">
           <path d="M1.5 7l4 5L14.5 1" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -818,10 +899,12 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
       </div>
     </div>
 
-    <!-- Segmented control — shown only for Event/Task (Calendar style) -->
-    <div class="cal-seg" id="calSeg" style="display:none">
-      <div class="cal-seg-btn on" id="csEvento" onclick="pickType('event',this)">Evento</div>
-      <div class="cal-seg-btn" id="csTask" onclick="pickType('task',this)">Lembrete</div>
+    <!-- Type selector — always visible, 4 options -->
+    <div style="display:flex;gap:0;margin:0 0 0;padding:0 16px 10px;flex-shrink:0">
+      <div id="ts-task" class="type-sel-btn on" onclick="pickType('task',this)" data-type="task">Tarefa</div>
+      <div id="ts-event" class="type-sel-btn" onclick="pickType('event',this)" data-type="event">Evento</div>
+      <div id="ts-note" class="type-sel-btn" onclick="pickType('note',this)" data-type="note">Nota</div>
+      <div id="ts-expense" class="type-sel-btn" onclick="pickType('expense',this)" data-type="expense">Despesa</div>
     </div>
 
     <!-- Body scroll -->
@@ -845,7 +928,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
         <div class="ios-sec">Data e Hora</div>
         <div class="ios-card">
 
-          <!-- Data toggle -->
+          <!-- Data toggle row -->
           <div class="ios-row" onclick="tapToggle('tog-date','pk-tdate')">
             <div class="ios-row-ico">
               <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
@@ -853,28 +936,53 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
                 <path d="M2 8h18"/><path d="M7 1v4M15 1v4"/>
               </svg>
             </div>
-            <span class="ios-row-lbl">Data</span>
+            <div style="flex:1">
+              <div class="ios-row-lbl">Data</div>
+              <div class="ios-row-sub" id="disp-date-lbl" style="display:none">Hoje</div>
+            </div>
             <div class="ios-tog" id="tog-date" onclick="event.stopPropagation();tapToggle('tog-date','pk-tdate')"></div>
           </div>
-          <!-- Data drum (inline expand) -->
-          <div class="drum-picker" id="pk-tdate">
-            <div class="drum-wrap">
-              <div class="drum-sel"></div>
-              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
-              <div class="drum-cols">
-                <div class="drum-col" id="dc-day"></div>
-                <div class="drum-col" id="dc-month"></div>
-                <div class="drum-col" id="dc-year"></div>
+
+          <!-- Calendar grid (iOS Reminders style) -->
+          <div class="cal-picker" id="pk-tdate">
+            <!-- Month nav header -->
+            <div class="cal-nav">
+              <button class="cal-nav-month" id="calMonthBtn" onclick="toggleMonthDrum()">
+                <span id="calMonthLabel">março de 2026</span>
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px">
+                  <path d="M2 3.5L5 6.5L8 3.5" stroke="#007aff" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <div style="display:flex;gap:18px">
+                <button class="cal-nav-arr" onclick="shiftCalMonth(-1)">
+                  <svg viewBox="0 0 10 16" fill="none"><path d="M8 2L2 8l6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button class="cal-nav-arr" onclick="shiftCalMonth(1)">
+                  <svg viewBox="0 0 10 16" fill="none"><path d="M2 2l6 6-6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
               </div>
             </div>
-            <div class="drum-labels">
-              <div class="drum-col-label">Dia</div>
-              <div class="drum-col-label">Mês</div>
-              <div class="drum-col-label">Ano</div>
+            <!-- Optional month/year drum (hidden by default) -->
+            <div id="pk-cal-my" style="display:none;border-bottom:.5px solid #c6c6c8">
+              <div class="drum-wrap" style="height:180px">
+                <div class="drum-sel"></div>
+                <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+                <div class="drum-cols" style="height:180px">
+                  <div class="drum-col" style="height:180px" id="dc-cal-month"></div>
+                  <div class="drum-col" style="height:180px" id="dc-cal-year"></div>
+                </div>
+              </div>
             </div>
+            <!-- Day-of-week headers -->
+            <div class="cal-dow-row">
+              <span>DOM.</span><span>SEG.</span><span>TER.</span>
+              <span>QUA.</span><span>QUI.</span><span>SEX.</span><span>SÁB.</span>
+            </div>
+            <!-- Days grid -->
+            <div class="cal-grid" id="calGrid"></div>
           </div>
 
-          <!-- Horário toggle -->
+          <!-- Horário toggle row -->
           <div class="ios-row" onclick="tapToggle('tog-time','pk-ttime')">
             <div class="ios-row-ico">
               <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -882,10 +990,14 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
                 <path d="M11 6v5.5l3.5 2" stroke-linecap="round"/>
               </svg>
             </div>
-            <span class="ios-row-lbl">Horário</span>
+            <div style="flex:1">
+              <div class="ios-row-lbl">Horário</div>
+              <div class="ios-row-sub" id="disp-time-lbl" style="display:none">08:00</div>
+            </div>
             <div class="ios-tog" id="tog-time" onclick="event.stopPropagation();tapToggle('tog-time','pk-ttime')"></div>
           </div>
-          <!-- Horário drum -->
+
+          <!-- Time drum (hours + minutes by 5) -->
           <div class="drum-picker" id="pk-ttime">
             <div class="drum-wrap">
               <div class="drum-sel"></div>
@@ -895,9 +1007,17 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
                 <div class="drum-col" id="dc-min"></div>
               </div>
             </div>
-            <div class="drum-labels">
-              <div class="drum-col-label">Hora</div>
-              <div class="drum-col-label">Min</div>
+            <!-- Fuso horário row inside time picker -->
+            <div class="ios-row" style="border-top:.5px solid #c6c6c8;border-bottom:none;min-height:44px;background:#fff">
+              <div class="ios-row-ico">
+                <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="11" cy="11" r="9"/>
+                  <path d="M11 2a14 14 0 010 18M11 2a14 14 0 000 18M2 11h18" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="ios-row-lbl">Fuso Horário</span>
+              <span class="ios-row-val">São Paulo</span>
+              <span class="ios-row-chev">›</span>
             </div>
           </div>
 
@@ -913,13 +1033,27 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
             <div class="ios-tog" id="tog-urgent" onclick="event.stopPropagation();tapToggleSimple('tog-urgent')"></div>
           </div>
         </div>
-        <div class="ios-hint">Para definir um alarme, marque este lembrete como urgente.</div>
+
+        <!-- Repetição -->
+        <div class="rep-card" onclick="tapRepetition()">
+          <div class="ios-row only" style="cursor:pointer">
+            <div class="ios-row-ico">
+              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 12v-2a7 7 0 0114 0v2"/><path d="M1 12l3-3 3 3"/>
+                <path d="M18 10v2a7 7 0 01-14 0v-2"/><path d="M21 10l-3 3-3-3"/>
+              </svg>
+            </div>
+            <span class="ios-row-lbl">Repetição</span>
+            <span class="ios-row-val" id="repLabel">Nunca</span>
+            <span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:4px">▲<br>▼</span>
+          </div>
+        </div>
 
         <!-- Mais Opções -->
         <div class="ios-sec">Mais Opções</div>
 
         <!-- Alarmes (mostrados só se urgente ativo) -->
-        <div class="ios-card" id="dg-alarms" style="display:none;margin-bottom:12px">
+        <div class="ios-card" id="dg-alarms" style="margin-bottom:12px">
           <div class="ios-row" onclick="tapAlarm('a1')">
             <div class="ios-row-ico">
               <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
@@ -1032,7 +1166,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 
         <div class="ios-card" id="dg-delete-task" style="display:none;margin-top:20px">
           <div class="ios-row only" onclick="deleteItem()">
-            <span class="ios-danger-row">Apagar Lembrete</span>
+            <span class="ios-danger-row">Apagar Tarefa</span>
           </div>
         </div>
         <div style="height:20px"></div>
@@ -1336,6 +1470,16 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   </div><!-- /det-card -->
 </div>
 
+<!-- ── RECURRENCE PICKER ──────────────────── -->
+<div class="overlay" id="repOverlay" onclick="closeRep(event)">
+  <div class="sheet" style="padding-bottom:calc(var(--safe-bot)+16px)">
+    <div class="sheet-handle"></div>
+    <div style="font-size:17px;font-weight:600;text-align:center;padding:0 20px 14px;color:var(--ink)">Repetição</div>
+    <div id="repList" style="padding:0 16px"></div>
+    <div style="height:8px"></div>
+  </div>
+</div>
+
 <!-- ── SETTINGS SHEET ─────────────────── -->
 <div class="overlay" id="settingsOverlay" onclick="closeSettings(event)">
   <div class="sheet">
@@ -1516,11 +1660,12 @@ function itemHTML(it,showDate=false){
   }
   if(it.comments) meta.push(`<span class="meta-icon">${SVG_CHT} ${it.comments}</span>`);
   if(it.alarm1>0) meta.push(`<span class="meta-icon">🔔 ${ALARM_LABELS[it.alarm1]}</span>`);
+  if(it.recur && it.recur!=='never') meta.push(`<span class="meta-icon">🔁 ${RECUR_OPTIONS.find(o=>o.val===it.recur)?.label||''}</span>`);
   if(it.loc) meta.push(`<span class="meta-icon" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">📍 ${it.loc}</span>`);
   if(it.url) meta.push(`<span class="meta-icon" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🔗 ${it.url}</span>`);
 
   const tags=it.tags&&it.tags.length
-    ?it.tags.map(t=>`<span style="font-size:11px;padding:2px 7px;border-radius:20px;background:${TAG_C[t]||'#8e8e93'}22;color:${TAG_C[t]||'#8e8e93'}">${t}</span>`).join('')
+    ?it.tags.map(t=>`<span style="font-size:11px;padding:2px 8px;border-radius:20px;background:#f2f2f7;color:#636366;border:.5px solid #e5e5ea">${t}</span>`).join('')
     :'';
 
   let notePreview='';
@@ -1819,48 +1964,125 @@ let DR={day:1,mo:0,yr:2026,h:8,mi:0,
   xd:1,xm:0,xy:2026,
   alarm1:0,alarm2:0,ealarm1:0,ealarm2:0};
 
+// ── Calendar state ────────────────────────
+let CAL = { viewY: 2026, viewM: 0, selY: 2026, selM: 0, selD: 1 };
+
+function initCalendar(){
+  const td = today();
+  CAL.viewY = td.getFullYear(); CAL.viewM = td.getMonth();
+  CAL.selY = td.getFullYear(); CAL.selM = td.getMonth(); CAL.selD = td.getDate();
+  renderCalGrid();
+  updateDateLabel();
+}
+
+const MO_CAL_PT = ['janeiro','fevereiro','março','abril','maio','junho',
+  'julho','agosto','setembro','outubro','novembro','dezembro'];
+const MO_CAL_ABBR = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+function renderCalGrid(){
+  const lbl = document.getElementById('calMonthLabel');
+  if(lbl) lbl.textContent = `${MO_CAL_PT[CAL.viewM]} de ${CAL.viewY}`;
+  const grid = document.getElementById('calGrid');
+  if(!grid) return;
+  const td = today();
+  const firstDay = new Date(CAL.viewY, CAL.viewM, 1).getDay(); // 0=Sun
+  const daysInM = new Date(CAL.viewY, CAL.viewM+1, 0).getDate();
+  let html = '';
+  // Leading empty cells
+  for(let i=0; i<firstDay; i++) html += '<div class="cal-day empty"></div>';
+  // Day cells
+  for(let d=1; d<=daysInM; d++){
+    const isToday = (d===td.getDate()&&CAL.viewM===td.getMonth()&&CAL.viewY===td.getFullYear());
+    const isSel = (d===CAL.selD&&CAL.viewM===CAL.selM&&CAL.viewY===CAL.selY);
+    html += `<div class="cal-day${isToday?' today':''}${isSel?' selected':''}" onclick="selCalDay(${d})">${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function selCalDay(d){
+  CAL.selD = d; CAL.selM = CAL.viewM; CAL.selY = CAL.viewY;
+  // Update DR state
+  DR.day = d; DR.mo = CAL.viewM; DR.yr = CAL.viewY;
+  haptic();
+  renderCalGrid();
+  updateDateLabel();
+  updateDrumDisplays();
+}
+
+function shiftCalMonth(dir){
+  CAL.viewM += dir;
+  if(CAL.viewM > 11){ CAL.viewM = 0; CAL.viewY++; }
+  if(CAL.viewM < 0){ CAL.viewM = 11; CAL.viewY--; }
+  haptic();
+  renderCalGrid();
+}
+
+function toggleMonthDrum(){
+  const pk = document.getElementById('pk-cal-my');
+  if(!pk) return;
+  const open = pk.style.display !== 'none';
+  pk.style.display = open ? 'none' : '';
+  if(!open){
+    // Build month/year drums
+    const yrs = [];
+    for(let y=CAL.viewY-5; y<=CAL.viewY+10; y++) yrs.push(String(y));
+    buildDrum('dc-cal-month', MO_CAL_ABBR, CAL.viewM);
+    buildDrum('dc-cal-year', yrs, 5);
+  }
+}
+
+function updateDateLabel(){
+  const td = today();
+  const lbl = document.getElementById('disp-date-lbl');
+  if(!lbl) return;
+  const isToday = CAL.selD===td.getDate()&&CAL.selM===td.getMonth()&&CAL.selY===td.getFullYear();
+  lbl.textContent = isToday ? 'Hoje' : `${CAL.selD} de ${MO_CAL_PT[CAL.selM]}`;
+}
+
+function updateTimeLabel(){
+  const lbl = document.getElementById('disp-time-lbl');
+  if(lbl) lbl.textContent = `${p2(DR.h)}:${p2(DR.mi*5)}`;
+}
+
 function initDrums(){
-  const td=today();
-  DR.day=td.getDate();DR.mo=td.getMonth();DR.yr=td.getFullYear();
-  DR.esd=DR.day;DR.esm=DR.mo;DR.esy=DR.yr;DR.esh=8;DR.esn=0;
-  DR.eed=DR.day;DR.eem=DR.mo;DR.eey=DR.yr;DR.eeh=9;DR.een=0;
-  DR.xd=DR.day;DR.xm=DR.mo;DR.xy=DR.yr;
+  const td = today();
+  DR.esd=td.getDate();DR.esm=td.getMonth();DR.esy=td.getFullYear();DR.esh=8;DR.esn=0;
+  DR.eed=td.getDate();DR.eem=td.getMonth();DR.eey=td.getFullYear();DR.eeh=9;DR.een=0;
+  DR.xd=td.getDate();DR.xm=td.getMonth();DR.xy=td.getFullYear();
   DR.alarm1=0;DR.alarm2=0;DR.ealarm1=0;DR.ealarm2=0;
+  DR.h=8;DR.mi=0; // mi = index into 5-min array (0=00, 1=05, 2=10...)
 
-  const yrs=[];for(let y=DR.yr-2;y<=DR.yr+10;y++)yrs.push(String(y));
-  const days=()=>Array.from({length:daysInMonth(DR.mo,DR.yr)},(_,i)=>String(i+1));
-  const hrs=Array.from({length:24},(_,i)=>p2(i));
-  const mins=Array.from({length:60},(_,i)=>p2(i));
+  const yrs=[];for(let y=td.getFullYear()-2;y<=td.getFullYear()+10;y++)yrs.push(String(y));
+  const hrs = Array.from({length:24},(_,i)=>p2(i));
+  // Minutes in steps of 5
+  const mins5 = Array.from({length:12},(_,i)=>p2(i*5));
 
-  // Task drums
-  buildDrum('dc-day',days(),DR.day-1);
-  buildDrum('dc-month',MONTHS_DRUM,DR.mo);
-  buildDrum('dc-year',yrs,2);
-  buildDrum('dc-hour',hrs,DR.h);
-  buildDrum('dc-min',mins,DR.mi);
-  buildDrum('dc-alarm1',ALARM_LABELS,0);
-  buildDrum('dc-alarm2',ALARM_LABELS,0);
+  // Time drums (no date drums anymore — date uses calendar)
+  buildDrum('dc-hour', hrs, DR.h);
+  buildDrum('dc-min', mins5, DR.mi);
+  buildDrum('dc-alarm1', ALARM_LABELS, 0);
+  buildDrum('dc-alarm2', ALARM_LABELS, 0);
 
-  // Event drums
-  const eyrs=[];for(let y=DR.yr-2;y<=DR.yr+10;y++)eyrs.push(String(y));
+  // Event drums (still use drum for date+time)
   buildDrum('dc-esd',Array.from({length:daysInMonth(DR.esm,DR.esy)},(_,i)=>String(i+1)),DR.esd-1);
-  buildDrum('dc-esm',MONTHS_DRUM,DR.esm);
-  buildDrum('dc-esy',eyrs,2);
+  buildDrum('dc-esm',MO_CAL_ABBR,DR.esm);
+  buildDrum('dc-esy',yrs,2);
   buildDrum('dc-esh',hrs,DR.esh);
-  buildDrum('dc-esn',mins,DR.esn);
+  buildDrum('dc-esn',mins5,DR.esn);
   buildDrum('dc-eed',Array.from({length:daysInMonth(DR.eem,DR.eey)},(_,i)=>String(i+1)),DR.eed-1);
-  buildDrum('dc-eem',MONTHS_DRUM,DR.eem);
-  buildDrum('dc-eey',eyrs,2);
+  buildDrum('dc-eem',MO_CAL_ABBR,DR.eem);
+  buildDrum('dc-eey',yrs,2);
   buildDrum('dc-eeh',hrs,DR.eeh);
-  buildDrum('dc-een',mins,DR.een);
+  buildDrum('dc-een',mins5,DR.een);
   buildDrum('dc-ealarm1',ALARM_LABELS,0);
   buildDrum('dc-ealarm2',ALARM_LABELS,0);
 
-  // Expense drums
+  // Expense
   buildDrum('dc-xd',Array.from({length:daysInMonth(DR.xm,DR.xy)},(_,i)=>String(i+1)),DR.xd-1);
-  buildDrum('dc-xm',MONTHS_DRUM,DR.xm);
+  buildDrum('dc-xm',MO_CAL_ABBR,DR.xm);
   buildDrum('dc-xy',yrs,2);
 
+  initCalendar();
   updateDrumDisplays();
 }
 
@@ -1918,38 +2140,37 @@ function closeDrum(pkId){
 function tapToggle(togId,pkId){
   const tog=document.getElementById(togId);
   const pk=document.getElementById(pkId);
-  if(!tog||!pk)return;
+  if(!tog)return;
   const on=!tog.classList.contains('on');
   tog.classList.toggle('on',on);
-  on?pk.classList.add('open'):pk.classList.remove('open');
-  // If turning on time, also turn on date
-  if(togId==='tog-time'&&on){
-    const td=document.getElementById('tog-date');
-    if(td&&!td.classList.contains('on')){
-      td.classList.add('on');
-      document.getElementById('pk-tdate')?.classList.add('open');
+  if(pk){ on?pk.classList.add('open'):pk.classList.remove('open'); }
+  // Blue subtitle
+  if(togId==='tog-date'){
+    const sub=document.getElementById('disp-date-lbl');
+    if(sub){sub.style.display=on?'':'none';if(on)updateDateLabel();}
+    if(!on){
+      document.getElementById('tog-time')?.classList.remove('on');
+      document.getElementById('pk-ttime')?.classList.remove('open');
+      const ts=document.getElementById('disp-time-lbl');if(ts)ts.style.display='none';
     }
   }
-  // If turning off date, also turn off time
-  if(togId==='tog-date'&&!on){
-    document.getElementById('tog-time')?.classList.remove('on');
-    document.getElementById('pk-ttime')?.classList.remove('open');
+  if(togId==='tog-time'){
+    const sub=document.getElementById('disp-time-lbl');
+    if(sub){sub.style.display=on?'':'none';if(on)updateTimeLabel();}
+    if(on&&!document.getElementById('tog-date')?.classList.contains('on')){
+      document.getElementById('tog-date')?.classList.add('on');
+      document.getElementById('pk-tdate')?.classList.add('open');
+      const ds=document.getElementById('disp-date-lbl');
+      if(ds){ds.style.display='';updateDateLabel();}
+    }
   }
-  // Show alarm section when urgent toggled
-  if(togId==='tog-urgent'){
-    const alarms=document.getElementById('dg-alarms');
-    if(alarms)alarms.style.display=on?'':'none';
-  }
+  // urgent: no alarm gate anymore
 }
 function tapToggleSimple(togId){
   const tog=document.getElementById(togId);
   if(!tog)return;
   tog.classList.toggle('on');
-  // urgent
-  if(togId==='tog-urgent'){
-    const alarms=document.getElementById('dg-alarms');
-    if(alarms)alarms.style.display=tog.classList.contains('on')?'':'none';
-  }
+  // urgent: visual only
   // allday
   if(togId==='tog-allday'){
     const on=tog.classList.contains('on');
@@ -1987,41 +2208,55 @@ function showDetails(){tapDetails();}
 
 // ── Type switching ────────────────────────
 let curType='task';
-function pickType(t,btn){
-  curType=t;
-  // Update cal seg buttons
+function pickType(t, btn){
+  curType = t;
+  // Update type selector underline buttons
+  document.querySelectorAll('.type-sel-btn').forEach(b=>b.classList.remove('on'));
+  const ts = document.getElementById('ts-'+t);
+  if(ts) ts.classList.add('on');
+  // Also sync cal-seg if present
   document.querySelectorAll('.cal-seg-btn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
   // Show/hide views
   ['task','event','note','expense'].forEach(v=>{
-    const el=document.getElementById('view-'+v);
-    if(el)el.style.display=v===t?'':'none';
+    const el = document.getElementById('view-'+v);
+    if(el) el.style.display = v===t ? '' : 'none';
   });
-  // Show cal-seg only for event/task
-  const calSeg=document.getElementById('calSeg');
-  if(calSeg)calSeg.style.display=(t==='event'||t==='task')?'':'none';
   // Update header title
-  const titles={task:'Novo Lembrete',event:'Novo',note:'Nova Nota',expense:'Nova Despesa'};
-  if(!S.editId)document.getElementById('detNavTitle').textContent=titles[t];
-  // Toolbar visibility
-  const tb=document.getElementById('det-toolbar-task');
-  if(tb)tb.style.display=(t==='task')?'':'none';
+  const titles = {task:'Nova Tarefa', event:'Novo Evento', note:'Nova Nota', expense:'Nova Despesa'};
+  if(!S.editId) document.getElementById('detNavTitle').textContent = titles[t];
+  // Toolbar: show for task only
+  const tb = document.getElementById('det-toolbar-task');
+  if(tb) tb.style.display = (t==='task') ? '' : 'none';
 }
 
 // ── Tags per view ─────────────────────────
-function buildTagsForView(viewId,sel=[]){
-  const el=document.getElementById('dTags-'+viewId);
-  if(!el)return;
-  el.innerHTML=TAGS.map(t=>
-    `<div class="ios-tag ${sel.includes(t)?'on':''}"
-      style="${sel.includes(t)?'background:'+TAG_C[t]+';border-color:transparent;color:#fff':'border-color:'+TAG_C[t]+'44;color:'+TAG_C[t]}"
-      onclick="toggleIosTag(this,'${TAG_C[t]||'#8e8e93'}')">${t}</div>`
-  ).join('');
+function buildTagsForView(viewId, sel=[]){
+  const el = document.getElementById('dTags-'+viewId);
+  if(!el) return;
+  el.innerHTML = TAGS.map(t=>{
+    const c = TAG_C[t] || '#8e8e93';
+    const on = sel.includes(t);
+    return `<div class="ios-tag ${on?'on':''}" 
+      style="color:${c}${on?';background:'+c:''}"
+      onclick="toggleIosTag(this,'${c}')">${t}</div>`;
+  }).join('');
 }
-function toggleIosTag(el,c){
+function toggleIosTag(el, c){
   el.classList.toggle('on');
-  if(el.classList.contains('on')){el.style.background=c;el.style.borderColor='transparent';el.style.color='#fff';}
-  else{el.style.background='';el.style.borderColor=c+'44';el.style.color=c;}
+  if(el.classList.contains('on')){
+    el.style.background = c;
+    el.style.color = '#fff';
+    el.style.borderColor = c;
+  } else {
+    el.style.background = 'transparent';
+    el.style.color = c;
+    el.style.borderColor = c;
+  }
+}
+function getTagsForView(viewId){
+  const el = document.getElementById('dTags-'+viewId);
+  if(!el) return [];
+  return [...el.querySelectorAll('.ios-tag.on')].map(x=>x.textContent.trim());
 }
 function getTagsForView(viewId){
   const el=document.getElementById('dTags-'+viewId);
@@ -2055,37 +2290,33 @@ function removeAttach(i){pendingAttachments.splice(i,1);renderAttachList();}
 function overlayTap(e){/* no-op, close only via X button */}
 
 function _resetModal(){
-  // Close all drum pickers
-  document.querySelectorAll('.drum-picker').forEach(p=>p.classList.remove('open'));
-  // Reset all toggles
+  document.querySelectorAll('.drum-picker,.cal-picker').forEach(p=>p.classList.remove('open'));
   ['tog-date','tog-time','tog-urgent','tog-allday'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.classList.remove('on');
   });
-  // Hide alarm section
-  const alarms=document.getElementById('dg-alarms');
-  if(alarms)alarms.style.display='none';
-  // Hide details
-  const det=document.getElementById('dg-details');
-  if(det)det.style.display='none';
-  // Reset pills
+  ['disp-date-lbl','disp-time-lbl'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display='none';
+  });
+  // alarms always shown
+  const det=document.getElementById('dg-details');if(det)det.style.display='none';
   updateDrumDisplays();
 }
 function openNew(){
   S.editId=null; curType='task'; pendingAttachments=[];
-  document.getElementById('detNavTitle').textContent='Novo Lembrete';
+  document.getElementById('detNavTitle').textContent='Nova Tarefa';
   // Clear all text fields
   ['dTitle','dBody','dUrl','dLoc','dSub','eTit','eLoc','eBody','eUrl','nTit','nBody','nUrl','xTit','xBody','dVal'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
+  // Activate task type button
+  document.querySelectorAll('.type-sel-btn').forEach(b=>b.classList.remove('on'));
+  const tsBtn = document.getElementById('ts-task');
+  if(tsBtn) tsBtn.classList.add('on');
+  curType='task';
   // Show task view, hide others
   ['task','event','note','expense'].forEach((v,i)=>{
     const el=document.getElementById('view-'+v);if(el)el.style.display=i===0?'':'none';
   });
-  // Seg control: default to task (Lembrete)
-  const calSeg=document.getElementById('calSeg');
-  if(calSeg)calSeg.style.display='none'; // hidden until pickType event/task
-  document.querySelectorAll('.cal-seg-btn').forEach((b,i)=>b.classList.toggle('on',i===1));
-  // Delete buttons hidden
   ['task','event','note','expense'].forEach(v=>{
     const el=document.getElementById('dg-delete-'+v);if(el)el.style.display='none';
   });
@@ -2101,8 +2332,10 @@ function openNew(){
   setDrumIdx('dc-esd',DR.esd-1);setDrumIdx('dc-esm',DR.esm);setDrumIdx('dc-esy',DR.esy-2026+2);
   setDrumIdx('dc-xd',DR.xd-1);setDrumIdx('dc-xm',DR.xm);setDrumIdx('dc-xy',DR.xy-2026+2);
   updateDrumDisplays();
-  // Show toolbar
-  const tb=document.getElementById('det-toolbar-task');if(tb)tb.style.display='';
+  // Reset recurrence
+  curRecur = 'never';
+  const repLbl = document.getElementById('repLabel');
+  if(repLbl) repLbl.textContent = 'Nunca';
   document.getElementById('detModal').classList.add('open');
   setTimeout(()=>document.getElementById('dTitle').focus(),400);
 }
@@ -2115,11 +2348,10 @@ function openEdit(id){
   ['task','event','note','expense'].forEach(v=>{
     const el=document.getElementById('view-'+v);if(el)el.style.display=v===it.type?'':'none';
   });
-  const calSeg=document.getElementById('calSeg');
-  if(calSeg)calSeg.style.display=(it.type==='event'||it.type==='task')?'':'none';
-  document.querySelectorAll('.cal-seg-btn').forEach(b=>{
-    b.classList.toggle('on',(it.type==='event'&&b.id==='csEvento')||(it.type!=='event'&&b.id==='csTask'));
-  });
+  document.querySelectorAll('.type-sel-btn').forEach(b=>b.classList.remove('on'));
+  const tsE = document.getElementById('ts-'+it.type);
+  if(tsE) tsE.classList.add('on');
+  document.querySelectorAll('.cal-seg-btn').forEach(b=>b.classList.remove('on'));
   ['task','event','note','expense'].forEach(v=>{
     const el=document.getElementById('dg-delete-'+v);if(el)el.style.display=v===it.type?'':'none';
   });
@@ -2130,6 +2362,10 @@ function openEdit(id){
   sv('nTit',it.title);sv('nBody',it.body);sv('nUrl',it.url);
   sv('xTit',it.title);sv('xBody',it.body);sv('dVal',it.val);
   buildTagsForView(it.type,it.tags||[]);renderAttachList();
+  // Load recurrence
+  curRecur = it.recur || 'never';
+  const repLbl2 = document.getElementById('repLabel');
+  if(repLbl2) repLbl2.textContent = RECUR_OPTIONS.find(o=>o.val===curRecur)?.label || 'Nunca';
   _resetModal();initDrums();
   if(it.date){
     const d=dparse(it.date);
@@ -2171,18 +2407,19 @@ function saveItem(){
   const title=getTitle();
   if(!title){showSnack('Digite um título');return;}
 
-  // Read drum vals
+  // Read values — task date comes from calendar, not drum
   if(curType==='task'){
     if(document.getElementById('tog-date').classList.contains('on')){
-      DR.day=getDrumIdx('dc-day')+1;DR.mo=getDrumIdx('dc-month');DR.yr=2026-2+getDrumIdx('dc-year');
+      DR.day=CAL.selD; DR.mo=CAL.selM; DR.yr=CAL.selY;
     }
     if(document.getElementById('tog-time').classList.contains('on')){
-      DR.h=getDrumIdx('dc-hour');DR.mi=getDrumIdx('dc-min');
+      DR.h=getDrumIdx('dc-hour');
+      DR.mi=getDrumIdx('dc-min'); // index × 5 = actual minutes
     }
     DR.alarm1=getDrumIdx('dc-alarm1');DR.alarm2=getDrumIdx('dc-alarm2');
   } else if(curType==='event'){
     DR.esd=getDrumIdx('dc-esd')+1;DR.esm=getDrumIdx('dc-esm');DR.esy=2026-2+getDrumIdx('dc-esy');
-    DR.esh=getDrumIdx('dc-esh');DR.esn=getDrumIdx('dc-esn');
+    DR.esh=getDrumIdx('dc-esh');DR.esn=getDrumIdx('dc-esn'); // index × 5
     DR.eed=getDrumIdx('dc-eed')+1;DR.eem=getDrumIdx('dc-eem');DR.eey=2026-2+getDrumIdx('dc-eey');
     DR.eeh=getDrumIdx('dc-eeh');DR.een=getDrumIdx('dc-een');
     DR.ealarm1=getDrumIdx('dc-ealarm1');DR.ealarm2=getDrumIdx('dc-ealarm2');
@@ -2196,9 +2433,10 @@ function saveItem(){
     curType==='expense'?`${DR.xy}-${p2(DR.xm+1)}-${p2(DR.xd)}`:
     `${DR.yr}-${p2(DR.mo+1)}-${p2(DR.day)}`;
   const hasTime=curType==='task'?document.getElementById('tog-time').classList.contains('on'):curType==='event';
+  // DR.mi and DR.esn/een are indices into 5-min array, multiply by 5
   const timeStr=!hasTime?'':
-    curType==='event'?`${p2(DR.esh)}:${p2(DR.esn)}`:`${p2(DR.h)}:${p2(DR.mi)}`;
-  const endStr=curType==='event'?`${p2(DR.eeh)}:${p2(DR.een)}`:'';
+    curType==='event'?`${p2(DR.esh)}:${p2(DR.esn*5)}`:`${p2(DR.h)}:${p2(DR.mi*5)}`;
+  const endStr=curType==='event'?`${p2(DR.eeh)}:${p2(DR.een*5)}`:'';
 
   const bodyMap={task:'dBody',event:'eBody',note:'nBody',expense:'xBody'};
   const locMap={task:getField('dLoc'),event:getField('eLoc')};
@@ -2218,6 +2456,9 @@ function saveItem(){
     alarm1:curType==='event'?DR.ealarm1:DR.alarm1,
     alarm2:curType==='event'?DR.ealarm2:DR.alarm2,
     attachments:[...pendingAttachments],
+    // Recurrence: store chosen frequency + anchor date (original due day)
+    recur: curType==='task' ? curRecur : 'never',
+    anchorDate: curType==='task' && dateStr ? dateStr : null,
   };
   if(S.editId){
     const idx=S.items.findIndex(x=>x.id===S.editId);
@@ -2241,11 +2482,154 @@ function deleteItem(){
 function toggleDone(id,e){
   e.stopPropagation();
   const it=S.items.find(x=>x.id===id);if(!it)return;
-  it.done=!it.done;save();renderAll();buildWeek();
+  const wasNotDone = !it.done;
+  it.done=!it.done;
+  // When completing a recurring task → spawn next occurrence using anchor date
+  if(wasNotDone && it.recur && it.recur!=='never'){
+    spawnNextRecurrence(it);
+  }
+  save();renderAll();buildWeek();
 }
 
 // ══════════════════════════════════════════
-// SETTINGS
+// RECURRENCE ENGINE
+// Key rule: next occurrence always uses the ORIGINAL due day (anchor),
+// never the completion date. Boleto vence dia 10 → sempre dia 10.
+
+const RECUR_OPTIONS = [
+  {val:'never',   label:'Nunca'},
+  {val:'daily',   label:'Todo dia'},
+  {val:'weekly',  label:'Toda semana'},
+  {val:'biweek',  label:'A cada 2 semanas'},
+  {val:'monthly', label:'Todo mês'},
+  {val:'bimonth', label:'A cada 2 meses'},
+  {val:'trimest', label:'A cada 3 meses'},
+  {val:'semester',label:'A cada 6 meses'},
+  {val:'yearly',  label:'Todo ano'},
+];
+
+let curRecur = 'never';
+
+function tapRepetition(){
+  const ol = document.getElementById('repList');
+  const card = document.createElement('div');
+  card.className = 'ios-card';
+  card.style.marginBottom = '0';
+  card.innerHTML = RECUR_OPTIONS.map(o =>
+    `<div class="ios-row ${o.val===curRecur?'':''}rep-opt"
+      style="cursor:pointer;${o.val===curRecur?'':'border-bottom:.5px solid #c6c6c8'}"
+      onclick="selectRecur('${o.val}')">
+      <span class="ios-row-lbl">${o.label}</span>
+      ${o.val===curRecur?`<svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M3 9l4.5 5L15 4" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`:''}
+    </div>`
+  ).join('');
+  // fix last row
+  const rows = card.querySelectorAll('.ios-row');
+  rows[rows.length-1].style.borderBottom = 'none';
+  ol.innerHTML = '';
+  ol.appendChild(card);
+  document.getElementById('repOverlay').classList.add('show');
+}
+
+function selectRecur(val){
+  curRecur = val;
+  const lbl = RECUR_OPTIONS.find(o=>o.val===val)?.label || 'Nunca';
+  const el = document.getElementById('repLabel');
+  if(el) el.textContent = lbl;
+  document.getElementById('repOverlay').classList.remove('show');
+}
+
+function closeRep(e){
+  if(e.target===document.getElementById('repOverlay'))
+    document.getElementById('repOverlay').classList.remove('show');
+}
+
+// Calculate next due date using ANCHOR (original day of month), not completion date
+function nextRecurDate(anchorDateStr, recur){
+  if(!anchorDateStr || recur==='never') return null;
+  const anchor = dparse(anchorDateStr);
+  const anchorDay = anchor.getDate(); // e.g. 10
+  const today_ = today();
+
+  let next = new Date(anchor);
+
+  const advanceMonth = (d, months) => {
+    const y = d.getFullYear();
+    const m = d.getMonth() + months;
+    const newY = y + Math.floor(m/12);
+    const newM = ((m % 12) + 12) % 12;
+    // Clamp day to valid range for target month
+    const maxDay = new Date(newY, newM+1, 0).getDate();
+    return new Date(newY, newM, Math.min(anchorDay, maxDay));
+  };
+
+  if(recur==='daily'){
+    next = new Date(today_); next.setDate(today_.getDate()+1);
+  } else if(recur==='weekly'){
+    next = new Date(anchor);
+    while(next <= today_) next.setDate(next.getDate()+7);
+  } else if(recur==='biweek'){
+    next = new Date(anchor);
+    while(next <= today_) next.setDate(next.getDate()+14);
+  } else if(recur==='monthly'){
+    next = advanceMonth(anchor, 1);
+    let safety=0;
+    while(next <= today_ && safety++<24) next = advanceMonth(next,1);
+    // Ensure day is always the anchor day
+    const maxD = new Date(next.getFullYear(), next.getMonth()+1, 0).getDate();
+    next.setDate(Math.min(anchorDay, maxD));
+  } else if(recur==='bimonth'){
+    next = advanceMonth(anchor, 2);
+    let safety=0;
+    while(next <= today_ && safety++<24) next = advanceMonth(next,2);
+    const maxD = new Date(next.getFullYear(), next.getMonth()+1, 0).getDate();
+    next.setDate(Math.min(anchorDay, maxD));
+  } else if(recur==='trimest'){
+    next = advanceMonth(anchor, 3);
+    let safety=0;
+    while(next <= today_ && safety++<24) next = advanceMonth(next,3);
+    const maxD = new Date(next.getFullYear(), next.getMonth()+1, 0).getDate();
+    next.setDate(Math.min(anchorDay, maxD));
+  } else if(recur==='semester'){
+    next = advanceMonth(anchor, 6);
+    let safety=0;
+    while(next <= today_ && safety++<24) next = advanceMonth(next,6);
+    const maxD = new Date(next.getFullYear(), next.getMonth()+1, 0).getDate();
+    next.setDate(Math.min(anchorDay, maxD));
+  } else if(recur==='yearly'){
+    next = new Date(anchor.getFullYear()+1, anchor.getMonth(), anchorDay);
+    let safety=0;
+    while(next <= today_ && safety++<10) next = new Date(next.getFullYear()+1, next.getMonth(), anchorDay);
+  }
+
+  return dfmt(next);
+}
+
+// Called when toggling a recurring task done — spawns the next occurrence
+function spawnNextRecurrence(it){
+  if(!it.recur || it.recur==='never' || !it.date) return;
+  // anchorDate is always the ORIGINAL due date stored in the item
+  const anchorDate = it.anchorDate || it.date; // anchorDate preserved across recurrences
+  const nextDate = nextRecurDate(anchorDate, it.recur);
+  if(!nextDate) return;
+  // Don't duplicate if already exists
+  if(S.items.find(x=>x.date===nextDate&&x.title===it.title&&x.recur===it.recur&&!x.done)) return;
+
+  const next = {
+    ...it,
+    id: uid(),
+    done: false,
+    subDone: 0,
+    date: nextDate,
+    anchorDate: anchorDate, // preserve original anchor day
+    createdFrom: it.id,
+  };
+  S.items.unshift(next);
+}
+
+
 function openSettings(){document.getElementById('settingsOverlay').classList.add('show');}
 function closeSettings(e){if(e.target===document.getElementById('settingsOverlay'))document.getElementById('settingsOverlay').classList.remove('show');}
 function exportData(){
