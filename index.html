@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="FocusFlow">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#ffffff" id="themeColor">
@@ -27,12 +27,15 @@
 html[data-dark="1"],html[data-dark="1"] body{
   background:#000 !important;
 }
-html,body{height:100%;background:var(--bg);color:var(--ink);
+html,body{
+  margin:0;padding:0;
+  width:100%;height:100%;
+  min-height:100dvh;
+  background:var(--bg);color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;
   overflow:hidden;
-  /* Fill safe areas with bg color */
-  background-color:var(--bg);
 }
+/* The app container fills everything */
 /* Ensure dark mode fills entire screen including notch/status bar area */
 [data-dark="1"] html,
 [data-dark="1"] body{background:#000;}
@@ -59,7 +62,14 @@ html,body{height:100%;background:var(--bg);color:var(--ink);
 [data-dark="1"] .sec-hdr{background:#000;}
 
 /* ─── LAYOUT ─────────────────────────── */
-.app{display:flex;flex-direction:column;height:100dvh}
+.app{
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  display:flex;flex-direction:column;
+  background:var(--bg);
+  overflow:hidden;
+}
+[data-dark="1"] .app{background:#000;}
 
 /* ─── TOP BAR ────────────────────────── */
 .topbar{
@@ -207,7 +217,7 @@ html,body{height:100%;background:var(--bg);color:var(--ink);
 
 /* ─── FAB ────────────────────────────── */
 .fab{
-  position:fixed;bottom:calc(var(--safe-bot) + 80px);right:22px;
+  position:fixed;bottom:calc(var(--safe-bot) + 74px);right:22px;
   width:50px;height:50px;border-radius:50%;
   background:#5a6070;color:#fff;
   display:flex;align-items:center;justify-content:center;
@@ -222,7 +232,7 @@ html,body{height:100%;background:var(--bg);color:var(--ink);
 /* ─── BOTTOM NAV — Liquid Glass ────────── */
 .nav{
   position:fixed;
-  bottom:calc(var(--safe-bot) + 4px);
+  bottom:0;padding-bottom:calc(var(--safe-bot) + 4px);padding-top:10px;
   left:50%;transform:translateX(-50%);
   width:auto;min-width:336px;max-width:408px;
   background:rgba(255,255,255,0.55);
@@ -412,7 +422,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   white-space:nowrap;
 }
 .cal-seg-btn.on{
-  background:#fff;color:#000;font-weight:600;
+  background:var(--bg);color:var(--ink);font-weight:600;
   box-shadow:0 1px 4px rgba(0,0,0,.18),0 0 0 .5px rgba(0,0,0,.06);
 }
 [data-dark="1"] .cal-seg-btn.on{background:#636366;color:#fff;}
@@ -432,7 +442,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 
 /* ── White grouped card ── */
 .ios-card{
-  background:#fff;border-radius:12px;
+  background:var(--bg);border-radius:12px;
   overflow:visible;margin-bottom:12px;
 }
 [data-dark="1"] .ios-card{background:#2c2c2e;}
@@ -557,7 +567,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 /* drum outer container */
 .drum-wrap{
   position:relative;height:216px;overflow:hidden;
-  background:#fff;
+  background:var(--bg);
 }
 [data-dark="1"] .drum-wrap{background:#1c1c1e;}
 
@@ -632,7 +642,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 
 /* bottom labels row */
 .drum-labels{
-  display:flex;border-top:.5px solid #c6c6c8;background:#fff;
+  display:flex;border-top:.5px solid #c6c6c8;background:var(--bg);
 }
 [data-dark="1"] .drum-labels{background:#1c1c1e;border-top-color:#38383a;}
 .drum-col-label{
@@ -647,7 +657,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 
 /* ── Calendar grid picker (iOS Reminders style) ── */
 .cal-picker{
-  overflow:hidden;background:#fff;
+  overflow:hidden;background:var(--bg);
   border-top:.5px solid #c6c6c8;
   max-height:0;transition:max-height .32s cubic-bezier(.4,0,.2,1);
 }
@@ -655,7 +665,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 .cal-picker.open{max-height:380px;}
 
 .cal-nav{
-  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg);display:flex;align-items:center;justify-content:space-between;
   padding:12px 16px 8px;
 }
 .cal-nav-month{
@@ -702,7 +712,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 
 /* ── Repetição row (below time card) ── */
 .rep-card{
-  background:#fff;border-radius:12px;margin-bottom:12px;overflow:hidden;
+  background:var(--bg);border-radius:12px;margin-bottom:12px;overflow:hidden;
 }
 [data-dark="1"] .rep-card{background:#1c1c1e;}
 
@@ -779,6 +789,43 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   pointer-events:none;z-index:999;white-space:nowrap;
 }
 .snack.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── Comprehensive dark mode — no white surfaces ── */
+[data-dark="1"] .cal-seg-btn.on{background:#3a3a3c;color:#fff;}
+[data-dark="1"] .ios-card{background:#1c1c1e !important;}
+[data-dark="1"] .ios-row{background:transparent;}
+[data-dark="1"] .drum-picker,[data-dark="1"] .drum-wrap,[data-dark="1"] .drum-labels,
+[data-dark="1"] .cal-picker,[data-dark="1"] .cal-nav{background:#1c1c1e;}
+[data-dark="1"] .rep-card,[data-dark="1"] .set-card{background:#1c1c1e;}
+[data-dark="1"] .ios-tag{background:#2c2c2e;border-color:#3a3a3c;color:#ebebf5;}
+[data-dark="1"] .tag-opt{background:#2c2c2e;color:#ebebf5;border-color:#3a3a3c;}
+[data-dark="1"] .tag-opt.on{background:var(--red);color:#fff;}
+[data-dark="1"] .ios-tog{background:#39393d;}
+[data-dark="1"] .ios-tog::after{background:#e5e5e7;}
+[data-dark="1"] .cal-day{color:#fff;}
+[data-dark="1"] .cal-day:active{background:#2c2c2e;}
+[data-dark="1"] .cal-nav-month{color:#fff;}
+[data-dark="1"] .ios-divider{background:#38383a;}
+/* Drum sel highlight */
+[data-dark="1"] .drum-sel{background:#2c2c2e;}
+/* Fuso horario row */
+[data-dark="1"] .ios-row[style*="background:#fff"]{background:#1c1c1e !important;}
+/* Sheet and overlay */
+[data-dark="1"] .sheet{background:#1c1c1e;}
+[data-dark="1"] .set-label{color:#8e8e93;}
+[data-dark="1"] .set-row{background:transparent;}
+[data-dark="1"] .set-txt{color:#fff;}
+[data-dark="1"] .det-hdr,[data-dark="1"] .det-body{background:#1c1c1e;}
+[data-dark="1"] .det-card{background:#1c1c1e;}
+[data-dark="1"] .det-hdr-circ{background:#2c2c2e;}
+[data-dark="1"] .det-toolbar{background:#1c1c1e;border-top-color:#38383a;}
+[data-dark="1"] .type-sel-btn{color:#8e8e93;}
+[data-dark="1"] .type-sel-btn.on{color:#fff;border-bottom-color:#fff;}
+[data-dark="1"] .ios-title-in,[data-dark="1"] .ios-notes-in,[data-dark="1"] .ios-url-in,
+[data-dark="1"] .ios-row-in,[data-dark="1"] .ios-row-lbl{color:#fff;}
+[data-dark="1"] .overdue-hdr{background:transparent;}
+[data-dark="1"] .month-hdr,[data-dark="1"] .week-strip{background:transparent;}
+[data-dark="1"] .snack{background:rgba(100,100,100,.95);}
 </style>
 </head>
 <body>
@@ -1040,7 +1087,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
               </div>
             </div>
             <!-- Fuso horário row inside time picker -->
-            <div class="ios-row" style="border-top:.5px solid #c6c6c8;border-bottom:none;min-height:44px;background:#fff">
+            <div class="ios-row" style="border-top:.5px solid #c6c6c8;border-bottom:none;min-height:44px;background:var(--bg)">
               <div class="ios-row-ico">
                 <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
                   <circle cx="11" cy="11" r="9"/>
