@@ -23,53 +23,50 @@
   --accent:#e5e5ea;--ink:#fff;--ink2:#ebebf5;--gray:#8e8e93;--gray2:#636366;
   --sep:#38383a;--bg:#000;--bg2:#1c1c1e;
 }
-/* Dark fills EVERY pixel including safe areas / status bar */
-html[data-dark="1"],html[data-dark="1"] body{
-  background:#000 !important;
-}
+/* ── Base: fill entire screen ── */
 html,body{
   margin:0;padding:0;
   width:100%;height:100%;
-  min-height:100dvh;
-  background:var(--bg);color:var(--ink);
+  /* background on html fills the status bar / Dynamic Island region in PWA */
+  background:var(--bg);
+  color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;
   overflow:hidden;
 }
-/* The app container fills everything */
-/* Ensure dark mode fills entire screen including notch/status bar area */
-[data-dark="1"] html,
-[data-dark="1"] body{background:#000;}
-/* White parts in dark mode - fix topbar glass pill */
-[data-dark="1"] .topbar-actions{
-  background:rgba(44,44,46,0.75) !important;
-  border-color:rgba(255,255,255,.15) !important;
-}
-/* Page backgrounds */
-[data-dark="1"] .page{background:#000;}
-[data-dark="1"] .scroll{background:#000;}
-/* Cards */
-[data-dark="1"] .ios-card{background:#1c1c1e;}
-/* Week bar */
-[data-dark="1"] .week-strip{background:#000;}
-[data-dark="1"] .month-hdr{background:#000;}
-[data-dark="1"] .hdivider{background:#38383a;}
-/* Item rows */
-[data-dark="1"] .item-row{background:#000;}
-[data-dark="1"] .item-row:active{background:#1c1c1e;}
-/* Overdue header */
-[data-dark="1"] .overdue-hdr{background:#000;}
-/* Section headers */  
-[data-dark="1"] .sec-hdr{background:#000;}
 
 /* ─── LAYOUT ─────────────────────────── */
+/*
+  PWA (adicionado à Tela de Início) com black-translucent:
+  - O app ocupa 100% da tela incluindo a área do Dynamic Island
+  - O html/body background preenche a barra de status
+  - padding-top: env(safe-area-inset-top) empurra conteúdo para baixo da Dynamic Island
+*/
+html,body,.app{
+  background:var(--bg);
+}
 .app{
   position:fixed;
   top:0;left:0;right:0;bottom:0;
   display:flex;flex-direction:column;
-  background:var(--bg);
   overflow:hidden;
 }
-[data-dark="1"] .app{background:#000;}
+/* Dark mode — tudo escuro */
+[data-dark="1"] html,
+[data-dark="1"] body,
+[data-dark="1"] .app,
+[data-dark="1"] .page,
+[data-dark="1"] .scroll{background:#000;}
+[data-dark="1"] .topbar-actions{
+  background:rgba(36,36,38,0.80) !important;
+  border-color:rgba(255,255,255,.14) !important;
+}
+[data-dark="1"] .week-strip,
+[data-dark="1"] .month-hdr{background:transparent;}
+[data-dark="1"] .hdivider{background:#38383a;}
+[data-dark="1"] .item-row{background:transparent;}
+[data-dark="1"] .item-row:active{background:#1c1c1e;}
+[data-dark="1"] .overdue-hdr,
+[data-dark="1"] .sec-hdr{background:transparent;}
 
 /* ─── TOP BAR ────────────────────────── */
 .topbar{
@@ -217,7 +214,7 @@ html,body{
 
 /* ─── FAB ────────────────────────────── */
 .fab{
-  position:fixed;bottom:calc(var(--safe-bot) + 74px);right:22px;
+  position:fixed;bottom:calc(var(--safe-bot) + 76px);right:22px;
   width:50px;height:50px;border-radius:50%;
   background:#5a6070;color:#fff;
   display:flex;align-items:center;justify-content:center;
@@ -232,7 +229,7 @@ html,body{
 /* ─── BOTTOM NAV — Liquid Glass ────────── */
 .nav{
   position:fixed;
-  bottom:0;padding-bottom:calc(var(--safe-bot) + 4px);padding-top:10px;
+  bottom:calc(var(--safe-bot) + 11px);
   left:50%;transform:translateX(-50%);
   width:auto;min-width:336px;max-width:408px;
   background:rgba(255,255,255,0.55);
@@ -241,7 +238,7 @@ html,body{
   -webkit-backdrop-filter:blur(20px) saturate(160%);
   border-radius:30px;
   display:flex;align-items:center;justify-content:space-around;
-  padding:8px 10px 8px;
+  padding:8px 14px 8px;
   z-index:100;
   box-shadow:0 6px 32px rgba(0,0,0,.16), 0 1px 0 rgba(255,255,255,.9) inset;
 }
@@ -1694,21 +1691,20 @@ function demo(){
 // ══════════════════════════════════════════
 // DARK MODE
 function applyDark(){
-  document.documentElement.setAttribute('data-dark',S.dark?'1':'0');
-  // Force background on root to fill status bar / notch area
-  document.documentElement.style.background = S.dark ? '#000' : '#fff';
-  document.body.style.background = S.dark ? '#000' : '#fff';
-  // Update theme-color for Safari status bar
-  const tc = document.querySelector('meta[name="theme-color"]');
-  if(tc) tc.setAttribute('content', S.dark ? '#000000' : '#ffffff');
-  const sb = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
-  if(sb) sb.setAttribute('content', S.dark ? 'black-translucent' : 'default');
-  document.getElementById('togDark')?.classList.toggle('on', S.dark);
-  // Update topbar moon/sun icon
+  const dark = S.dark;
+  document.documentElement.setAttribute('data-dark', dark ? '1' : '0');
+  // Set bg directly on html/body with !important via setProperty
+  const bg = dark ? '#000000' : '#ffffff';
+  document.documentElement.style.setProperty('background', bg, 'important');
+  document.documentElement.style.setProperty('background-color', bg, 'important');
+  document.body.style.setProperty('background', bg, 'important');
+  document.body.style.setProperty('background-color', bg, 'important');
+  document.getElementById('togDark')?.classList.toggle('on', dark);
+  // Moon → sun icon swap
   const ico = document.getElementById('darkModeIcon');
   if(ico){
-    ico.innerHTML = S.dark
-      ? '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-linecap="round"/>'
+    ico.innerHTML = dark
+      ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3" stroke-linecap="round"/><line x1="12" y1="21" x2="12" y2="23" stroke-linecap="round"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke-linecap="round"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke-linecap="round"/><line x1="1" y1="12" x2="3" y2="12" stroke-linecap="round"/><line x1="21" y1="12" x2="23" y2="12" stroke-linecap="round"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke-linecap="round"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke-linecap="round"/>'
       : '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
   }
 }
