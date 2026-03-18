@@ -129,6 +129,7 @@ html,body,.app{
 .scroll{
   flex:1;overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
+  padding-bottom:calc(var(--safe-bot) + 80px);
 }
 .scroll::-webkit-scrollbar{display:none}
 
@@ -1566,18 +1567,18 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 </div>
 
 <!-- ── NOTIFICATION BANNER ──────────────── -->
-<div id="notifBanner" style="display:none;position:fixed;top:calc(env(safe-area-inset-top,0px)+12px);left:16px;right:16px;z-index:900;
-  background:#1c1c1e;border-radius:16px;padding:14px 16px;
-  align-items:center;gap:12px;
-  box-shadow:0 4px 24px rgba(0,0,0,.35);
-  transform:translateY(-120%);transition:transform .35s cubic-bezier(.32,1,.65,1);">
-  <div style="font-size:24px">🔔</div>
-  <div style="flex:1">
-    <div style="font-size:14px;font-weight:600;color:#fff">Ativar notificações</div>
-    <div style="font-size:12px;color:#8e8e93;margin-top:2px">Receba alarmes dos seus lembretes</div>
+<div id="notifBanner" style="display:none;position:fixed;top:12px;left:12px;right:12px;z-index:900;
+  background:#1c1c1e;border-radius:16px;padding:12px 14px;
+  align-items:center;gap:10px;
+  box-shadow:0 4px 24px rgba(0,0,0,.45);
+  transform:translateY(-140%);transition:transform .35s cubic-bezier(.32,1,.65,1);">
+  <div style="font-size:22px;flex-shrink:0">🔔</div>
+  <div style="flex:1;min-width:0">
+    <div style="font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ativar notificações</div>
+    <div style="font-size:11px;color:#8e8e93;margin-top:1px">Receba alarmes dos seus lembretes</div>
   </div>
-  <button onclick="enableNotifFromBanner()" style="background:#0a84ff;color:#fff;border:none;border-radius:10px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Ativar</button>
-  <button onclick="closeNotifBanner()" style="background:none;border:none;color:#8e8e93;font-size:20px;cursor:pointer;padding:0 4px;line-height:1">✕</button>
+  <button onclick="enableNotifFromBanner()" style="background:#0a84ff;color:#fff;border:none;border-radius:9px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0;white-space:nowrap">Ativar</button>
+  <button onclick="closeNotifBanner()" style="background:none;border:none;color:#636366;font-size:18px;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0">✕</button>
 </div>
 
 <!-- ── RECURRENCE PICKER ──────────────────── -->
