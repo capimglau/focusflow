@@ -1934,6 +1934,7 @@ function renderEmBreve(){
     }
   }
 
+  h += `<div style="height:110px"></div>`;
   const hdivider=el.querySelector('.hdivider');
   if(hdivider){
     let next=hdivider.nextSibling;
@@ -1981,6 +1982,8 @@ function renderHoje(){
       <div class="empty-t">Dia livre</div>
       <div class="empty-s">Nenhum item para hoje.</div></div>`;
   }
+
+  h+=`<div style="height:110px"></div>`;
   el.innerHTML=h;
 }
 
@@ -2003,6 +2006,8 @@ function renderEntrada(){
   } else {
     items.forEach(it=>{ h+=itemHTML(it,true); });
   }
+
+  h+=`<div style="height:110px"></div>`;
   el.innerHTML=h;
 }
 function setFilter(el,f){
@@ -2559,15 +2564,6 @@ function tapToggleSimple(togId){
     if(et)et.style.display=on?'none':'';
   }
 }
-function tapEventPicker(which){
-  const ids=['start','end'];
-  ids.forEach(w=>{
-    const pk=document.getElementById('pk-e'+w);
-    if(!pk)return;
-    if(w===which){pk.classList.toggle('open');}
-    else{pk.classList.remove('open');}
-  });
-}
 function tapAlarm(key){
   const map={a1:'pk-alarm1',a2:'pk-alarm2',ea1:'pk-ealarm1',ea2:'pk-ealarm2'};
   Object.entries(map).forEach(([k,pkId])=>{
@@ -2637,12 +2633,6 @@ function getTagsForView(viewId){
   if(!el) return [];
   return [...el.querySelectorAll('.ios-tag.on')].map(x=>x.textContent.trim());
 }
-function getTagsForView(viewId){
-  const el=document.getElementById('dTags-'+viewId);
-  if(!el)return[];
-  return [...el.querySelectorAll('.ios-tag.on')].map(x=>x.textContent.trim());
-}
-
 // ── Attachments ────────────────────────────
 let pendingAttachments=[];
 let activeAttachView='task';
