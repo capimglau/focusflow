@@ -70,7 +70,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 [data-dark="1"] 
 .irow{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:.5px solid rgba(0,0,0,.05);cursor:pointer;transition:background .1s;position:relative;overflow:hidden;background:transparent;touch-action:pan-y;min-height:52px}
 .irow:last-child{border-bottom:none!important}
-.irow.item-past{opacity:0.5;}
 .irow:active{background:rgba(0,122,255,.06)!important}
 .irow .swipe-bg-l,.irow .swipe-bg-r{position:absolute;top:0;bottom:0;width:100%;display:flex;align-items:center;padding:0 22px;font-size:13px;font-weight:700;color:#fff;pointer-events:none;opacity:0;transition:opacity .12s}
 .irow .swipe-bg-r{background:var(--green);justify-content:flex-start;left:0}
@@ -179,7 +178,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:transparent;color:v
 .prog-meta{display:flex;justify-content:space-between;align-items:center}
 .prog-meta span:first-child{font-size:12px;color:var(--sub)}
 .prog-meta span:last-child{font-size:13px;font-weight:700}
-.date-banner{margin:10px 16px 4px;padding:4px 14px 4px 10px;width:fit-content;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:5px;color:#6e6e73;background:rgba(255,255,255,0.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:20px;border:.5px solid rgba(255,255,255,0.7)}
+.date-banner::before{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:#007AFF;flex-shrink:0;opacity:.7}
+.date-banner{padding:20px 20px 6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center;gap:6px;color:#6e6e73}
 
 #move-sheet-bg{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.32);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:none;align-items:flex-end;justify-content:center}
 #move-sheet-bg.on{display:flex;animation:fadeIn .18s ease}
@@ -278,7 +278,7 @@ button:active,.nb:active{transform:scale(.88)!important;opacity:.58!important}
 .irow:active{background:rgba(120,120,128,.08)!important}
 html:not([data-dark="1"]){
   min-height:100svh;
-  background:#eeebe6;
+  background:#f0ede8;
 }
 html:not([data-dark="1"]) .pages,html:not([data-dark="1"]) 
 #dashboard-feed,.sec{padding:10px 16px 6px;display:flex;align-items:center;justify-content:space-between;}
@@ -292,209 +292,6 @@ html:not([data-dark="1"]) .pages,html:not([data-dark="1"])
   -webkit-backdrop-filter:blur(40px) saturate(2) brightness(1.1)!important;
   border:.5px solid rgba(255,255,255,.10)!important;
   box-shadow:0 1px 0 rgba(255,255,255,.07) inset,0 4px 14px rgba(0,0,0,.25)!important;
-}
-
-/* ═══════════════════════════════════════════════
-   LIQUID GLASS — SISTEMA UNIFICADO
-   Mesmo tom em todos os banners, cards e botões
-═══════════════════════════════════════════════ */
-
-:root {
-  --lg:rgba(255,255,255,.68);
-  --lg-blur:blur(72px) saturate(3.5) brightness(1.12);
-  --lg-border:rgba(255,255,255,.85);
-  --lg-shine:rgba(255,255,255,.96);
-  --lg-shadow:0 1.5px 0 rgba(255,255,255,.96) inset,
-              0 -1px 0 rgba(160,190,240,.22) inset,
-              0 6px 28px rgba(70,110,200,.10),
-              0 2px 8px rgba(0,0,0,.06);
-}
-[data-dark="1"] {
-  --lg:rgba(42,42,46,.82);
-  --lg-blur:blur(60px) saturate(2.2) brightness(1.08);
-  --lg-border:rgba(255,255,255,.12);
-  --lg-shine:rgba(255,255,255,.09);
-  --lg-shadow:0 1px 0 rgba(255,255,255,.09) inset,
-              0 6px 24px rgba(0,0,0,.38),
-              0 2px 8px rgba(0,0,0,.22);
-}
-
-/* ── Cards de conteúdo ── */
-html:not([data-dark="1"]) .card,
-html:not([data-dark="1"]) .proj-card {
-  background: rgba(200,210,225,0.25) !important;
-  backdrop-filter: blur(30px) !important;
-  -webkit-backdrop-filter: none !important;
-  border: .5px solid rgba(0,0,0,.07) !important;
-  box-shadow: 0 1px 4px rgba(0,0,0,.05) !important;
-  border-radius: 16px !important;
-}
-
-/* ── Modal sections ── */
-html:not([data-dark="1"]) .msec {
-  background: rgba(255,255,255,.72) !important;
-  backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
-  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
-  border: .5px solid rgba(255,255,255,.88) !important;
-  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 3px 12px rgba(0,0,0,.06) !important;
-  border-radius: 16px !important;
-}
-html:not([data-dark="1"]) #modal-box {
-  background: rgba(232,240,252,.92) !important;
-  backdrop-filter: blur(60px) saturate(2.8) !important;
-  -webkit-backdrop-filter: blur(60px) saturate(2.8) !important;
-}
-
-/* ── Chips de filtro ── */
-html:not([data-dark="1"]) .chip:not(.on),
-html:not([data-dark="1"]) .sf-chip:not(.on),
-html:not([data-dark="1"]) .ds-btn,
-html:not([data-dark="1"]) .mv-date-btn:not(.on) {
-  background: rgba(255,255,255,.70) !important;
-  backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
-  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
-  border: .5px solid rgba(255,255,255,.88) !important;
-  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 3px 12px rgba(70,100,180,.08) !important;
-  color: #3a3a3c !important;
-  font-weight: 500 !important;
-}
-
-/* ── Botões de ação modais (Salvar, Cancelar) ── */
-html:not([data-dark="1"]) .mact {
-  background: rgba(255,255,255,.75) !important;
-  backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
-  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
-  border: .5px solid rgba(255,255,255,.90) !important;
-  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 4px 14px rgba(70,100,180,.09) !important;
-  border-radius: 16px !important;
-  margin: 0 16px 8px !important;
-  width: calc(100% - 32px) !important;
-}
-
-/* ── Priority buttons ── */
-html:not([data-dark="1"]) .pri-btn:not(.on) {
-  background: rgba(255,255,255,.72) !important;
-  backdrop-filter: blur(50px) saturate(2.8) !important;
-  -webkit-backdrop-filter: blur(50px) saturate(2.8) !important;
-  border: .5px solid rgba(255,255,255,.88) !important;
-  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 2px 8px rgba(0,0,0,.07) !important;
-  color: #3a3a3c !important;
-}
-
-/* ── Nav pill ── */
-html:not([data-dark="1"]) #nav-pill {
-  background: rgba(200,210,225,0.25) !important;
-  backdrop-filter: blur(30px) !important;
-  -webkit-backdrop-filter: none !important;
-  border: .5px solid rgba(0,0,0,.08) !important;
-  box-shadow: 0 2px 12px rgba(0,0,0,.08) !important;
-}
-
-/* ── Header pills (qadd + hdr-act) ── */
-html:not([data-dark="1"]) .qadd-pill,
-html:not([data-dark="1"]) .hdr-act {
-  background: rgba(200,210,225,0.25) !important;
-  backdrop-filter: blur(30px) !important;
-  -webkit-backdrop-filter: none !important;
-  border: .5px solid rgba(0,0,0,.08) !important;
-  box-shadow: 0 1px 6px rgba(0,0,0,.07) !important;
-}
-
-/* ── Move sheet ── */
-html:not([data-dark="1"]) #move-sheet,
-html:not([data-dark="1"]) .mv-sec {
-  background: rgba(240,248,255,.90) !important;
-  backdrop-filter: blur(60px) saturate(2.8) !important;
-  -webkit-backdrop-filter: blur(60px) saturate(2.8) !important;
-  border: .5px solid rgba(255,255,255,.85) !important;
-}
-
-/* ── Full-page headers (fp) ── */
-html:not([data-dark="1"]) .fp {
-  background: rgba(235,244,254,.85) !important;
-}
-html:not([data-dark="1"]) .fp-hdr {
-  background: rgba(228,238,252,.88) !important;
-  backdrop-filter: blur(50px) saturate(2.5) !important;
-  -webkit-backdrop-filter: blur(50px) saturate(2.5) !important;
-  border-bottom: .5px solid rgba(255,255,255,.75) !important;
-}
-
-/* ── Ver tudo button ── */
-html:not([data-dark="1"]) .ver-tudo-btn {
-  background: rgba(255,255,255,.68) !important;
-  backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
-  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
-  border: .5px solid rgba(255,255,255,.88) !important;
-  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 4px 14px rgba(70,100,180,.09) !important;
-  color: var(--blue) !important;
-}
-
-/* ── Tag chips ── */
-html:not([data-dark="1"]) .tag-opt:not(.on) {
-  background: rgba(255,255,255,.72) !important;
-  backdrop-filter: blur(40px) !important;
-  -webkit-backdrop-filter: blur(40px) !important;
-  border: .5px solid rgba(255,255,255,.85) !important;
-}
-
-/* ── Search bar ── */
-html:not([data-dark="1"]) .s-bar {
-  background: rgba(255,255,255,.75) !important;
-  backdrop-filter: blur(60px) saturate(3) !important;
-  -webkit-backdrop-filter: blur(60px) saturate(3) !important;
-  border: .5px solid rgba(255,255,255,.88) !important;
-  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 2px 10px rgba(0,0,0,.06) !important;
-}
-
-/* ── PWA Banner ── */
-html:not([data-dark="1"]) #pwa-banner {
-  background: rgba(255,255,255,.78) !important;
-  backdrop-filter: blur(60px) saturate(3) !important;
-  -webkit-backdrop-filter: blur(60px) saturate(3) !important;
-  border: .5px solid rgba(255,255,255,.88) !important;
-  color: #1c1c1e !important;
-}
-
-/* ── Notif bar ── */
-html:not([data-dark="1"]) #notif-bar {
-  background: rgba(255,255,255,.88) !important;
-  backdrop-filter: blur(60px) saturate(3) brightness(1.08) !important;
-  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.08) !important;
-  border: .5px solid rgba(255,255,255,.90) !important;
-}
-
-/* ── AG section cards (dentro do dashboard) ── */
-html:not([data-dark="1"]) .ag-kpi-box {
-  background: rgba(255,255,255,.68) !important;
-  backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
-  -webkit-backdrop-filter: blur(60px) saturate(3) brightness(1.1) !important;
-  border: .5px solid rgba(255,255,255,.88) !important;
-  box-shadow: 0 1.5px 0 rgba(255,255,255,.95) inset, 0 4px 16px rgba(70,110,200,.09) !important;
-}
-
-/* ── DARK MODE contrastes ── */
-[data-dark="1"] .card,
-[data-dark="1"] .proj-card {
-  background: rgba(36,36,40,.80) !important;
-  backdrop-filter: blur(50px) saturate(2) brightness(1.05) !important;
-  -webkit-backdrop-filter: blur(50px) saturate(2) brightness(1.05) !important;
-  border: .5px solid rgba(255,255,255,.09) !important;
-  box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 6px 22px rgba(0,0,0,.32) !important;
-}
-[data-dark="1"] .chip:not(.on),
-[data-dark="1"] .ds-btn {
-  background: rgba(52,52,58,.82) !important;
-  border: .5px solid rgba(255,255,255,.12) !important;
-  color: rgba(255,255,255,.75) !important;
-}
-[data-dark="1"] .mact {
-  background: rgba(44,44,50,.85) !important;
-  border: .5px solid rgba(255,255,255,.10) !important;
-}
-[data-dark="1"] .msec {
-  background: rgba(44,44,50,.85) !important;
-  border: .5px solid rgba(255,255,255,.08) !important;
 }
 
 /* Dashboard KPI banners */
