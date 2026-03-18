@@ -515,7 +515,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   transition:max-height .32s cubic-bezier(.4,0,.2,1);
 }
 [data-dark="1"] .drum-picker{background:#1c1c1e;border-top-color:#38383a;}
-.drum-picker.open{max-height:260px;}
+.drum-picker.open{max-height:216px;}
 
 /* drum outer container */
 .drum-wrap{
@@ -1489,7 +1489,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 </div>
 
 <!-- ── RECURRENCE PICKER ──────────────────── -->
-<div class="overlay" id="repOverlay" onclick="closeRep(event)">
+<div class="overlay" id="repOverlay" onclick="closeRep(event)" style="z-index:700">
   <div class="sheet" style="padding-bottom:calc(var(--safe-bot)+16px)">
     <div class="sheet-handle"></div>
     <div style="font-size:17px;font-weight:600;text-align:center;padding:0 20px 14px;color:var(--ink)">Repetição</div>
@@ -2300,35 +2300,30 @@ function closeDrum(pkId){
   const pk=document.getElementById(pkId);
   if(pk)pk.classList.remove('open');
 }
-function tapToggle(togId,pkId){
+function tapToggle(togId, pkId){
   const tog = document.getElementById(togId);
   const pk  = document.getElementById(pkId);
   if(!tog) return;
 
-  // If toggle already ON and picker already OPEN → just collapse picker (keep toggle on)
-  const pickerOpen = pk && pk.classList.contains('open');
-  const togOn = tog.classList.contains('on');
+  const alreadyOpen = pk && pk.classList.contains('open');
 
-  if(togOn && pickerOpen){
-    // Collapse picker, keep toggle green
+  // Row tap: if picker already open → collapse it (scroll past)
+  // Row tap: if picker closed → open it
+  if(alreadyOpen){
     pk.classList.remove('open');
     return;
   }
 
-  // Turning ON for first time or reopening
-  const turningOn = !togOn;
-  tog.classList.toggle('on', true); // always turn on when tapping
-
-  // Close the OTHER date/time picker first (only one open at a time)
+  // Opening: turn toggle on, close sibling picker
+  tog.classList.add('on');
   if(togId==='tog-date'){
     document.getElementById('pk-ttime')?.classList.remove('open');
   } else if(togId==='tog-time'){
     document.getElementById('pk-tdate')?.classList.remove('open');
   }
-
   if(pk) pk.classList.add('open');
 
-  // Blue subtitle labels
+  // Blue subtitle
   if(togId==='tog-date'){
     const sub = document.getElementById('disp-date-lbl');
     if(sub){ sub.style.display=''; updateDateLabel(); }
@@ -2336,12 +2331,16 @@ function tapToggle(togId,pkId){
   if(togId==='tog-time'){
     const sub = document.getElementById('disp-time-lbl');
     if(sub){ sub.style.display=''; updateTimeLabel(); }
-    // Auto-enable date toggle if not already on
+    // Auto-enable date if not on
     if(!document.getElementById('tog-date')?.classList.contains('on')){
       document.getElementById('tog-date')?.classList.add('on');
       const ds = document.getElementById('disp-date-lbl');
       if(ds){ ds.style.display=''; updateDateLabel(); }
     }
+    // Scroll body so time drum is visible
+    setTimeout(()=>{
+      pk?.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 320);
   }
 }
 function _closePicker(togId, pkId){
@@ -3045,6 +3044,20 @@ window.addEventListener('DOMContentLoaded',()=>{
     const dx=e.changedTouches[0].clientX-tx;
     if(Math.abs(dx)>50)shiftWeek(dx<0?1:-1);
   },{passive:true});
+  // Close open drum/cal pickers when user scrolls in det-body
+  let _lastScrollY = 0;
+  const detBody = document.getElementById('detBody');
+  if(detBody){
+    detBody.addEventListener('scroll', ()=>{
+      const dy = detBody.scrollTop - _lastScrollY;
+      _lastScrollY = detBody.scrollTop;
+      // If scrolling down more than 30px, collapse any open picker
+      if(dy > 30){
+        document.getElementById('pk-ttime')?.classList.remove('open');
+        document.getElementById('pk-tdate')?.classList.remove('open');
+      }
+    },{passive:true});
+  }
 });
 </script>
 </body>
