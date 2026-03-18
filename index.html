@@ -940,7 +940,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
               <div class="ios-row-lbl">Data</div>
               <div class="ios-row-sub" id="disp-date-lbl" style="display:none">Hoje</div>
             </div>
-            <div class="ios-tog" id="tog-date" onclick="event.stopPropagation();tapToggle('tog-date','pk-tdate')"></div>
+            <div class="ios-tog" id="tog-date" onclick="event.stopPropagation();handleTogBtn('tog-date','pk-tdate')"></div>
           </div>
 
           <!-- Calendar grid (iOS Reminders style) -->
@@ -994,7 +994,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
               <div class="ios-row-lbl">Horário</div>
               <div class="ios-row-sub" id="disp-time-lbl" style="display:none">08:00</div>
             </div>
-            <div class="ios-tog" id="tog-time" onclick="event.stopPropagation();tapToggle('tog-time','pk-ttime')"></div>
+            <div class="ios-tog" id="tog-time" onclick="event.stopPropagation();handleTogBtn('tog-time','pk-ttime')"></div>
           </div>
 
           <!-- Time drum (hours + minutes by 5) -->
@@ -1192,64 +1192,81 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
             <span class="ios-row-lbl">Dia inteiro</span>
             <div class="ios-tog" id="tog-allday" onclick="event.stopPropagation();toggleAllDay()"></div>
           </div>
-          <!-- Começa row -->
-          <div class="ios-row" onclick="tapEventPicker('start')">
+
+          <!-- Começa -->
+          <div class="ios-row">
             <span class="ios-row-lbl">Começa</span>
             <div class="dt-pills" id="pills-start">
-              <div class="dt-pill" id="pill-sdate">—</div>
-              <div class="dt-pill" id="pill-stime">—</div>
+              <div class="dt-pill" id="pill-sdate" onclick="tapEventPill('start','date')">—</div>
+              <div class="dt-pill" id="pill-stime" onclick="tapEventPill('start','time')">—</div>
             </div>
           </div>
-          <!-- Start drum inline -->
-          <div class="drum-picker" id="pk-estart">
+          <!-- Start calendar -->
+          <div class="cal-picker" id="pk-estart-cal">
+            <div class="cal-nav">
+              <button class="cal-nav-month" onclick="toggleEventMonthDrum('start')">
+                <span id="eStartMonthLabel">—</span>
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px">
+                  <path d="M2 3.5L5 6.5L8 3.5" stroke="#007aff" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <div style="display:flex;gap:18px">
+                <button class="cal-nav-arr" onclick="shiftEventCal('start',-1)"><svg viewBox="0 0 10 16" fill="none"><path d="M8 2L2 8l6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <button class="cal-nav-arr" onclick="shiftEventCal('start',1)"><svg viewBox="0 0 10 16" fill="none"><path d="M2 2l6 6-6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              </div>
+            </div>
+            <div class="cal-dow-row"><span>DOM.</span><span>SEG.</span><span>TER.</span><span>QUA.</span><span>QUI.</span><span>SEX.</span><span>SÁB.</span></div>
+            <div class="cal-grid" id="eStartGrid"></div>
+          </div>
+          <!-- Start time drum -->
+          <div class="drum-picker" id="pk-estart-time">
             <div class="drum-wrap">
-              <div class="drum-sel"></div>
-              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+              <div class="drum-sel"></div><div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
               <div class="drum-cols">
-                <div class="drum-col" id="dc-esd"></div>
-                <div class="drum-col" id="dc-esm"></div>
-                <div class="drum-col" id="dc-esy"></div>
                 <div class="drum-col" id="dc-esh"></div>
                 <div class="drum-col" id="dc-esn"></div>
               </div>
             </div>
-            <div class="drum-labels">
-              <div class="drum-col-label">Dia</div>
-              <div class="drum-col-label">Mês</div>
-              <div class="drum-col-label">Ano</div>
-              <div class="drum-col-label">Hora</div>
-              <div class="drum-col-label">Min</div>
-            </div>
+            <div class="drum-labels"><div class="drum-col-label">Hora</div><div class="drum-col-label">Min</div></div>
           </div>
-          <!-- Termina row -->
-          <div class="ios-row" onclick="tapEventPicker('end')">
+
+          <!-- Termina -->
+          <div class="ios-row">
             <span class="ios-row-lbl">Termina</span>
             <div class="dt-pills" id="pills-end">
-              <div class="dt-pill" id="pill-edate">—</div>
-              <div class="dt-pill" id="pill-etime">—</div>
+              <div class="dt-pill" id="pill-edate" onclick="tapEventPill('end','date')">—</div>
+              <div class="dt-pill" id="pill-etime" onclick="tapEventPill('end','time')">—</div>
             </div>
           </div>
-          <!-- End drum inline -->
-          <div class="drum-picker" id="pk-eend">
+          <!-- End calendar -->
+          <div class="cal-picker" id="pk-eend-cal">
+            <div class="cal-nav">
+              <button class="cal-nav-month" onclick="toggleEventMonthDrum('end')">
+                <span id="eEndMonthLabel">—</span>
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px">
+                  <path d="M2 3.5L5 6.5L8 3.5" stroke="#007aff" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <div style="display:flex;gap:18px">
+                <button class="cal-nav-arr" onclick="shiftEventCal('end',-1)"><svg viewBox="0 0 10 16" fill="none"><path d="M8 2L2 8l6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <button class="cal-nav-arr" onclick="shiftEventCal('end',1)"><svg viewBox="0 0 10 16" fill="none"><path d="M2 2l6 6-6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              </div>
+            </div>
+            <div class="cal-dow-row"><span>DOM.</span><span>SEG.</span><span>TER.</span><span>QUA.</span><span>QUI.</span><span>SEX.</span><span>SÁB.</span></div>
+            <div class="cal-grid" id="eEndGrid"></div>
+          </div>
+          <!-- End time drum -->
+          <div class="drum-picker" id="pk-eend-time">
             <div class="drum-wrap">
-              <div class="drum-sel"></div>
-              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+              <div class="drum-sel"></div><div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
               <div class="drum-cols">
-                <div class="drum-col" id="dc-eed"></div>
-                <div class="drum-col" id="dc-eem"></div>
-                <div class="drum-col" id="dc-eey"></div>
                 <div class="drum-col" id="dc-eeh"></div>
                 <div class="drum-col" id="dc-een"></div>
               </div>
             </div>
-            <div class="drum-labels">
-              <div class="drum-col-label">Dia</div>
-              <div class="drum-col-label">Mês</div>
-              <div class="drum-col-label">Ano</div>
-              <div class="drum-col-label">Hora</div>
-              <div class="drum-col-label">Min</div>
-            </div>
+            <div class="drum-labels"><div class="drum-col-label">Hora</div><div class="drum-col-label">Min</div></div>
           </div>
+
           <!-- Tempo de Viagem -->
           <div class="ios-row" style="border-bottom:none">
             <span class="ios-row-lbl">Tempo de Viagem</span>
@@ -1393,26 +1410,27 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
             <input id="dVal" type="number" step="0.01" placeholder="0,00"
               style="flex:1;text-align:right;font-size:17px;color:#8e8e93;background:none;border:none;outline:none;font-family:inherit;-webkit-appearance:none"/>
           </div>
-          <div class="ios-row" onclick="tapToggle('tog-xdate','pk-xdate')" style="border-bottom:none">
+          <div class="ios-row" onclick="tapExpenseCal()" style="border-bottom:none">
             <span class="ios-row-lbl">Data</span>
             <span class="ios-row-val" id="disp-xdate">Hoje</span>
             <span class="ios-row-chev">›</span>
           </div>
-          <div class="drum-picker" id="pk-xdate">
-            <div class="drum-wrap">
-              <div class="drum-sel"></div>
-              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
-              <div class="drum-cols">
-                <div class="drum-col" id="dc-xd"></div>
-                <div class="drum-col" id="dc-xm"></div>
-                <div class="drum-col" id="dc-xy"></div>
+          <!-- Expense calendar -->
+          <div class="cal-picker" id="pk-xdate">
+            <div class="cal-nav">
+              <button class="cal-nav-month" onclick="toggleExpMonthDrum()">
+                <span id="xCalMonthLabel">—</span>
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px">
+                  <path d="M2 3.5L5 6.5L8 3.5" stroke="#007aff" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <div style="display:flex;gap:18px">
+                <button class="cal-nav-arr" onclick="shiftXCal(-1)"><svg viewBox="0 0 10 16" fill="none"><path d="M8 2L2 8l6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <button class="cal-nav-arr" onclick="shiftXCal(1)"><svg viewBox="0 0 10 16" fill="none"><path d="M2 2l6 6-6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
               </div>
             </div>
-            <div class="drum-labels">
-              <div class="drum-col-label">Dia</div>
-              <div class="drum-col-label">Mês</div>
-              <div class="drum-col-label">Ano</div>
-            </div>
+            <div class="cal-dow-row"><span>DOM.</span><span>SEG.</span><span>TER.</span><span>QUA.</span><span>QUI.</span><span>SEX.</span><span>SÁB.</span></div>
+            <div class="cal-grid" id="xCalGrid"></div>
           </div>
         </div>
         <div class="ios-sec">Tags</div>
@@ -1964,7 +1982,171 @@ let DR={day:1,mo:0,yr:2026,h:8,mi:0,
   xd:1,xm:0,xy:2026,
   alarm1:0,alarm2:0,ealarm1:0,ealarm2:0};
 
-// ── Calendar state ────────────────────────
+// ── Event & Expense calendar states ──────
+let ECAL = {
+  start: { viewY:2026, viewM:0, selY:2026, selM:0, selD:1 },
+  end:   { viewY:2026, viewM:0, selY:2026, selM:0, selD:1 },
+  x:     { viewY:2026, viewM:0, selY:2026, selM:0, selD:1 },
+};
+
+function initEventCals(){
+  const td = today();
+  ['start','end','x'].forEach(k=>{
+    ECAL[k] = { viewY:td.getFullYear(), viewM:td.getMonth(),
+      selY:td.getFullYear(), selM:td.getMonth(), selD:td.getDate() };
+  });
+  renderEventCal('start');
+  renderEventCal('end');
+  renderXCal();
+  updateEventPills();
+  updateXDateLabel();
+}
+
+function renderEventCal(which){
+  const state = ECAL[which];
+  const td = today();
+  const lbl = document.getElementById(which==='start'?'eStartMonthLabel':'eEndMonthLabel');
+  if(lbl) lbl.textContent = `${MO_CAL_PT[state.viewM]} de ${state.viewY}`;
+  const grid = document.getElementById(which==='start'?'eStartGrid':'eEndGrid');
+  if(!grid) return;
+  const firstDay = new Date(state.viewY, state.viewM, 1).getDay();
+  const daysInM = new Date(state.viewY, state.viewM+1, 0).getDate();
+  let html = '';
+  for(let i=0;i<firstDay;i++) html+='<div class="cal-day empty"></div>';
+  for(let d=1;d<=daysInM;d++){
+    const isToday=(d===td.getDate()&&state.viewM===td.getMonth()&&state.viewY===td.getFullYear());
+    const isSel=(d===state.selD&&state.viewM===state.selM&&state.viewY===state.selY);
+    html+=`<div class="cal-day${isToday?' today':''}${isSel?' selected':''}" onclick="selEventCalDay('${which}',${d})">${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function selEventCalDay(which, d){
+  const state = ECAL[which];
+  state.selD=d; state.selM=state.viewM; state.selY=state.viewY;
+  if(which==='start'){
+    DR.esd=d; DR.esm=state.viewM; DR.esy=state.viewY;
+    // Close cal, keep time open or close both
+    document.getElementById('pk-estart-cal')?.classList.remove('open');
+  } else {
+    DR.eed=d; DR.eem=state.viewM; DR.eey=state.viewY;
+    document.getElementById('pk-eend-cal')?.classList.remove('open');
+  }
+  haptic();
+  renderEventCal(which);
+  updateEventPills();
+}
+
+function shiftEventCal(which, dir){
+  const state = ECAL[which];
+  state.viewM += dir;
+  if(state.viewM>11){state.viewM=0;state.viewY++;}
+  if(state.viewM<0){state.viewM=11;state.viewY--;}
+  haptic();
+  renderEventCal(which);
+}
+
+function toggleEventMonthDrum(which){ /* future: month/year drum */ }
+
+function tapEventPicker(which){
+  // Close all event pickers first
+  ['pk-estart-cal','pk-estart-time','pk-eend-cal','pk-eend-time'].forEach(id=>{
+    document.getElementById(id)?.classList.remove('open');
+  });
+  // Determine which pill was tapped (date or time) based on last tap
+  // Default: open calendar
+  if(which==='start'){
+    document.getElementById('pk-estart-cal')?.classList.add('open');
+  } else {
+    document.getElementById('pk-eend-cal')?.classList.add('open');
+  }
+}
+
+function tapEventPill(which, part){
+  // part = 'date' or 'time'
+  const calId = `pk-e${which}-cal`;
+  const timeId = `pk-e${which}-time`;
+  const otherCal = which==='start'?'pk-eend-cal':'pk-estart-cal';
+  const otherTime = which==='start'?'pk-eend-time':'pk-estart-time';
+  // Close others
+  [otherCal, otherTime].forEach(id=>document.getElementById(id)?.classList.remove('open'));
+  const pkId = part==='date' ? calId : timeId;
+  const pk = document.getElementById(pkId);
+  if(!pk) return;
+  const wasOpen = pk.classList.contains('open');
+  // Close the sibling too
+  document.getElementById(part==='date'?timeId:calId)?.classList.remove('open');
+  pk.classList.toggle('open', !wasOpen);
+  haptic();
+}
+
+function updateEventPills(){
+  const p2x = n=>String(n).padStart(2,'0');
+  const df=(d,m,y)=>`${d} ${MO_CAL_ABBR[m]} ${y}`;
+  const tf=(h,mi)=>`${p2x(h)}:${p2x(mi*5)}`;
+  const sd=document.getElementById('pill-sdate');
+  const st=document.getElementById('pill-stime');
+  const ed=document.getElementById('pill-edate');
+  const et=document.getElementById('pill-etime');
+  if(sd) sd.textContent=df(ECAL.start.selD,ECAL.start.selM,ECAL.start.selY);
+  if(st) st.textContent=tf(DR.esh,DR.esn);
+  if(ed) ed.textContent=df(ECAL.end.selD,ECAL.end.selM,ECAL.end.selY);
+  if(et) et.textContent=tf(DR.eeh,DR.een);
+}
+
+// ── Expense calendar ──────────────────────
+function renderXCal(){
+  const state = ECAL.x;
+  const td = today();
+  const lbl = document.getElementById('xCalMonthLabel');
+  if(lbl) lbl.textContent = `${MO_CAL_PT[state.viewM]} de ${state.viewY}`;
+  const grid = document.getElementById('xCalGrid');
+  if(!grid) return;
+  const firstDay = new Date(state.viewY, state.viewM, 1).getDay();
+  const daysInM = new Date(state.viewY, state.viewM+1, 0).getDate();
+  let html='';
+  for(let i=0;i<firstDay;i++) html+='<div class="cal-day empty"></div>';
+  for(let d=1;d<=daysInM;d++){
+    const isToday=(d===td.getDate()&&state.viewM===td.getMonth()&&state.viewY===td.getFullYear());
+    const isSel=(d===state.selD&&state.viewM===state.selM&&state.viewY===state.selY);
+    html+=`<div class="cal-day${isToday?' today':''}${isSel?' selected':''}" onclick="selXCalDay(${d})">${d}</div>`;
+  }
+  grid.innerHTML=html;
+}
+
+function selXCalDay(d){
+  ECAL.x.selD=d; ECAL.x.selM=ECAL.x.viewM; ECAL.x.selY=ECAL.x.viewY;
+  DR.xd=d; DR.xm=ECAL.x.viewM; DR.xy=ECAL.x.viewY;
+  haptic();
+  renderXCal();
+  updateXDateLabel();
+  document.getElementById('pk-xdate')?.classList.remove('open');
+}
+
+function shiftXCal(dir){
+  ECAL.x.viewM+=dir;
+  if(ECAL.x.viewM>11){ECAL.x.viewM=0;ECAL.x.viewY++;}
+  if(ECAL.x.viewM<0){ECAL.x.viewM=11;ECAL.x.viewY--;}
+  haptic();
+  renderXCal();
+}
+
+function tapExpenseCal(){
+  const pk=document.getElementById('pk-xdate');
+  if(!pk)return;
+  pk.classList.toggle('open');
+}
+
+function toggleExpMonthDrum(){ /* future */ }
+
+function updateXDateLabel(){
+  const td=today();
+  const s=ECAL.x;
+  const isToday=(s.selD===td.getDate()&&s.selM===td.getMonth()&&s.selY===td.getFullYear());
+  const lbl=document.getElementById('disp-xdate');
+  if(lbl) lbl.textContent=isToday?'Hoje':`${s.selD} ${MO_CAL_ABBR[s.selM]} ${s.selY}`;
+}
+
 let CAL = { viewY: 2026, viewM: 0, selY: 2026, selM: 0, selD: 1 };
 
 function initCalendar(){
@@ -2001,12 +2183,15 @@ function renderCalGrid(){
 
 function selCalDay(d){
   CAL.selD = d; CAL.selM = CAL.viewM; CAL.selY = CAL.viewY;
-  // Update DR state
   DR.day = d; DR.mo = CAL.viewM; DR.yr = CAL.viewY;
   haptic();
   renderCalGrid();
   updateDateLabel();
   updateDrumDisplays();
+  // Close calendar after selection — like iOS
+  const pk = document.getElementById('pk-tdate');
+  if(pk) pk.classList.remove('open');
+  // Don't turn off the toggle — date stays selected, just picker collapses
 }
 
 function shiftCalMonth(dir){
@@ -2063,26 +2248,18 @@ function initDrums(){
   buildDrum('dc-alarm1', ALARM_LABELS, 0);
   buildDrum('dc-alarm2', ALARM_LABELS, 0);
 
-  // Event drums (still use drum for date+time)
-  buildDrum('dc-esd',Array.from({length:daysInMonth(DR.esm,DR.esy)},(_,i)=>String(i+1)),DR.esd-1);
-  buildDrum('dc-esm',MO_CAL_ABBR,DR.esm);
-  buildDrum('dc-esy',yrs,2);
-  buildDrum('dc-esh',hrs,DR.esh);
-  buildDrum('dc-esn',mins5,DR.esn);
-  buildDrum('dc-eed',Array.from({length:daysInMonth(DR.eem,DR.eey)},(_,i)=>String(i+1)),DR.eed-1);
-  buildDrum('dc-eem',MO_CAL_ABBR,DR.eem);
-  buildDrum('dc-eey',yrs,2);
-  buildDrum('dc-eeh',hrs,DR.eeh);
-  buildDrum('dc-een',mins5,DR.een);
-  buildDrum('dc-ealarm1',ALARM_LABELS,0);
-  buildDrum('dc-ealarm2',ALARM_LABELS,0);
+  // Event drums (time only — date uses calendar)
+  buildDrum('dc-esh', hrs, DR.esh);
+  buildDrum('dc-esn', mins5, DR.esn);
+  buildDrum('dc-eeh', hrs, DR.eeh);
+  buildDrum('dc-een', mins5, DR.een);
+  buildDrum('dc-ealarm1', ALARM_LABELS, 0);
+  buildDrum('dc-ealarm2', ALARM_LABELS, 0);
 
-  // Expense
-  buildDrum('dc-xd',Array.from({length:daysInMonth(DR.xm,DR.xy)},(_,i)=>String(i+1)),DR.xd-1);
-  buildDrum('dc-xm',MO_CAL_ABBR,DR.xm);
-  buildDrum('dc-xy',yrs,2);
+  // Expense — date uses calendar, no drums needed
 
   initCalendar();
+  initEventCals();
   updateDrumDisplays();
 }
 
@@ -2094,38 +2271,24 @@ function onDrumChange(id,idx){
   else if(id==='dc-min')DR.mi=idx;
   else if(id==='dc-alarm1')DR.alarm1=idx;
   else if(id==='dc-alarm2')DR.alarm2=idx;
-  else if(id==='dc-esd')DR.esd=idx+1;
-  else if(id==='dc-esm'){DR.esm=idx;buildDrum('dc-esd',Array.from({length:daysInMonth(DR.esm,DR.esy)},(_,i)=>String(i+1)),DR.esd-1);}
-  else if(id==='dc-esy')DR.esy=2026-2+idx;
-  else if(id==='dc-esh')DR.esh=idx;
-  else if(id==='dc-esn')DR.esn=idx;
-  else if(id==='dc-eed')DR.eed=idx+1;
-  else if(id==='dc-eem'){DR.eem=idx;buildDrum('dc-eed',Array.from({length:daysInMonth(DR.eem,DR.eey)},(_,i)=>String(i+1)),DR.eed-1);}
-  else if(id==='dc-eey')DR.eey=2026-2+idx;
-  else if(id==='dc-eeh')DR.eeh=idx;
-  else if(id==='dc-een')DR.een=idx;
+  else if(id==='dc-esh'){DR.esh=idx;updateEventPills();}
+  else if(id==='dc-esn'){DR.esn=idx;updateEventPills();}
+  else if(id==='dc-eeh'){DR.eeh=idx;updateEventPills();}
+  else if(id==='dc-een'){DR.een=idx;updateEventPills();}
   else if(id==='dc-ealarm1')DR.ealarm1=idx;
   else if(id==='dc-ealarm2')DR.ealarm2=idx;
-  else if(id==='dc-xd')DR.xd=idx+1;
-  else if(id==='dc-xm'){DR.xm=idx;buildDrum('dc-xd',Array.from({length:daysInMonth(DR.xm,DR.xy)},(_,i)=>String(i+1)),DR.xd-1);}
-  else if(id==='dc-xy')DR.xy=2026-2+idx;
+  // expense date now uses ECAL.x calendar, no drum handlers needed
   // updateDrumDisplays called by scroll handler
 }
 
 function updateDrumDisplays(){
   const el=id=>document.getElementById(id);
-  const df=(d,m,y)=>`${d} ${MONTHS_DRUM[m]} ${y}`;
-  const tf=(h,mi)=>`${p2(h)}:${p2(mi)}`;
-
   if(el('disp-alarm1'))el('disp-alarm1').textContent=ALARM_LABELS[DR.alarm1]||'Nenhum';
   if(el('disp-alarm2'))el('disp-alarm2').textContent=ALARM_LABELS[DR.alarm2]||'Nenhum';
   if(el('disp-ealarm1'))el('disp-ealarm1').textContent=ALARM_LABELS[DR.ealarm1]||'Nenhum';
   if(el('disp-ealarm2'))el('disp-ealarm2').textContent=ALARM_LABELS[DR.ealarm2]||'Nenhum';
-  if(el('pill-sdate'))el('pill-sdate').textContent=df(DR.esd,DR.esm,DR.esy);
-  if(el('pill-stime'))el('pill-stime').textContent=tf(DR.esh,DR.esn);
-  if(el('pill-edate'))el('pill-edate').textContent=df(DR.eed,DR.eem,DR.eey);
-  if(el('pill-etime'))el('pill-etime').textContent=tf(DR.eeh,DR.een);
-  if(el('disp-xdate'))el('disp-xdate').textContent=df(DR.xd,DR.xm,DR.xy);
+  if(typeof updateEventPills==='function') updateEventPills();
+  if(typeof updateXDateLabel==='function') updateXDateLabel();
 }
 
 // ── Toggle helpers (new drum-picker CSS transition) ──
@@ -2138,33 +2301,70 @@ function closeDrum(pkId){
   if(pk)pk.classList.remove('open');
 }
 function tapToggle(togId,pkId){
-  const tog=document.getElementById(togId);
-  const pk=document.getElementById(pkId);
-  if(!tog)return;
-  const on=!tog.classList.contains('on');
-  tog.classList.toggle('on',on);
-  if(pk){ on?pk.classList.add('open'):pk.classList.remove('open'); }
-  // Blue subtitle
+  const tog = document.getElementById(togId);
+  const pk  = document.getElementById(pkId);
+  if(!tog) return;
+
+  // If toggle already ON and picker already OPEN → just collapse picker (keep toggle on)
+  const pickerOpen = pk && pk.classList.contains('open');
+  const togOn = tog.classList.contains('on');
+
+  if(togOn && pickerOpen){
+    // Collapse picker, keep toggle green
+    pk.classList.remove('open');
+    return;
+  }
+
+  // Turning ON for first time or reopening
+  const turningOn = !togOn;
+  tog.classList.toggle('on', true); // always turn on when tapping
+
+  // Close the OTHER date/time picker first (only one open at a time)
   if(togId==='tog-date'){
-    const sub=document.getElementById('disp-date-lbl');
-    if(sub){sub.style.display=on?'':'none';if(on)updateDateLabel();}
-    if(!on){
-      document.getElementById('tog-time')?.classList.remove('on');
-      document.getElementById('pk-ttime')?.classList.remove('open');
-      const ts=document.getElementById('disp-time-lbl');if(ts)ts.style.display='none';
-    }
+    document.getElementById('pk-ttime')?.classList.remove('open');
+  } else if(togId==='tog-time'){
+    document.getElementById('pk-tdate')?.classList.remove('open');
+  }
+
+  if(pk) pk.classList.add('open');
+
+  // Blue subtitle labels
+  if(togId==='tog-date'){
+    const sub = document.getElementById('disp-date-lbl');
+    if(sub){ sub.style.display=''; updateDateLabel(); }
   }
   if(togId==='tog-time'){
-    const sub=document.getElementById('disp-time-lbl');
-    if(sub){sub.style.display=on?'':'none';if(on)updateTimeLabel();}
-    if(on&&!document.getElementById('tog-date')?.classList.contains('on')){
+    const sub = document.getElementById('disp-time-lbl');
+    if(sub){ sub.style.display=''; updateTimeLabel(); }
+    // Auto-enable date toggle if not already on
+    if(!document.getElementById('tog-date')?.classList.contains('on')){
       document.getElementById('tog-date')?.classList.add('on');
-      document.getElementById('pk-tdate')?.classList.add('open');
-      const ds=document.getElementById('disp-date-lbl');
-      if(ds){ds.style.display='';updateDateLabel();}
+      const ds = document.getElementById('disp-date-lbl');
+      if(ds){ ds.style.display=''; updateDateLabel(); }
     }
   }
-  // urgent: no alarm gate anymore
+}
+function _closePicker(togId, pkId){
+  // Turn off toggle completely
+  document.getElementById(togId)?.classList.remove('on');
+  document.getElementById(pkId)?.classList.remove('open');
+  if(togId==='tog-date'){
+    document.getElementById('disp-date-lbl') && (document.getElementById('disp-date-lbl').style.display='none');
+    _closePicker('tog-time','pk-ttime');
+  }
+  if(togId==='tog-time'){
+    document.getElementById('disp-time-lbl') && (document.getElementById('disp-time-lbl').style.display='none');
+  }
+}
+function handleTogBtn(togId, pkId){
+  // Toggle button: if ON → turn completely off. If OFF → open picker.
+  const tog = document.getElementById(togId);
+  if(!tog) return;
+  if(tog.classList.contains('on')){
+    _closePicker(togId, pkId);
+  } else {
+    tapToggle(togId, pkId);
+  }
 }
 function tapToggleSimple(togId){
   const tog=document.getElementById(togId);
@@ -2418,13 +2618,14 @@ function saveItem(){
     }
     DR.alarm1=getDrumIdx('dc-alarm1');DR.alarm2=getDrumIdx('dc-alarm2');
   } else if(curType==='event'){
-    DR.esd=getDrumIdx('dc-esd')+1;DR.esm=getDrumIdx('dc-esm');DR.esy=2026-2+getDrumIdx('dc-esy');
-    DR.esh=getDrumIdx('dc-esh');DR.esn=getDrumIdx('dc-esn'); // index × 5
-    DR.eed=getDrumIdx('dc-eed')+1;DR.eem=getDrumIdx('dc-eem');DR.eey=2026-2+getDrumIdx('dc-eey');
-    DR.eeh=getDrumIdx('dc-eeh');DR.een=getDrumIdx('dc-een');
-    DR.ealarm1=getDrumIdx('dc-ealarm1');DR.ealarm2=getDrumIdx('dc-ealarm2');
+    // Dates from ECAL calendars, times from drums
+    DR.esd=ECAL.start.selD; DR.esm=ECAL.start.selM; DR.esy=ECAL.start.selY;
+    DR.esh=getDrumIdx('dc-esh'); DR.esn=getDrumIdx('dc-esn');
+    DR.eed=ECAL.end.selD; DR.eem=ECAL.end.selM; DR.eey=ECAL.end.selY;
+    DR.eeh=getDrumIdx('dc-eeh'); DR.een=getDrumIdx('dc-een');
+    DR.ealarm1=getDrumIdx('dc-ealarm1'); DR.ealarm2=getDrumIdx('dc-ealarm2');
   } else if(curType==='expense'){
-    DR.xd=getDrumIdx('dc-xd')+1;DR.xm=getDrumIdx('dc-xm');DR.xy=2026-2+getDrumIdx('dc-xy');
+    DR.xd=ECAL.x.selD; DR.xm=ECAL.x.selM; DR.xy=ECAL.x.selY;
   }
 
   const hasDate=curType==='task'?document.getElementById('tog-date').classList.contains('on'):true;
