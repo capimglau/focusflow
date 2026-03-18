@@ -813,7 +813,6 @@ html:not([data-dark="1"]) body::after{
 
 /* Liquid Glass cards */
 .card{
-  margin-right:62px!important;
   background:rgba(255,255,255,0.82)!important;
   backdrop-filter:blur(20px) saturate(1.8)!important;
   -webkit-backdrop-filter:blur(20px) saturate(1.8)!important;
@@ -1760,11 +1759,11 @@ function renderInicio(){
 
   // ── Notas recentes ──
   var recentNotes=D.notes.slice(0,5);
+  var nSec=document.createElement('div');nSec.className='sec';
+  nSec.innerHTML='<div class="sec-t"><b>📓 Notas</b></div><button onclick="goPage(\"notas\")" style="border:none;background:transparent;color:var(--blue);font-size:14px;font-weight:600;cursor:pointer">Ver todas</button>';
+  el.appendChild(nSec);
   if(recentNotes.length){
-    var nSec=document.createElement('div');nSec.className='sec';
-    nSec.innerHTML='<div class="sec-t"><b>📓 Notas</b></div><button onclick="goPage(\"notas\")" style="border:none;background:transparent;color:var(--blue);font-size:14px;font-weight:600;cursor:pointer">Ver todas</button>';
-    el.appendChild(nSec);
-    var nCard=document.createElement('div');nCard.className='card';nCard.style.margin='0 62px 8px 16px';
+    var nCard=document.createElement('div');nCard.className='card';nCard.style.margin='0 16px 8px';
     recentNotes.forEach(function(note){
       var row=document.createElement('div');row.className='irow';row.style.cursor='pointer';
       row.onclick=function(){openNoteEditor(note);};
@@ -1782,13 +1781,16 @@ function renderInicio(){
 
   // ── Projetos em andamento ──
   var activeProjs=D.projects.slice(0,5);
+  var pSec2=document.createElement('div');pSec2.className='sec';
+  pSec2.innerHTML='<div class="sec-t"><b>📁 Projetos</b></div><button onclick="goPage(\"projetos\")" style="border:none;background:transparent;color:var(--blue);font-size:14px;font-weight:600;cursor:pointer">Ver todos</button>';
+  el.appendChild(pSec2);
   if(activeProjs.length){
     var pSec=document.createElement('div');pSec.className='sec';
     pSec.innerHTML='<div class="sec-t"><b>📁 Projetos</b></div><button onclick="goPage(\"projetos\")" style="border:none;background:transparent;color:var(--blue);font-size:14px;font-weight:600;cursor:pointer">Ver todos</button>';
     el.appendChild(pSec);
     activeProjs.forEach(function(proj){
       var card=document.createElement('div');
-      card.className='card';card.style.cssText='margin:0 16px 8px;cursor:pointer;padding:14px 16px';
+      card.className='card';card.style.margin='0 16px 8px';
       card.onclick=function(){openProjectEditor(proj);};
       var tasks=D.tasks.filter(function(t){return t.projectId===proj.id;});
       var done=tasks.filter(function(t){return t.done;}).length;
@@ -1804,10 +1806,7 @@ function renderInicio(){
     });
   }
 
-  // AutoGest Financeiro
-  var agEl=document.createElement('div');
-  buildDashFinanceiro(agEl);
-  el.appendChild(agEl);
+
 }
 
 // ═══════════════════════════════════════
@@ -1835,7 +1834,7 @@ function renderHoje(){
     return;
   }
   if(items.length){
-    var card=document.createElement('div');card.className='card fade-in';card.style.margin='0 62px 6px 16px';
+    var card=document.createElement('div');card.className='card fade-in';card.style.margin='0 16px 6px';
     items.forEach(function(item){card.appendChild(buildItemRow(item));});
     feed.appendChild(card);
   }
@@ -1873,7 +1872,7 @@ function renderEntrada(){
     el.innerHTML='<div style="padding:60px 20px;text-align:center"><div style="font-size:40px;margin-bottom:12px">✅</div><div style="font-size:16px;font-weight:500;color:var(--fg);margin-bottom:6px">Tudo em dia!</div><div style="font-size:14px;color:var(--sub);margin-bottom:20px">Nenhuma tarefa pendente</div></div>';
     return;
   }
-  var card=document.createElement('div');card.className='card';card.style.margin='0 62px 6px 16px';
+  var card=document.createElement('div');card.className='card';card.style.margin='0 16px 6px';
   tasks.forEach(function(t){
     var item={kind:'task',data:t,date:t.dueDate||''};
     var row=buildItemRow(item);
