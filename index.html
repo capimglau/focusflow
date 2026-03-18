@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-title" content="FocusFlow">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f2f2f7">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232c3040'/><text y='.9em' font-size='70' x='15'>🗓</text></svg>">
 <title>FocusFlow</title>
 <style>
 /* ─── RESET & BASE ─────────────────── */
@@ -132,6 +135,14 @@ html,body{height:100%;background:var(--bg);color:var(--ink);
 .chk.done{background:var(--green,#34c759);border-color:var(--green,#34c759)}
 .chk-check{display:none;width:13px;height:13px}
 .chk.done .chk-check{display:block}
+
+/* Calendar icon for events in list */
+.ev-ico{
+  width:26px;height:26px;flex-shrink:0;margin-right:12px;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+}
+.ev-ico svg{width:22px;height:22px;color:var(--gray2)}
 
 .item-body{flex:1;min-width:0}
 .item-title{font-size:16px;font-weight:400;color:var(--ink);line-height:1.35}
@@ -296,6 +307,350 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   box-shadow:0 2px 4px rgba(0,0,0,.25);transition:left .2s}
 .tog.on::after{left:23px}
 
+/* ═══════════════════════════════════════
+   DETAIL MODAL — pixel-perfect iOS match
+   ═══════════════════════════════════════ */
+.det-overlay{
+  position:fixed;inset:0;z-index:600;
+  background:rgba(0,0,0,.0);
+  display:flex;flex-direction:column;
+  pointer-events:none;
+  transition:background .3s;
+}
+.det-overlay.open{background:rgba(0,0,0,.0);pointer-events:all;}
+
+/* The card slides up from bottom, covers full screen below status bar */
+.det-card{
+  position:absolute;
+  top:calc(var(--safe-top) + 6px);
+  left:0;right:0;bottom:0;
+  background:#f2f2f7;
+  border-radius:20px 20px 0 0;
+  display:flex;flex-direction:column;
+  transform:translateY(110%);
+  transition:transform .38s cubic-bezier(.22,1,.36,1);
+  overflow:hidden;
+  box-shadow:0 -2px 20px rgba(0,0,0,.18);
+}
+[data-dark="1"] .det-card{background:#1c1c1e;}
+.det-overlay.open .det-card{transform:translateY(0);}
+
+/* ── Header: X  Title  ✓ ── */
+.det-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 16px 12px;
+  background:#f2f2f7;
+  flex-shrink:0;
+}
+[data-dark="1"] .det-hdr{background:#1c1c1e;}
+.det-hdr-circ{
+  width:34px;height:34px;border-radius:50%;
+  background:#e5e5ea;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:opacity .12s;flex-shrink:0;
+  -webkit-tap-highlight-color:transparent;
+}
+[data-dark="1"] .det-hdr-circ{background:#3a3a3c;}
+.det-hdr-circ:active{opacity:.5;}
+.det-hdr-circ svg{width:13px;height:13px;color:#636366;}
+[data-dark="1"] .det-hdr-circ svg{color:#aeaeb2;}
+.det-hdr-title{
+  font-size:17px;font-weight:700;color:#000;
+  flex:1;text-align:center;letter-spacing:-.2px;
+}
+[data-dark="1"] .det-hdr-title{color:#fff;}
+
+/* ── iOS Calendar segmented control (Evento | Lembrete) ── */
+.cal-seg{
+  display:flex;
+  background:#e5e5ea;border-radius:9px;
+  margin:0 16px 14px;padding:2px;
+  flex-shrink:0;
+}
+[data-dark="1"] .cal-seg{background:#3a3a3c;}
+.cal-seg-btn{
+  flex:1;padding:7px 8px;border-radius:7px;
+  text-align:center;font-size:15px;font-weight:500;
+  color:#636366;cursor:pointer;transition:all .15s;
+  white-space:nowrap;
+}
+.cal-seg-btn.on{
+  background:#fff;color:#000;font-weight:600;
+  box-shadow:0 1px 4px rgba(0,0,0,.18),0 0 0 .5px rgba(0,0,0,.06);
+}
+[data-dark="1"] .cal-seg-btn.on{background:#636366;color:#fff;}
+
+/* ── Scroll body ── */
+.det-body{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:0 16px calc(var(--safe-bot)+20px);
+}
+.det-body::-webkit-scrollbar{display:none;}
+
+/* ── Section label (gray, normal weight, like iOS) ── */
+.ios-sec{
+  font-size:15px;font-weight:400;color:#8e8e93;
+  padding:18px 4px 7px;letter-spacing:0;
+}
+
+/* ── White grouped card ── */
+.ios-card{
+  background:#fff;border-radius:12px;
+  overflow:visible;margin-bottom:12px;
+}
+[data-dark="1"] .ios-card{background:#2c2c2e;}
+
+/* ── Row inside card ── */
+.ios-row{
+  display:flex;align-items:center;
+  padding:12px 16px;min-height:50px;
+  border-bottom:.5px solid #c6c6c8;
+  gap:12px;position:relative;
+  cursor:pointer;
+  -webkit-tap-highlight-color:rgba(0,0,0,.06);
+}
+[data-dark="1"] .ios-row{border-bottom-color:#3a3a3c;}
+.ios-row:last-child{border-bottom:none;}
+.ios-row:first-child{border-radius:12px 12px 0 0;}
+.ios-row.only{border-radius:12px;}
+
+/* row icon — exact SF Symbols sizes */
+.ios-row-ico{
+  flex-shrink:0;width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:6px;
+}
+.ios-row-ico svg{width:18px;height:18px;color:#8e8e93;}
+.ios-row-ico.yellow{background:#FFD60A;}
+.ios-row-ico.yellow svg{color:#fff;}
+
+.ios-row-lbl{flex:1;font-size:17px;color:#000;letter-spacing:-.2px;}
+[data-dark="1"] .ios-row-lbl{color:#fff;}
+.ios-row-val{font-size:17px;color:#8e8e93;flex-shrink:0;}
+.ios-row-chev{
+  flex-shrink:0;margin-left:4px;
+  font-size:13px;color:#c7c7cc;font-weight:500;
+}
+
+/* ── Title input ── */
+.ios-title-in{
+  width:100%;font-size:17px;font-weight:400;color:#000;
+  background:none;border:none;outline:none;font-family:inherit;
+  padding:14px 16px 10px;display:block;-webkit-appearance:none;
+  caret-color:#007aff;
+}
+[data-dark="1"] .ios-title-in{color:#fff;}
+.ios-title-in::placeholder{color:#c7c7cc;}
+.ios-divider{height:.5px;background:#c6c6c8;margin:0 16px;}
+[data-dark="1"] .ios-divider{background:#3a3a3c;}
+
+/* ── Notes textarea ── */
+.ios-notes-in{
+  width:100%;font-size:17px;font-weight:400;color:#000;
+  background:none;border:none;outline:none;font-family:inherit;
+  resize:none;padding:10px 16px 14px;display:block;
+  line-height:1.45;-webkit-appearance:none;min-height:42px;
+  caret-color:#007aff;
+}
+[data-dark="1"] .ios-notes-in{color:#fff;}
+.ios-notes-in::placeholder{color:#c7c7cc;}
+
+/* ── URL input ── */
+.ios-url-in{
+  flex:1;font-size:17px;color:#000;background:none;
+  border:none;outline:none;font-family:inherit;-webkit-appearance:none;
+  caret-color:#007aff;
+}
+[data-dark="1"] .ios-url-in{color:#fff;}
+.ios-url-in::placeholder{color:#c7c7cc;}
+
+/* ── Generic text input in row ── */
+.ios-row-in{
+  flex:1;font-size:17px;color:#000;background:none;
+  border:none;outline:none;font-family:inherit;-webkit-appearance:none;
+  min-width:0;caret-color:#007aff;
+}
+[data-dark="1"] .ios-row-in{color:#fff;}
+.ios-row-in::placeholder{color:#c7c7cc;}
+.ios-row-in.r{text-align:right;}
+
+/* ── iOS Toggle (exact Apple style) ── */
+.ios-tog{
+  width:51px;height:31px;border-radius:15.5px;
+  background:#e5e5ea;position:relative;
+  cursor:pointer;transition:background .22s cubic-bezier(.4,0,.2,1);
+  flex-shrink:0;-webkit-tap-highlight-color:transparent;
+}
+[data-dark="1"] .ios-tog{background:#39393d;}
+.ios-tog.on{background:#34c759;}
+.ios-tog::after{
+  content:'';position:absolute;
+  top:2px;left:2px;width:27px;height:27px;
+  border-radius:50%;background:#fff;
+  box-shadow:0 3px 8px rgba(0,0,0,.15),0 1px 1px rgba(0,0,0,.1);
+  transition:left .22s cubic-bezier(.4,0,.2,1);
+}
+.ios-tog.on::after{left:22px;}
+
+/* ── Date/time pills (iOS Calendar style) ── */
+.dt-pill{
+  background:#e9e9eb;border-radius:8px;
+  padding:5px 11px;font-size:15px;color:#000;
+  font-weight:400;cursor:pointer;
+  transition:opacity .12s;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+[data-dark="1"] .dt-pill{background:#3a3a3c;color:#fff;}
+.dt-pill:active{opacity:.6;}
+.dt-pill.active-pill{background:#007aff;color:#fff;}
+.dt-pills{display:flex;gap:6px;flex-shrink:0;}
+
+/* ── Drum roll picker — iOS UIDatePicker pixel-perfect ── */
+.drum-picker{
+  overflow:hidden;
+  background:#fff;
+  border-top:.5px solid #c6c6c8;
+  max-height:0;
+  transition:max-height .32s cubic-bezier(.4,0,.2,1);
+}
+[data-dark="1"] .drum-picker{background:#1c1c1e;border-top-color:#38383a;}
+.drum-picker.open{max-height:260px;}
+
+/* drum outer container */
+.drum-wrap{
+  position:relative;height:216px;overflow:hidden;
+  background:#fff;
+}
+[data-dark="1"] .drum-wrap{background:#1c1c1e;}
+
+/* two thin horizontal lines marking selection zone — exactly like iOS */
+.drum-wrap::before,.drum-wrap::after{
+  content:'';position:absolute;
+  left:0;right:0;height:.5px;
+  background:rgba(0,0,0,.15);z-index:10;pointer-events:none;
+}
+[data-dark="1"] .drum-wrap::before,[data-dark="1"] .drum-wrap::after{
+  background:rgba(255,255,255,.18);
+}
+.drum-wrap::before{top:86px;}
+.drum-wrap::after{top:130px;}
+
+/* hide old drum-sel div */
+.drum-sel{display:none;}
+
+/* gradient masks — iOS uses stronger fade than 40% */
+.drum-fade-top,.drum-fade-bot{
+  position:absolute;left:0;right:0;height:88px;pointer-events:none;z-index:6;
+}
+.drum-fade-top{
+  top:0;
+  background:linear-gradient(to bottom,
+    rgba(255,255,255,1) 0%,
+    rgba(255,255,255,.92) 40%,
+    rgba(255,255,255,0) 100%);
+}
+.drum-fade-bot{
+  bottom:0;
+  background:linear-gradient(to top,
+    rgba(255,255,255,1) 0%,
+    rgba(255,255,255,.92) 40%,
+    rgba(255,255,255,0) 100%);
+}
+[data-dark="1"] .drum-fade-top{
+  background:linear-gradient(to bottom,
+    rgba(28,28,30,1) 0%,
+    rgba(28,28,30,.92) 40%,
+    rgba(28,28,30,0) 100%);
+}
+[data-dark="1"] .drum-fade-bot{
+  background:linear-gradient(to top,
+    rgba(28,28,30,1) 0%,
+    rgba(28,28,30,.92) 40%,
+    rgba(28,28,30,0) 100%);
+}
+
+/* columns */
+.drum-cols{display:flex;height:216px;position:relative;z-index:3;}
+.drum-col{
+  flex:1;overflow-y:scroll;height:216px;
+  scroll-snap-type:y mandatory;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+}
+.drum-col::-webkit-scrollbar{display:none;}
+.drum-spacer{height:86px;flex-shrink:0;pointer-events:none;}
+
+/* items — iOS uses weight 400, size 22px, tight letter-spacing */
+.drum-item{
+  height:44px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:400;letter-spacing:-.3px;
+  color:#000;
+  scroll-snap-align:center;
+  user-select:none;pointer-events:none;
+}
+[data-dark="1"] .drum-item{color:#fff;}
+
+/* bottom labels row */
+.drum-labels{
+  display:flex;border-top:.5px solid #c6c6c8;background:#fff;
+}
+[data-dark="1"] .drum-labels{background:#1c1c1e;border-top-color:#38383a;}
+.drum-col-label{
+  flex:1;font-size:13px;font-weight:400;color:#8e8e93;
+  text-align:center;padding:5px 0 7px;
+}
+
+/* ── Hint text ── */
+.ios-hint{
+  font-size:13px;color:#8e8e93;
+  padding:6px 4px 4px;line-height:1.4;
+}
+
+/* ── Tags ── */
+.ios-tags{display:flex;flex-wrap:wrap;gap:7px;padding:4px 0 6px;}
+.ios-tag{
+  padding:6px 14px;border-radius:20px;font-size:14px;font-weight:500;
+  border:.5px solid #c6c6c8;cursor:pointer;transition:all .12s;
+  background:#fff;color:#636366;
+  -webkit-tap-highlight-color:transparent;
+}
+[data-dark="1"] .ios-tag{background:#2c2c2e;border-color:#3a3a3c;}
+.ios-tag.on{color:#fff;border-color:transparent;}
+
+/* ── Attachments ── */
+.att-item{
+  display:flex;align-items:center;padding:11px 16px;
+  border-top:.5px solid #c6c6c8;gap:10px;
+}
+[data-dark="1"] .att-item{border-top-color:#3a3a3c;}
+.att-name{flex:1;font-size:14px;color:#3c3c43;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.att-rm{font-size:20px;color:#ff3b30;cursor:pointer;padding:0 2px;}
+
+/* ── Danger row ── */
+.ios-danger-row{
+  color:#ff3b30;text-align:center;
+  font-size:17px;font-weight:400;flex:1;
+}
+
+/* ── Bottom toolbar — exact iOS Reminders style ── */
+.det-toolbar{
+  display:flex;align-items:center;justify-content:space-around;
+  background:#fff;border-top:.5px solid #c6c6c8;
+  padding:10px 10px calc(var(--safe-bot)+10px);flex-shrink:0;
+}
+[data-dark="1"] .det-toolbar{background:#1c1c1e;border-top-color:#3a3a3c;}
+.det-tb-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:40px;height:38px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;transition:opacity .12s;
+}
+.det-tb-btn:active{opacity:.4;}
+.det-tb-btn svg{width:22px;height:22px;color:#636366;}
+[data-dark="1"] .det-tb-btn svg{color:#8e8e93;}
+
 /* ─── SNACK ──────────────────────────── */
 .snack{
   position:fixed;bottom:calc(var(--safe-bot)+74px);left:50%;
@@ -444,38 +799,541 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   </div>
 </div>
 
-<!-- ── MODAL SHEET ─────────────────────── -->
-<div class="overlay" id="overlay" onclick="closeSheet(event)">
-  <div class="sheet" id="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-head" id="sheetHead">Novo item</div>
-    <div class="sheet-body">
-      <div class="seg" id="typeSeg">
-        <div class="seg-btn on" onclick="pickType('task',this)">Tarefa</div>
-        <div class="seg-btn" onclick="pickType('event',this)">Evento</div>
-        <div class="seg-btn" onclick="pickType('note',this)">Nota</div>
-        <div class="seg-btn" onclick="pickType('expense',this)">Despesa</div>
+<!-- ── DETAIL MODAL — pixel-perfect iOS ── -->
+<div id="detModal" class="det-overlay">
+  <div class="det-card" id="detCard">
+
+    <!-- Header: ✕  Title  ✓ -->
+    <div class="det-hdr">
+      <div class="det-hdr-circ" onclick="closeDetail()">
+        <svg viewBox="0 0 14 14" fill="none">
+          <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
       </div>
-      <div class="fg">
-        <div class="frow"><input class="finput" id="fTitle" placeholder="Título" autocomplete="off"/></div>
-        <div class="frow"><textarea class="finput" id="fBody" placeholder="Notas" rows="3"></textarea></div>
+      <span class="det-hdr-title" id="detNavTitle">Novo Lembrete</span>
+      <div class="det-hdr-circ" style="background:#e5e5ea" onclick="saveItem()">
+        <svg viewBox="0 0 16 14" fill="none">
+          <path d="M1.5 7l4 5L14.5 1" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
-      <div class="fg" id="fgDateTime">
-        <div class="frow"><span class="flabel">Data</span><input type="date" class="finput r" id="fDate"/></div>
-        <div class="frow" id="frowTime"><span class="flabel">Hora</span><input type="time" class="finput r" id="fTime"/></div>
-        <div class="frow" id="frowEnd"><span class="flabel">Fim</span><input type="time" class="finput r" id="fTimeEnd"/></div>
-        <div class="frow" id="frowLoc"><span class="flabel">Local</span><input type="text" class="finput r" id="fLoc" placeholder="Opcional"/></div>
-        <div class="frow" id="frowVal" style="display:none"><span class="flabel">R$</span><input type="number" class="finput r" id="fVal" placeholder="0,00" step="0.01"/></div>
-        <div class="frow" id="frowSub" style="display:none"><span class="flabel">Subtarefas</span><input type="number" class="finput r" id="fSub" placeholder="0" min="0"/></div>
-      </div>
-      <div class="fg">
-        <div class="tag-wrap" id="tagWrap"></div>
-      </div>
-      <button class="sbtn p" onclick="saveItem()">Salvar</button>
-      <button class="sbtn d" id="btnDelete" style="display:none" onclick="deleteItem()">Apagar</button>
-      <div style="height:6px"></div>
     </div>
-  </div>
+
+    <!-- Segmented control — shown only for Event/Task (Calendar style) -->
+    <div class="cal-seg" id="calSeg" style="display:none">
+      <div class="cal-seg-btn on" id="csEvento" onclick="pickType('event',this)">Evento</div>
+      <div class="cal-seg-btn" id="csTask" onclick="pickType('task',this)">Lembrete</div>
+    </div>
+
+    <!-- Body scroll -->
+    <div class="det-body" id="detBody">
+
+      <!-- ══ TASK / LEMBRETE view ══════════════ -->
+      <div id="view-task">
+
+        <!-- Title + Notes + URL card -->
+        <div class="ios-card" style="margin-bottom:18px">
+          <input id="dTitle" class="ios-title-in" placeholder="Título" autocomplete="off"/>
+          <div class="ios-divider"></div>
+          <textarea id="dBody" class="ios-notes-in" placeholder="Notas" rows="2"></textarea>
+          <div class="ios-divider"></div>
+          <div class="ios-row only" style="min-height:44px">
+            <input id="dUrl" type="url" class="ios-url-in" placeholder="URL"/>
+          </div>
+        </div>
+
+        <!-- Data e Hora -->
+        <div class="ios-sec">Data e Hora</div>
+        <div class="ios-card">
+
+          <!-- Data toggle -->
+          <div class="ios-row" onclick="tapToggle('tog-date','pk-tdate')">
+            <div class="ios-row-ico">
+              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <rect x="2" y="3" width="18" height="17" rx="2.5"/>
+                <path d="M2 8h18"/><path d="M7 1v4M15 1v4"/>
+              </svg>
+            </div>
+            <span class="ios-row-lbl">Data</span>
+            <div class="ios-tog" id="tog-date" onclick="event.stopPropagation();tapToggle('tog-date','pk-tdate')"></div>
+          </div>
+          <!-- Data drum (inline expand) -->
+          <div class="drum-picker" id="pk-tdate">
+            <div class="drum-wrap">
+              <div class="drum-sel"></div>
+              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+              <div class="drum-cols">
+                <div class="drum-col" id="dc-day"></div>
+                <div class="drum-col" id="dc-month"></div>
+                <div class="drum-col" id="dc-year"></div>
+              </div>
+            </div>
+            <div class="drum-labels">
+              <div class="drum-col-label">Dia</div>
+              <div class="drum-col-label">Mês</div>
+              <div class="drum-col-label">Ano</div>
+            </div>
+          </div>
+
+          <!-- Horário toggle -->
+          <div class="ios-row" onclick="tapToggle('tog-time','pk-ttime')">
+            <div class="ios-row-ico">
+              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="11" cy="11" r="9"/>
+                <path d="M11 6v5.5l3.5 2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="ios-row-lbl">Horário</span>
+            <div class="ios-tog" id="tog-time" onclick="event.stopPropagation();tapToggle('tog-time','pk-ttime')"></div>
+          </div>
+          <!-- Horário drum -->
+          <div class="drum-picker" id="pk-ttime">
+            <div class="drum-wrap">
+              <div class="drum-sel"></div>
+              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+              <div class="drum-cols">
+                <div class="drum-col" id="dc-hour"></div>
+                <div class="drum-col" id="dc-min"></div>
+              </div>
+            </div>
+            <div class="drum-labels">
+              <div class="drum-col-label">Hora</div>
+              <div class="drum-col-label">Min</div>
+            </div>
+          </div>
+
+          <!-- Urgente toggle -->
+          <div class="ios-row" style="border-bottom:none" onclick="tapToggleSimple('tog-urgent')">
+            <div class="ios-row-ico">
+              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <circle cx="11" cy="11" r="9"/>
+                <path d="M11 7v5M11 15v.5"/>
+              </svg>
+            </div>
+            <span class="ios-row-lbl">Urgente</span>
+            <div class="ios-tog" id="tog-urgent" onclick="event.stopPropagation();tapToggleSimple('tog-urgent')"></div>
+          </div>
+        </div>
+        <div class="ios-hint">Para definir um alarme, marque este lembrete como urgente.</div>
+
+        <!-- Mais Opções -->
+        <div class="ios-sec">Mais Opções</div>
+
+        <!-- Alarmes (mostrados só se urgente ativo) -->
+        <div class="ios-card" id="dg-alarms" style="display:none;margin-bottom:12px">
+          <div class="ios-row" onclick="tapAlarm('a1')">
+            <div class="ios-row-ico">
+              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M11 4a7 7 0 100 14A7 7 0 0011 4z"/>
+                <path d="M11 8v4l2.5 2"/><path d="M4 2l3 3M18 2l-3 3"/>
+              </svg>
+            </div>
+            <span class="ios-row-lbl">Alarme</span>
+            <span class="ios-row-val" id="disp-alarm1">Nenhum</span>
+            <span class="ios-row-chev">›</span>
+          </div>
+          <div class="drum-picker" id="pk-alarm1">
+            <div class="drum-wrap">
+              <div class="drum-sel"></div>
+              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+              <div class="drum-cols"><div class="drum-col" id="dc-alarm1"></div></div>
+            </div>
+          </div>
+          <div class="ios-row" style="border-bottom:none" onclick="tapAlarm('a2')">
+            <div class="ios-row-ico">
+              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M11 4a7 7 0 100 14A7 7 0 0011 4z"/>
+                <path d="M11 8v4l2.5 2"/><path d="M4 2l3 3M18 2l-3 3"/>
+              </svg>
+            </div>
+            <span class="ios-row-lbl">2º Alarme</span>
+            <span class="ios-row-val" id="disp-alarm2">Nenhum</span>
+            <span class="ios-row-chev">›</span>
+          </div>
+          <div class="drum-picker" id="pk-alarm2">
+            <div class="drum-wrap">
+              <div class="drum-sel"></div>
+              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+              <div class="drum-cols"><div class="drum-col" id="dc-alarm2"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lista / Detalhes rows -->
+        <div class="ios-card">
+          <div class="ios-row" onclick="tapList()">
+            <div class="ios-row-ico yellow">
+              <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <line x1="3" y1="5" x2="15" y2="5"/>
+                <line x1="3" y1="9" x2="15" y2="9"/>
+                <line x1="3" y1="13" x2="10" y2="13"/>
+              </svg>
+            </div>
+            <span class="ios-row-lbl">Lista</span>
+            <span class="ios-row-val" id="listVal">Entrada</span>
+            <span class="ios-row-chev">›</span>
+          </div>
+          <div class="ios-row" style="border-bottom:none" onclick="tapDetails()">
+            <div class="ios-row-ico">
+              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <circle cx="11" cy="11" r="9"/>
+                <path d="M11 10v6M11 7v.5"/>
+              </svg>
+            </div>
+            <span class="ios-row-lbl">Detalhes</span>
+            <span class="ios-row-chev">›</span>
+          </div>
+        </div>
+
+        <!-- Subtarefas + Localização -->
+        <div class="ios-card" id="dg-details" style="display:none">
+          <div class="ios-row">
+            <div class="ios-row-ico">
+              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <rect x="3" y="3" width="6" height="6" rx="1"/>
+                <rect x="3" y="13" width="6" height="6" rx="1"/>
+                <line x1="13" y1="6" x2="19" y2="6"/>
+                <line x1="13" y1="16" x2="19" y2="16"/>
+              </svg>
+            </div>
+            <span class="ios-row-lbl">Subtarefas</span>
+            <input id="dSub" type="number" min="0" placeholder="0"
+              style="width:60px;text-align:right;font-size:17px;color:#8e8e93;background:none;border:none;outline:none;font-family:inherit"/>
+          </div>
+          <div class="ios-row" style="border-bottom:none">
+            <div class="ios-row-ico">
+              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M11 2C8 2 6 5 6 8c0 4.25 5 12 5 12s5-7.75 5-12c0-3-2-6-5-6z"/>
+                <circle cx="11" cy="8" r="2"/>
+              </svg>
+            </div>
+            <input id="dLoc" class="ios-row-in" placeholder="Adicionar endereço" autocomplete="off"/>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="ios-sec">Tags</div>
+        <div class="ios-tags" id="dTags-task"></div>
+
+        <!-- Anexos -->
+        <div class="ios-sec" style="margin-top:10px">Anexos</div>
+        <div class="ios-card">
+          <div class="ios-row only" onclick="document.getElementById('dFileInput').click()">
+            <div class="ios-row-ico">
+              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M13.5 3H5a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8.5L13.5 3z"/>
+                <path d="M13 3v6h6"/><path d="M11 10v6M8 13l3-3 3 3"/>
+              </svg>
+            </div>
+            <span class="ios-row-lbl">Adicionar anexo</span>
+            <span class="ios-row-chev">›</span>
+          </div>
+          <div id="attachList-task"></div>
+        </div>
+
+        <div class="ios-card" id="dg-delete-task" style="display:none;margin-top:20px">
+          <div class="ios-row only" onclick="deleteItem()">
+            <span class="ios-danger-row">Apagar Lembrete</span>
+          </div>
+        </div>
+        <div style="height:20px"></div>
+      </div><!-- /view-task -->
+
+
+      <!-- ══ EVENT view ══════════════════════ -->
+      <div id="view-event" style="display:none">
+
+        <!-- Title + Location -->
+        <div class="ios-card" style="margin-bottom:18px">
+          <input id="eTit" class="ios-title-in" placeholder="Título" autocomplete="off"/>
+          <div class="ios-divider"></div>
+          <div class="ios-row only" style="min-height:44px">
+            <input id="eLoc" class="ios-row-in" placeholder="Localização ou Ligação de Vídeo" autocomplete="off"/>
+          </div>
+        </div>
+
+        <!-- Date/time block -->
+        <div class="ios-card">
+          <!-- Dia inteiro -->
+          <div class="ios-row" onclick="tapToggleSimple('tog-allday')">
+            <span class="ios-row-lbl">Dia inteiro</span>
+            <div class="ios-tog" id="tog-allday" onclick="event.stopPropagation();toggleAllDay()"></div>
+          </div>
+          <!-- Começa row -->
+          <div class="ios-row" onclick="tapEventPicker('start')">
+            <span class="ios-row-lbl">Começa</span>
+            <div class="dt-pills" id="pills-start">
+              <div class="dt-pill" id="pill-sdate">—</div>
+              <div class="dt-pill" id="pill-stime">—</div>
+            </div>
+          </div>
+          <!-- Start drum inline -->
+          <div class="drum-picker" id="pk-estart">
+            <div class="drum-wrap">
+              <div class="drum-sel"></div>
+              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+              <div class="drum-cols">
+                <div class="drum-col" id="dc-esd"></div>
+                <div class="drum-col" id="dc-esm"></div>
+                <div class="drum-col" id="dc-esy"></div>
+                <div class="drum-col" id="dc-esh"></div>
+                <div class="drum-col" id="dc-esn"></div>
+              </div>
+            </div>
+            <div class="drum-labels">
+              <div class="drum-col-label">Dia</div>
+              <div class="drum-col-label">Mês</div>
+              <div class="drum-col-label">Ano</div>
+              <div class="drum-col-label">Hora</div>
+              <div class="drum-col-label">Min</div>
+            </div>
+          </div>
+          <!-- Termina row -->
+          <div class="ios-row" onclick="tapEventPicker('end')">
+            <span class="ios-row-lbl">Termina</span>
+            <div class="dt-pills" id="pills-end">
+              <div class="dt-pill" id="pill-edate">—</div>
+              <div class="dt-pill" id="pill-etime">—</div>
+            </div>
+          </div>
+          <!-- End drum inline -->
+          <div class="drum-picker" id="pk-eend">
+            <div class="drum-wrap">
+              <div class="drum-sel"></div>
+              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+              <div class="drum-cols">
+                <div class="drum-col" id="dc-eed"></div>
+                <div class="drum-col" id="dc-eem"></div>
+                <div class="drum-col" id="dc-eey"></div>
+                <div class="drum-col" id="dc-eeh"></div>
+                <div class="drum-col" id="dc-een"></div>
+              </div>
+            </div>
+            <div class="drum-labels">
+              <div class="drum-col-label">Dia</div>
+              <div class="drum-col-label">Mês</div>
+              <div class="drum-col-label">Ano</div>
+              <div class="drum-col-label">Hora</div>
+              <div class="drum-col-label">Min</div>
+            </div>
+          </div>
+          <!-- Tempo de Viagem -->
+          <div class="ios-row" style="border-bottom:none">
+            <span class="ios-row-lbl">Tempo de Viagem</span>
+            <span class="ios-row-val">Nenhum</span>
+            <span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span>
+          </div>
+        </div>
+
+        <!-- Repete -->
+        <div class="ios-card">
+          <div class="ios-row only">
+            <span class="ios-row-lbl">Repete</span>
+            <span class="ios-row-val" id="eRepete">Nunca</span>
+            <span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span>
+          </div>
+        </div>
+
+        <!-- Calendário + Convidados -->
+        <div class="ios-card">
+          <div class="ios-row">
+            <span class="ios-row-lbl">Calendário</span>
+            <span class="ios-row-val" style="display:flex;align-items:center;gap:5px">
+              <span style="width:10px;height:10px;border-radius:50%;background:#32ade6;display:inline-block"></span>
+              Padrão
+            </span>
+            <span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span>
+          </div>
+          <div class="ios-row" style="border-bottom:none">
+            <span class="ios-row-lbl">Convidados</span>
+            <span class="ios-row-val">Nenhum</span>
+            <span class="ios-row-chev">›</span>
+          </div>
+        </div>
+
+        <!-- Alertas -->
+        <div class="ios-card">
+          <div class="ios-row" onclick="tapAlarm('ea1')">
+            <span class="ios-row-lbl">Alerta</span>
+            <span class="ios-row-val" id="disp-ealarm1">Nenhum</span>
+            <span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span>
+          </div>
+          <div class="drum-picker" id="pk-ealarm1">
+            <div class="drum-wrap">
+              <div class="drum-sel"></div>
+              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+              <div class="drum-cols"><div class="drum-col" id="dc-ealarm1"></div></div>
+            </div>
+          </div>
+          <div class="ios-row" style="border-bottom:none" onclick="tapAlarm('ea2')">
+            <span class="ios-row-lbl">2º Alerta</span>
+            <span class="ios-row-val" id="disp-ealarm2">Nenhum</span>
+            <span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span>
+          </div>
+          <div class="drum-picker" id="pk-ealarm2">
+            <div class="drum-wrap">
+              <div class="drum-sel"></div>
+              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+              <div class="drum-cols"><div class="drum-col" id="dc-ealarm2"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notas + URL -->
+        <div class="ios-card">
+          <textarea id="eBody" class="ios-notes-in" placeholder="Notas" rows="3" style="padding:14px 16px"></textarea>
+          <div class="ios-divider"></div>
+          <div class="ios-row only" style="min-height:44px">
+            <input id="eUrl" type="url" class="ios-url-in" placeholder="URL"/>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="ios-sec">Tags</div>
+        <div class="ios-tags" id="dTags-event"></div>
+
+        <!-- Anexos -->
+        <div class="ios-sec" style="margin-top:10px">Anexos</div>
+        <div class="ios-card">
+          <div class="ios-row only" onclick="document.getElementById('dFileInput').click()">
+            <div class="ios-row-ico">
+              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M13.5 3H5a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8.5L13.5 3z"/>
+                <path d="M13 3v6h6"/><path d="M11 10v6M8 13l3-3 3 3"/>
+              </svg>
+            </div>
+            <span class="ios-row-lbl">Adicionar anexo</span>
+            <span class="ios-row-chev">›</span>
+          </div>
+          <div id="attachList-event"></div>
+        </div>
+
+        <div class="ios-card" id="dg-delete-event" style="display:none;margin-top:20px">
+          <div class="ios-row only" onclick="deleteItem()">
+            <span class="ios-danger-row">Apagar Evento</span>
+          </div>
+        </div>
+        <div style="height:20px"></div>
+      </div><!-- /view-event -->
+
+
+      <!-- ══ NOTE view ═══════════════════════ -->
+      <div id="view-note" style="display:none">
+        <div class="ios-card">
+          <input id="nTit" class="ios-title-in" placeholder="Título" autocomplete="off"/>
+          <div class="ios-divider"></div>
+          <textarea id="nBody" class="ios-notes-in" placeholder="Notas" rows="8" style="padding:12px 16px"></textarea>
+          <div class="ios-divider"></div>
+          <div class="ios-row only" style="min-height:44px">
+            <input id="nUrl" type="url" class="ios-url-in" placeholder="URL"/>
+          </div>
+        </div>
+        <div class="ios-sec">Tags</div>
+        <div class="ios-tags" id="dTags-note"></div>
+        <div class="ios-sec" style="margin-top:10px">Anexos</div>
+        <div class="ios-card">
+          <div class="ios-row only" onclick="document.getElementById('dFileInput').click()">
+            <span class="ios-row-lbl" style="color:#8e8e93">Adicionar anexo</span>
+            <span class="ios-row-chev">›</span>
+          </div>
+          <div id="attachList-note"></div>
+        </div>
+        <div class="ios-card" id="dg-delete-note" style="display:none;margin-top:20px">
+          <div class="ios-row only" onclick="deleteItem()">
+            <span class="ios-danger-row">Apagar Nota</span>
+          </div>
+        </div>
+        <div style="height:20px"></div>
+      </div><!-- /view-note -->
+
+
+      <!-- ══ EXPENSE view ═════════════════════ -->
+      <div id="view-expense" style="display:none">
+        <div class="ios-card">
+          <input id="xTit" class="ios-title-in" placeholder="Título" autocomplete="off"/>
+          <div class="ios-divider"></div>
+          <textarea id="xBody" class="ios-notes-in" placeholder="Notas" rows="2"></textarea>
+        </div>
+        <div class="ios-card">
+          <div class="ios-row">
+            <span class="ios-row-lbl">Valor R$</span>
+            <input id="dVal" type="number" step="0.01" placeholder="0,00"
+              style="flex:1;text-align:right;font-size:17px;color:#8e8e93;background:none;border:none;outline:none;font-family:inherit;-webkit-appearance:none"/>
+          </div>
+          <div class="ios-row" onclick="tapToggle('tog-xdate','pk-xdate')" style="border-bottom:none">
+            <span class="ios-row-lbl">Data</span>
+            <span class="ios-row-val" id="disp-xdate">Hoje</span>
+            <span class="ios-row-chev">›</span>
+          </div>
+          <div class="drum-picker" id="pk-xdate">
+            <div class="drum-wrap">
+              <div class="drum-sel"></div>
+              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+              <div class="drum-cols">
+                <div class="drum-col" id="dc-xd"></div>
+                <div class="drum-col" id="dc-xm"></div>
+                <div class="drum-col" id="dc-xy"></div>
+              </div>
+            </div>
+            <div class="drum-labels">
+              <div class="drum-col-label">Dia</div>
+              <div class="drum-col-label">Mês</div>
+              <div class="drum-col-label">Ano</div>
+            </div>
+          </div>
+        </div>
+        <div class="ios-sec">Tags</div>
+        <div class="ios-tags" id="dTags-expense"></div>
+        <div class="ios-card" id="dg-delete-expense" style="display:none;margin-top:20px">
+          <div class="ios-row only" onclick="deleteItem()">
+            <span class="ios-danger-row">Apagar Despesa</span>
+          </div>
+        </div>
+        <div style="height:20px"></div>
+      </div><!-- /view-expense -->
+
+    </div><!-- /det-body -->
+
+    <!-- ── Bottom toolbar (exact iOS Reminders icons) ── -->
+    <div class="det-toolbar" id="det-toolbar-task">
+      <!-- Date/time -->
+      <div class="det-tb-btn" onclick="tapToggle('tog-date','pk-tdate')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <rect x="2" y="4" width="20" height="18" rx="3"/>
+          <path d="M2 9h20"/><path d="M8 2v4M16 2v4"/>
+          <circle cx="8" cy="14" r="1.2" fill="currentColor"/>
+          <text x="16" y="19" font-size="5" font-weight="700" text-anchor="middle" fill="currentColor" stroke="none">!</text>
+        </svg>
+      </div>
+      <!-- Location -->
+      <div class="det-tb-btn" onclick="showDetails()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <path d="M12 2C9 2 6 5 6 9c0 5 6 13 6 13s6-8 6-13c0-4-3-7-6-7z"/>
+          <circle cx="12" cy="9" r="2.5"/>
+        </svg>
+      </div>
+      <!-- Hash/Tags -->
+      <div class="det-tb-btn" onclick="document.getElementById('dTags-'+curType)?.scrollIntoView({behavior:'smooth'})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/>
+          <line x1="10" y1="4" x2="8" y2="20"/><line x1="16" y1="4" x2="14" y2="20"/>
+        </svg>
+      </div>
+      <!-- Flag/Urgente -->
+      <div class="det-tb-btn" onclick="tapToggleSimple('tog-urgent')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <path d="M5 3v18M5 3l14 6-14 6"/>
+        </svg>
+      </div>
+      <!-- Camera/Attach -->
+      <div class="det-tb-btn" onclick="document.getElementById('dFileInput').click()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+      </div>
+    </div>
+
+  </div><!-- /det-card -->
 </div>
 
 <!-- ── SETTINGS SHEET ─────────────────── -->
@@ -520,6 +1378,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 </div>
 
 <div class="snack" id="snack"></div>
+<input type="file" id="dFileInput" multiple style="display:none" onchange="handleAttach(event)">
 <input type="file" id="importFile" accept=".json" style="display:none" onchange="handleImport(event)">
 
 <script>
@@ -652,10 +1511,13 @@ function itemHTML(it,showDate=false){
     const d=dparse(it.date);
     const label=`${d.getDate()} ${MO_ABBR[d.getMonth()]}.`;
     meta.push(`<span class="meta-icon ${over?'meta-date-red':''}">${SVG_CAL} ${label}</span>`);
-  }else if(it.time){
+  } else if(it.time){
     meta.push(`<span class="meta-icon">${SVG_CAL} ${it.time}${it.timeEnd?'–'+it.timeEnd:''}</span>`);
   }
   if(it.comments) meta.push(`<span class="meta-icon">${SVG_CHT} ${it.comments}</span>`);
+  if(it.alarm1>0) meta.push(`<span class="meta-icon">🔔 ${ALARM_LABELS[it.alarm1]}</span>`);
+  if(it.loc) meta.push(`<span class="meta-icon" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">📍 ${it.loc}</span>`);
+  if(it.url) meta.push(`<span class="meta-icon" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🔗 ${it.url}</span>`);
 
   const tags=it.tags&&it.tags.length
     ?it.tags.map(t=>`<span style="font-size:11px;padding:2px 7px;border-radius:20px;background:${TAG_C[t]||'#8e8e93'}22;color:${TAG_C[t]||'#8e8e93'}">${t}</span>`).join('')
@@ -669,17 +1531,35 @@ function itemHTML(it,showDate=false){
   if(it.type==='expense'&&it.val){
     meta.push(`<span class="meta-icon">R$ ${Number(it.val).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>`);
   }
+  if(it.attachments&&it.attachments.length){
+    meta.push(`<span class="meta-icon">📎 ${it.attachments.length}</span>`);
+  }
+
+  // Cap meta to 4 items (so total with note/body = 5 lines)
+  const metaToShow=meta.slice(0,4);
+
+  const leftEl = it.type === 'event'
+    ? `<div class="ev-ico" onclick="openEdit('${it.id}')">
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <rect x="1" y="3" width="20" height="18" rx="3"/>
+          <path d="M1 8h20"/>
+          <path d="M7 1v4M15 1v4"/>
+          <text x="11" y="18" font-size="7" font-weight="600" text-anchor="middle" 
+            fill="currentColor" stroke="none">${it.date?new Date(it.date+'T12:00').getDate():''}</text>
+        </svg>
+      </div>`
+    : `<div class="chk ${it.done?'done':''}" onclick="toggleDone('${it.id}',event)">${SVG_CHK}</div>`;
 
   return`<div class="item-row" id="row-${it.id}">
-    <div class="chk ${it.done?'done':''}" onclick="toggleDone('${it.id}',event)">${SVG_CHK}</div>
+    ${leftEl}
     <div class="item-body" onclick="openEdit('${it.id}')">
       <div class="item-title ${it.done?'done-text':''}">${it.title}</div>
       ${it.body&&it.type!='note'?`<div class="item-note">${it.body}</div>`:''}
       ${notePreview}
-      ${meta.length?`<div class="item-subtitle">${meta.join('')}</div>`:''}
+      ${metaToShow.length?`<div class="item-subtitle">${metaToShow.join('')}</div>`:''}
       ${tags?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${tags}</div>`:''}
     </div>
-    <div class="item-right" onclick="openEdit('${it.id}')" style="pointer-events:auto">
+    <div class="item-right" onclick="openEdit('${it.id}')">
       <span class="inbox-tag">Entrada</span>
       <span class="inbox-icon">${SVG_INB}</span>
     </div>
@@ -834,92 +1714,530 @@ function goPage(p){
 }
 
 // ══════════════════════════════════════════
-// MODAL
+// ALARM OPTIONS
+const ALARM_LABELS=['Nenhum','Na hora','5 min antes','10 min antes','15 min antes','30 min antes','1h antes','2h antes','1 dia antes'];
+const MONTHS_DRUM=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MONTHS_DRUM_FULL=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+// ── Drum engine — iOS-identical with haptics ──────────────
+const ITEM_H = 44;
+
+// Haptic: 1ms light pulse per tick — feels like iOS
+function haptic(){
+  if(navigator.vibrate) navigator.vibrate(4);
+}
+
+function buildDrum(colId, items, initIdx=0){
+  const col = document.getElementById(colId);
+  if(!col) return;
+  col.innerHTML =
+    '<div class="drum-spacer"></div>' +
+    items.map(v=>`<div class="drum-item">${v}</div>`).join('') +
+    '<div class="drum-spacer"></div>';
+  col._items = items;
+  col._lastIdx = Math.max(0, Math.min(initIdx, items.length-1));
+  col.scrollTop = col._lastIdx * ITEM_H;
+  _updateDrumHighlight(col, col._lastIdx);
+
+  let rafId, scrollEndTimer;
+  col.addEventListener('scroll', ()=>{
+    // Cancel previous snap timer
+    clearTimeout(scrollEndTimer);
+    // Highlight nearest item live while scrolling
+    if(rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(()=>{
+      const i = Math.round(col.scrollTop / ITEM_H);
+      _updateDrumHighlight(col, i);
+      // Haptic on each new index
+      if(i !== col._lastIdx){
+        haptic();
+        col._lastIdx = i;
+        onDrumChange(colId, i);
+        updateDrumDisplays();
+      }
+    });
+    // Snap after scroll ends
+    scrollEndTimer = setTimeout(()=>{
+      const i = Math.round(col.scrollTop / ITEM_H);
+      const clamped = Math.max(0, Math.min(i, (col._items||[]).length-1));
+      col.scrollTo({top: clamped * ITEM_H, behavior:'smooth'});
+      _updateDrumHighlight(col, clamped);
+      col._lastIdx = clamped;
+    }, 80);
+  }, {passive:true});
+}
+
+function _updateDrumHighlight(col, activeIdx){
+  const items = col.querySelectorAll('.drum-item');
+  items.forEach((el, i)=>{
+    const dist = Math.abs(i - activeIdx);
+    if(dist === 0){
+      el.style.opacity = '1';
+      el.style.fontSize = '22px';
+      el.style.fontWeight = '400';
+      el.style.color = '';
+    } else if(dist === 1){
+      el.style.opacity = '.55';
+      el.style.fontSize = '20px';
+      el.style.fontWeight = '300';
+      el.style.color = '';
+    } else if(dist === 2){
+      el.style.opacity = '.25';
+      el.style.fontSize = '18px';
+      el.style.fontWeight = '300';
+    } else {
+      el.style.opacity = '.1';
+      el.style.fontSize = '16px';
+      el.style.fontWeight = '300';
+    }
+  });
+}
+
+function getDrumIdx(colId){
+  const col = document.getElementById(colId);
+  return col ? Math.round(col.scrollTop / ITEM_H) : 0;
+}
+
+function setDrumIdx(colId, idx){
+  const col = document.getElementById(colId);
+  if(!col) return;
+  const safe = Math.max(0, idx);
+  // Use timeout to ensure DOM is laid out
+  setTimeout(()=>{
+    col.scrollTop = safe * ITEM_H;
+    col._lastIdx = safe;
+    _updateDrumHighlight(col, safe);
+  }, 40);
+}
+
+function daysInMonth(m,y){ return new Date(y, m+1, 0).getDate(); }
+
+// DR: shared date state
+let DR={day:1,mo:0,yr:2026,h:8,mi:0,
+  eh:9,emi:0,esd:1,esm:0,esy:2026,esh:8,esn:0,
+  eed:1,eem:0,eey:2026,eeh:9,een:0,
+  xd:1,xm:0,xy:2026,
+  alarm1:0,alarm2:0,ealarm1:0,ealarm2:0};
+
+function initDrums(){
+  const td=today();
+  DR.day=td.getDate();DR.mo=td.getMonth();DR.yr=td.getFullYear();
+  DR.esd=DR.day;DR.esm=DR.mo;DR.esy=DR.yr;DR.esh=8;DR.esn=0;
+  DR.eed=DR.day;DR.eem=DR.mo;DR.eey=DR.yr;DR.eeh=9;DR.een=0;
+  DR.xd=DR.day;DR.xm=DR.mo;DR.xy=DR.yr;
+  DR.alarm1=0;DR.alarm2=0;DR.ealarm1=0;DR.ealarm2=0;
+
+  const yrs=[];for(let y=DR.yr-2;y<=DR.yr+10;y++)yrs.push(String(y));
+  const days=()=>Array.from({length:daysInMonth(DR.mo,DR.yr)},(_,i)=>String(i+1));
+  const hrs=Array.from({length:24},(_,i)=>p2(i));
+  const mins=Array.from({length:60},(_,i)=>p2(i));
+
+  // Task drums
+  buildDrum('dc-day',days(),DR.day-1);
+  buildDrum('dc-month',MONTHS_DRUM,DR.mo);
+  buildDrum('dc-year',yrs,2);
+  buildDrum('dc-hour',hrs,DR.h);
+  buildDrum('dc-min',mins,DR.mi);
+  buildDrum('dc-alarm1',ALARM_LABELS,0);
+  buildDrum('dc-alarm2',ALARM_LABELS,0);
+
+  // Event drums
+  const eyrs=[];for(let y=DR.yr-2;y<=DR.yr+10;y++)eyrs.push(String(y));
+  buildDrum('dc-esd',Array.from({length:daysInMonth(DR.esm,DR.esy)},(_,i)=>String(i+1)),DR.esd-1);
+  buildDrum('dc-esm',MONTHS_DRUM,DR.esm);
+  buildDrum('dc-esy',eyrs,2);
+  buildDrum('dc-esh',hrs,DR.esh);
+  buildDrum('dc-esn',mins,DR.esn);
+  buildDrum('dc-eed',Array.from({length:daysInMonth(DR.eem,DR.eey)},(_,i)=>String(i+1)),DR.eed-1);
+  buildDrum('dc-eem',MONTHS_DRUM,DR.eem);
+  buildDrum('dc-eey',eyrs,2);
+  buildDrum('dc-eeh',hrs,DR.eeh);
+  buildDrum('dc-een',mins,DR.een);
+  buildDrum('dc-ealarm1',ALARM_LABELS,0);
+  buildDrum('dc-ealarm2',ALARM_LABELS,0);
+
+  // Expense drums
+  buildDrum('dc-xd',Array.from({length:daysInMonth(DR.xm,DR.xy)},(_,i)=>String(i+1)),DR.xd-1);
+  buildDrum('dc-xm',MONTHS_DRUM,DR.xm);
+  buildDrum('dc-xy',yrs,2);
+
+  updateDrumDisplays();
+}
+
+function onDrumChange(id,idx){
+  if(id==='dc-day')DR.day=idx+1;
+  else if(id==='dc-month'){DR.mo=idx;buildDrum('dc-day',Array.from({length:daysInMonth(DR.mo,DR.yr)},(_,i)=>String(i+1)),DR.day-1);}
+  else if(id==='dc-year')DR.yr=2026-2+idx;
+  else if(id==='dc-hour')DR.h=idx;
+  else if(id==='dc-min')DR.mi=idx;
+  else if(id==='dc-alarm1')DR.alarm1=idx;
+  else if(id==='dc-alarm2')DR.alarm2=idx;
+  else if(id==='dc-esd')DR.esd=idx+1;
+  else if(id==='dc-esm'){DR.esm=idx;buildDrum('dc-esd',Array.from({length:daysInMonth(DR.esm,DR.esy)},(_,i)=>String(i+1)),DR.esd-1);}
+  else if(id==='dc-esy')DR.esy=2026-2+idx;
+  else if(id==='dc-esh')DR.esh=idx;
+  else if(id==='dc-esn')DR.esn=idx;
+  else if(id==='dc-eed')DR.eed=idx+1;
+  else if(id==='dc-eem'){DR.eem=idx;buildDrum('dc-eed',Array.from({length:daysInMonth(DR.eem,DR.eey)},(_,i)=>String(i+1)),DR.eed-1);}
+  else if(id==='dc-eey')DR.eey=2026-2+idx;
+  else if(id==='dc-eeh')DR.eeh=idx;
+  else if(id==='dc-een')DR.een=idx;
+  else if(id==='dc-ealarm1')DR.ealarm1=idx;
+  else if(id==='dc-ealarm2')DR.ealarm2=idx;
+  else if(id==='dc-xd')DR.xd=idx+1;
+  else if(id==='dc-xm'){DR.xm=idx;buildDrum('dc-xd',Array.from({length:daysInMonth(DR.xm,DR.xy)},(_,i)=>String(i+1)),DR.xd-1);}
+  else if(id==='dc-xy')DR.xy=2026-2+idx;
+  // updateDrumDisplays called by scroll handler
+}
+
+function updateDrumDisplays(){
+  const el=id=>document.getElementById(id);
+  const df=(d,m,y)=>`${d} ${MONTHS_DRUM[m]} ${y}`;
+  const tf=(h,mi)=>`${p2(h)}:${p2(mi)}`;
+
+  if(el('disp-alarm1'))el('disp-alarm1').textContent=ALARM_LABELS[DR.alarm1]||'Nenhum';
+  if(el('disp-alarm2'))el('disp-alarm2').textContent=ALARM_LABELS[DR.alarm2]||'Nenhum';
+  if(el('disp-ealarm1'))el('disp-ealarm1').textContent=ALARM_LABELS[DR.ealarm1]||'Nenhum';
+  if(el('disp-ealarm2'))el('disp-ealarm2').textContent=ALARM_LABELS[DR.ealarm2]||'Nenhum';
+  if(el('pill-sdate'))el('pill-sdate').textContent=df(DR.esd,DR.esm,DR.esy);
+  if(el('pill-stime'))el('pill-stime').textContent=tf(DR.esh,DR.esn);
+  if(el('pill-edate'))el('pill-edate').textContent=df(DR.eed,DR.eem,DR.eey);
+  if(el('pill-etime'))el('pill-etime').textContent=tf(DR.eeh,DR.een);
+  if(el('disp-xdate'))el('disp-xdate').textContent=df(DR.xd,DR.xm,DR.xy);
+}
+
+// ── Toggle helpers (new drum-picker CSS transition) ──
+function openDrum(pkId){
+  const pk=document.getElementById(pkId);
+  if(pk)pk.classList.add('open');
+}
+function closeDrum(pkId){
+  const pk=document.getElementById(pkId);
+  if(pk)pk.classList.remove('open');
+}
+function tapToggle(togId,pkId){
+  const tog=document.getElementById(togId);
+  const pk=document.getElementById(pkId);
+  if(!tog||!pk)return;
+  const on=!tog.classList.contains('on');
+  tog.classList.toggle('on',on);
+  on?pk.classList.add('open'):pk.classList.remove('open');
+  // If turning on time, also turn on date
+  if(togId==='tog-time'&&on){
+    const td=document.getElementById('tog-date');
+    if(td&&!td.classList.contains('on')){
+      td.classList.add('on');
+      document.getElementById('pk-tdate')?.classList.add('open');
+    }
+  }
+  // If turning off date, also turn off time
+  if(togId==='tog-date'&&!on){
+    document.getElementById('tog-time')?.classList.remove('on');
+    document.getElementById('pk-ttime')?.classList.remove('open');
+  }
+  // Show alarm section when urgent toggled
+  if(togId==='tog-urgent'){
+    const alarms=document.getElementById('dg-alarms');
+    if(alarms)alarms.style.display=on?'':'none';
+  }
+}
+function tapToggleSimple(togId){
+  const tog=document.getElementById(togId);
+  if(!tog)return;
+  tog.classList.toggle('on');
+  // urgent
+  if(togId==='tog-urgent'){
+    const alarms=document.getElementById('dg-alarms');
+    if(alarms)alarms.style.display=tog.classList.contains('on')?'':'none';
+  }
+  // allday
+  if(togId==='tog-allday'){
+    const on=tog.classList.contains('on');
+    const st=document.getElementById('pill-stime');
+    const et=document.getElementById('pill-etime');
+    if(st)st.style.display=on?'none':'';
+    if(et)et.style.display=on?'none':'';
+  }
+}
+function tapEventPicker(which){
+  const ids=['start','end'];
+  ids.forEach(w=>{
+    const pk=document.getElementById('pk-e'+w);
+    if(!pk)return;
+    if(w===which){pk.classList.toggle('open');}
+    else{pk.classList.remove('open');}
+  });
+}
+function tapAlarm(key){
+  const map={a1:'pk-alarm1',a2:'pk-alarm2',ea1:'pk-ealarm1',ea2:'pk-ealarm2'};
+  Object.entries(map).forEach(([k,pkId])=>{
+    const pk=document.getElementById(pkId);
+    if(!pk)return;
+    if(k===key){pk.classList.toggle('open');}
+    else{pk.classList.remove('open');}
+  });
+}
+function toggleAllDay(){tapToggleSimple('tog-allday');}
+function tapList(){showSnack('Lista: Entrada');}
+function tapDetails(){
+  const d=document.getElementById('dg-details');
+  if(d)d.style.display=d.style.display?'':'block';
+}
+function showDetails(){tapDetails();}
+
+// ── Type switching ────────────────────────
 let curType='task';
 function pickType(t,btn){
   curType=t;
-  document.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('on'));
+  // Update cal seg buttons
+  document.querySelectorAll('.cal-seg-btn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  document.getElementById('frowEnd').style.display=t==='event'?'':'none';
-  document.getElementById('frowLoc').style.display=t==='event'?'':'none';
-  document.getElementById('frowTime').style.display=(t==='task'||t==='event')?'':'none';
-  document.getElementById('frowVal').style.display=t==='expense'?'':'none';
-  document.getElementById('frowSub').style.display=t==='task'?'':'none';
+  // Show/hide views
+  ['task','event','note','expense'].forEach(v=>{
+    const el=document.getElementById('view-'+v);
+    if(el)el.style.display=v===t?'':'none';
+  });
+  // Show cal-seg only for event/task
+  const calSeg=document.getElementById('calSeg');
+  if(calSeg)calSeg.style.display=(t==='event'||t==='task')?'':'none';
+  // Update header title
+  const titles={task:'Novo Lembrete',event:'Novo',note:'Nova Nota',expense:'Nova Despesa'};
+  if(!S.editId)document.getElementById('detNavTitle').textContent=titles[t];
+  // Toolbar visibility
+  const tb=document.getElementById('det-toolbar-task');
+  if(tb)tb.style.display=(t==='task')?'':'none';
 }
-function buildTags(sel=[]){
-  return TAGS.map(t=>`<div class="tag-opt ${sel.includes(t)?'on':''}" style="${sel.includes(t)?'':'border-color:'+TAG_C[t]+'44;color:'+TAG_C[t]}" onclick="this.classList.toggle('on')">${t}</div>`).join('');
+
+// ── Tags per view ─────────────────────────
+function buildTagsForView(viewId,sel=[]){
+  const el=document.getElementById('dTags-'+viewId);
+  if(!el)return;
+  el.innerHTML=TAGS.map(t=>
+    `<div class="ios-tag ${sel.includes(t)?'on':''}"
+      style="${sel.includes(t)?'background:'+TAG_C[t]+';border-color:transparent;color:#fff':'border-color:'+TAG_C[t]+'44;color:'+TAG_C[t]}"
+      onclick="toggleIosTag(this,'${TAG_C[t]||'#8e8e93'}')">${t}</div>`
+  ).join('');
+}
+function toggleIosTag(el,c){
+  el.classList.toggle('on');
+  if(el.classList.contains('on')){el.style.background=c;el.style.borderColor='transparent';el.style.color='#fff';}
+  else{el.style.background='';el.style.borderColor=c+'44';el.style.color=c;}
+}
+function getTagsForView(viewId){
+  const el=document.getElementById('dTags-'+viewId);
+  if(!el)return[];
+  return [...el.querySelectorAll('.ios-tag.on')].map(x=>x.textContent.trim());
+}
+
+// ── Attachments ────────────────────────────
+let pendingAttachments=[];
+let activeAttachView='task';
+function handleAttach(e){
+  [...e.target.files].forEach(f=>{
+    pendingAttachments.push({name:f.name,size:f.size,type:f.type});
+  });
+  renderAttachList();
+}
+function renderAttachList(){
+  ['task','event','note'].forEach(v=>{
+    const el=document.getElementById('attachList-'+v);
+    if(el)el.innerHTML=pendingAttachments.map((a,i)=>`
+      <div class="att-item">
+        <span style="font-size:16px">${a.type&&a.type.startsWith('image')?'🖼':'📄'}</span>
+        <span class="att-name">${a.name}</span>
+        <span class="att-rm" onclick="removeAttach(${i})">✕</span>
+      </div>`).join('');
+  });
+}
+function removeAttach(i){pendingAttachments.splice(i,1);renderAttachList();}
+
+// ── Open/Close ────────────────────────────
+function overlayTap(e){/* no-op, close only via X button */}
+
+function _resetModal(){
+  // Close all drum pickers
+  document.querySelectorAll('.drum-picker').forEach(p=>p.classList.remove('open'));
+  // Reset all toggles
+  ['tog-date','tog-time','tog-urgent','tog-allday'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.remove('on');
+  });
+  // Hide alarm section
+  const alarms=document.getElementById('dg-alarms');
+  if(alarms)alarms.style.display='none';
+  // Hide details
+  const det=document.getElementById('dg-details');
+  if(det)det.style.display='none';
+  // Reset pills
+  updateDrumDisplays();
 }
 function openNew(){
-  S.editId=null;curType='task';
-  document.getElementById('sheetHead').textContent='Novo item';
-  document.getElementById('fTitle').value='';
-  document.getElementById('fBody').value='';
-  document.getElementById('fDate').value=S.selDay||dfmt(today());
-  document.getElementById('fTime').value='';
-  document.getElementById('fTimeEnd').value='';
-  document.getElementById('fLoc').value='';
-  document.getElementById('fVal').value='';
-  document.getElementById('fSub').value='';
-  document.getElementById('tagWrap').innerHTML=buildTags();
-  document.querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('on',i===0));
-  pickType('task',document.querySelector('.seg-btn'));
-  document.getElementById('btnDelete').style.display='none';
-  document.getElementById('overlay').classList.add('show');
-  setTimeout(()=>document.getElementById('fTitle').focus(),300);
+  S.editId=null; curType='task'; pendingAttachments=[];
+  document.getElementById('detNavTitle').textContent='Novo Lembrete';
+  // Clear all text fields
+  ['dTitle','dBody','dUrl','dLoc','dSub','eTit','eLoc','eBody','eUrl','nTit','nBody','nUrl','xTit','xBody','dVal'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  // Show task view, hide others
+  ['task','event','note','expense'].forEach((v,i)=>{
+    const el=document.getElementById('view-'+v);if(el)el.style.display=i===0?'':'none';
+  });
+  // Seg control: default to task (Lembrete)
+  const calSeg=document.getElementById('calSeg');
+  if(calSeg)calSeg.style.display='none'; // hidden until pickType event/task
+  document.querySelectorAll('.cal-seg-btn').forEach((b,i)=>b.classList.toggle('on',i===1));
+  // Delete buttons hidden
+  ['task','event','note','expense'].forEach(v=>{
+    const el=document.getElementById('dg-delete-'+v);if(el)el.style.display='none';
+  });
+  buildTagsForView('task');buildTagsForView('event');buildTagsForView('note');buildTagsForView('expense');
+  renderAttachList();
+  _resetModal();
+  initDrums();
+  // Date = selected day
+  const sel=S.selDay?dparse(S.selDay):today();
+  DR.day=sel.getDate();DR.mo=sel.getMonth();DR.yr=sel.getFullYear();
+  DR.esd=DR.day;DR.esm=DR.mo;DR.esy=DR.yr;DR.xd=DR.day;DR.xm=DR.mo;DR.xy=DR.yr;
+  setDrumIdx('dc-day',DR.day-1);setDrumIdx('dc-month',DR.mo);setDrumIdx('dc-year',DR.yr-2026+2);
+  setDrumIdx('dc-esd',DR.esd-1);setDrumIdx('dc-esm',DR.esm);setDrumIdx('dc-esy',DR.esy-2026+2);
+  setDrumIdx('dc-xd',DR.xd-1);setDrumIdx('dc-xm',DR.xm);setDrumIdx('dc-xy',DR.xy-2026+2);
+  updateDrumDisplays();
+  // Show toolbar
+  const tb=document.getElementById('det-toolbar-task');if(tb)tb.style.display='';
+  document.getElementById('detModal').classList.add('open');
+  setTimeout(()=>document.getElementById('dTitle').focus(),400);
 }
+
 function openEdit(id){
   const it=S.items.find(x=>x.id===id);if(!it)return;
-  S.editId=id;curType=it.type;
-  document.getElementById('sheetHead').textContent='Editar';
-  document.getElementById('fTitle').value=it.title;
-  document.getElementById('fBody').value=it.body||'';
-  document.getElementById('fDate').value=it.date||'';
-  document.getElementById('fTime').value=it.time||'';
-  document.getElementById('fTimeEnd').value=it.timeEnd||'';
-  document.getElementById('fLoc').value=it.loc||'';
-  document.getElementById('fVal').value=it.val||'';
-  document.getElementById('fSub').value=it.sub||'';
-  document.getElementById('tagWrap').innerHTML=buildTags(it.tags||[]);
-  const types=['task','event','note','expense'];
-  const idx=types.indexOf(it.type);
-  document.querySelectorAll('.seg-btn').forEach((b,i)=>b.classList.toggle('on',i===idx));
-  pickType(it.type,document.querySelectorAll('.seg-btn')[idx]);
-  document.getElementById('btnDelete').style.display='';
-  document.getElementById('overlay').classList.add('show');
+  S.editId=id;curType=it.type;pendingAttachments=it.attachments||[];
+  const titles={task:'Lembrete',event:'Evento',note:'Nota',expense:'Despesa'};
+  document.getElementById('detNavTitle').textContent=titles[it.type]||'Item';
+  ['task','event','note','expense'].forEach(v=>{
+    const el=document.getElementById('view-'+v);if(el)el.style.display=v===it.type?'':'none';
+  });
+  const calSeg=document.getElementById('calSeg');
+  if(calSeg)calSeg.style.display=(it.type==='event'||it.type==='task')?'':'none';
+  document.querySelectorAll('.cal-seg-btn').forEach(b=>{
+    b.classList.toggle('on',(it.type==='event'&&b.id==='csEvento')||(it.type!=='event'&&b.id==='csTask'));
+  });
+  ['task','event','note','expense'].forEach(v=>{
+    const el=document.getElementById('dg-delete-'+v);if(el)el.style.display=v===it.type?'':'none';
+  });
+  const gv=(id)=>{const e=document.getElementById(id);return e?e.value='':null;};
+  const sv=(id,val)=>{const e=document.getElementById(id);if(e)e.value=val||'';};
+  sv('dTitle',it.title);sv('dBody',it.body);sv('dUrl',it.url);sv('dLoc',it.loc);sv('dSub',it.sub);
+  sv('eTit',it.title);sv('eBody',it.body);sv('eUrl',it.url);sv('eLoc',it.loc);
+  sv('nTit',it.title);sv('nBody',it.body);sv('nUrl',it.url);
+  sv('xTit',it.title);sv('xBody',it.body);sv('dVal',it.val);
+  buildTagsForView(it.type,it.tags||[]);renderAttachList();
+  _resetModal();initDrums();
+  if(it.date){
+    const d=dparse(it.date);
+    DR.day=d.getDate();DR.mo=d.getMonth();DR.yr=d.getFullYear();
+    DR.esd=DR.day;DR.esm=DR.mo;DR.esy=DR.yr;DR.xd=DR.day;DR.xm=DR.mo;DR.xy=DR.yr;
+    setDrumIdx('dc-day',DR.day-1);setDrumIdx('dc-month',DR.mo);setDrumIdx('dc-year',DR.yr-2026+2);
+    setDrumIdx('dc-esd',DR.esd-1);setDrumIdx('dc-esm',DR.esm);setDrumIdx('dc-esy',DR.esy-2026+2);
+    setDrumIdx('dc-xd',DR.xd-1);setDrumIdx('dc-xm',DR.xm);setDrumIdx('dc-xy',DR.xy-2026+2);
+    if(it.type==='task'){
+      document.getElementById('tog-date')?.classList.add('on');
+      document.getElementById('pk-tdate')?.classList.add('open');
+    }
+  }
+  if(it.time){const[h,m]=it.time.split(':').map(Number);DR.h=h;DR.mi=m;DR.esh=h;DR.esn=m;
+    setDrumIdx('dc-hour',h);setDrumIdx('dc-min',m);setDrumIdx('dc-esh',h);setDrumIdx('dc-esn',m);
+    if(it.type==='task'){document.getElementById('tog-time')?.classList.add('on');document.getElementById('pk-ttime')?.classList.add('open');}
+  }
+  if(it.timeEnd){const[h,m]=it.timeEnd.split(':').map(Number);DR.eeh=h;DR.een=m;setDrumIdx('dc-eeh',h);setDrumIdx('dc-een',m);}
+  DR.alarm1=it.alarm1||0;DR.alarm2=it.alarm2||0;DR.ealarm1=it.alarm1||0;DR.ealarm2=it.alarm2||0;
+  setDrumIdx('dc-alarm1',DR.alarm1);setDrumIdx('dc-alarm2',DR.alarm2);
+  setDrumIdx('dc-ealarm1',DR.ealarm1);setDrumIdx('dc-ealarm2',DR.ealarm2);
+  updateDrumDisplays();
+  const tb=document.getElementById('det-toolbar-task');if(tb)tb.style.display=it.type==='task'?'':'none';
+  document.getElementById('detModal').classList.add('open');
 }
-function closeSheet(e){if(e.target===document.getElementById('overlay'))document.getElementById('overlay').classList.remove('show');}
+
+function closeDetail(){
+  document.getElementById('detModal').classList.remove('open');
+}
+
+function getTitle(){
+  const map={task:'dTitle',event:'eTit',note:'nTit',expense:'xTit'};
+  const el=document.getElementById(map[curType]);
+  return el?el.value.trim():'';
+}
+function getField(id){const el=document.getElementById(id);return el?el.value.trim():'';}
+
 function saveItem(){
-  const title=document.getElementById('fTitle').value.trim();
+  const title=getTitle();
   if(!title){showSnack('Digite um título');return;}
-  const tags=[...document.querySelectorAll('#tagWrap .tag-opt.on')].map(x=>x.textContent);
+
+  // Read drum vals
+  if(curType==='task'){
+    if(document.getElementById('tog-date').classList.contains('on')){
+      DR.day=getDrumIdx('dc-day')+1;DR.mo=getDrumIdx('dc-month');DR.yr=2026-2+getDrumIdx('dc-year');
+    }
+    if(document.getElementById('tog-time').classList.contains('on')){
+      DR.h=getDrumIdx('dc-hour');DR.mi=getDrumIdx('dc-min');
+    }
+    DR.alarm1=getDrumIdx('dc-alarm1');DR.alarm2=getDrumIdx('dc-alarm2');
+  } else if(curType==='event'){
+    DR.esd=getDrumIdx('dc-esd')+1;DR.esm=getDrumIdx('dc-esm');DR.esy=2026-2+getDrumIdx('dc-esy');
+    DR.esh=getDrumIdx('dc-esh');DR.esn=getDrumIdx('dc-esn');
+    DR.eed=getDrumIdx('dc-eed')+1;DR.eem=getDrumIdx('dc-eem');DR.eey=2026-2+getDrumIdx('dc-eey');
+    DR.eeh=getDrumIdx('dc-eeh');DR.een=getDrumIdx('dc-een');
+    DR.ealarm1=getDrumIdx('dc-ealarm1');DR.ealarm2=getDrumIdx('dc-ealarm2');
+  } else if(curType==='expense'){
+    DR.xd=getDrumIdx('dc-xd')+1;DR.xm=getDrumIdx('dc-xm');DR.xy=2026-2+getDrumIdx('dc-xy');
+  }
+
+  const hasDate=curType==='task'?document.getElementById('tog-date').classList.contains('on'):true;
+  const dateStr=(curType==='task'&&!hasDate)?'':
+    curType==='event'?`${DR.esy}-${p2(DR.esm+1)}-${p2(DR.esd)}`:
+    curType==='expense'?`${DR.xy}-${p2(DR.xm+1)}-${p2(DR.xd)}`:
+    `${DR.yr}-${p2(DR.mo+1)}-${p2(DR.day)}`;
+  const hasTime=curType==='task'?document.getElementById('tog-time').classList.contains('on'):curType==='event';
+  const timeStr=!hasTime?'':
+    curType==='event'?`${p2(DR.esh)}:${p2(DR.esn)}`:`${p2(DR.h)}:${p2(DR.mi)}`;
+  const endStr=curType==='event'?`${p2(DR.eeh)}:${p2(DR.een)}`:'';
+
+  const bodyMap={task:'dBody',event:'eBody',note:'nBody',expense:'xBody'};
+  const locMap={task:getField('dLoc'),event:getField('eLoc')};
+  const urlMap={task:getField('dUrl'),event:getField('eUrl'),note:getField('nUrl')};
+
   const it={
-    id:S.editId||uid(),type:curType,title,
-    body:document.getElementById('fBody').value.trim(),
-    date:document.getElementById('fDate').value,
-    time:document.getElementById('fTime').value,
-    timeEnd:document.getElementById('fTimeEnd').value,
-    loc:document.getElementById('fLoc').value.trim(),
-    done:false,tags,
-    val:parseFloat(document.getElementById('fVal').value)||0,
-    sub:parseInt(document.getElementById('fSub').value)||0,
-    subDone:0,comments:0,
+    id:S.editId||uid(), type:curType, title,
+    body:getField(bodyMap[curType])||'',
+    date:dateStr, time:timeStr, timeEnd:endStr,
+    loc:locMap[curType]||'',
+    url:urlMap[curType]||'',
+    done:false,
+    tags:getTagsForView(curType),
+    val:parseFloat(document.getElementById('dVal')?.value)||0,
+    sub:parseInt(document.getElementById('dSub')?.value)||0,
+    subDone:0, comments:0,
+    alarm1:curType==='event'?DR.ealarm1:DR.alarm1,
+    alarm2:curType==='event'?DR.ealarm2:DR.alarm2,
+    attachments:[...pendingAttachments],
   };
   if(S.editId){
     const idx=S.items.findIndex(x=>x.id===S.editId);
     if(idx>=0){it.done=S.items[idx].done;it.subDone=S.items[idx].subDone||0;S.items[idx]=it;}
-  }else{S.items.unshift(it);}
-  save();renderAll();buildWeek();
-  document.getElementById('overlay').classList.remove('show');
+  } else {S.items.unshift(it);}
+  save();renderAll();buildWeek();scheduleAlarms();
+  closeDetail();
   showSnack(S.editId?'Salvo':'Adicionado');
   S.editId=null;
 }
+
 function deleteItem(){
   if(!S.editId)return;
+  if(!confirm('Apagar este item?'))return;
   S.items=S.items.filter(x=>x.id!==S.editId);
   save();renderAll();buildWeek();
-  document.getElementById('overlay').classList.remove('show');
+  closeDetail();
   showSnack('Apagado');S.editId=null;
 }
+
 function toggleDone(id,e){
   e.stopPropagation();
   const it=S.items.find(x=>x.id===id);if(!it)return;
@@ -980,6 +2298,130 @@ function showSnack(msg){
 }
 
 // ══════════════════════════════════════════
+// ALARM ENGINE — Safari / iOS compatible
+// iOS Safari supports Notifications only as PWA (added to Home Screen)
+// Fallback: in-app alert banner + vibration + Audio beep
+
+let _alarmTimers=[];
+
+// Map alarm option index → offset in ms before item time
+const ALARM_OFFSET_MS=[
+  null,      // 0 = Nenhum
+  0,         // 1 = Na hora
+  5*60000,   // 2 = 5 min antes
+  10*60000,  // 3 = 10 min antes
+  15*60000,  // 4 = 15 min antes
+  30*60000,  // 5 = 30 min antes
+  60*60000,  // 6 = 1h antes
+  120*60000, // 7 = 2h antes
+  86400000,  // 8 = 1 dia antes
+];
+
+async function requestNotifPermission(){
+  if(!('Notification' in window)) return false;
+  if(Notification.permission==='granted') return true;
+  if(Notification.permission==='denied') return false;
+  const p=await Notification.requestPermission();
+  return p==='granted';
+}
+
+function alarmBeep(){
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);
+    osc.frequency.value=880;
+    gain.gain.setValueAtTime(0.4,ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.6);
+    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.6);
+  }catch(e){}
+  if(navigator.vibrate)navigator.vibrate([300,100,300]);
+}
+
+function showAlarmBanner(title,body){
+  // Remove any existing
+  const old=document.getElementById('alarm-banner');
+  if(old)old.remove();
+  const el=document.createElement('div');
+  el.id='alarm-banner';
+  el.style.cssText=`
+    position:fixed;top:calc(env(safe-area-inset-top,44px)+12px);left:16px;right:16px;
+    background:rgba(30,30,30,.96);color:#fff;
+    border-radius:16px;padding:14px 16px;z-index:2000;
+    box-shadow:0 4px 24px rgba(0,0,0,.4);
+    display:flex;align-items:flex-start;gap:12px;
+    animation:bannerIn .3s cubic-bezier(.32,1,.65,1);
+    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  `;
+  el.innerHTML=`
+    <div style="font-size:24px;flex-shrink:0">🔔</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:14px;font-weight:700;margin-bottom:2px;
+        white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</div>
+      ${body?`<div style="font-size:13px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${body}</div>`:''}
+    </div>
+    <div onclick="this.parentElement.remove()" style="font-size:18px;opacity:.6;cursor:pointer;padding:0 2px">✕</div>
+  `;
+  document.body.appendChild(el);
+  alarmBeep();
+  // Auto-dismiss after 8s
+  setTimeout(()=>{if(el.parentNode)el.style.opacity='0',setTimeout(()=>el.remove(),300);},8000);
+}
+
+// Inject banner animation CSS once
+(function(){
+  if(document.getElementById('alarm-style'))return;
+  const s=document.createElement('style');
+  s.id='alarm-style';
+  s.textContent=`@keyframes bannerIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}`;
+  document.head.appendChild(s);
+})();
+
+function scheduleAlarms(){
+  // Cancel all existing timers
+  _alarmTimers.forEach(t=>clearTimeout(t));
+  _alarmTimers=[];
+
+  const now=Date.now();
+  S.items.filter(x=>!x.done&&(x.alarm1>0||x.alarm2>0)&&x.date).forEach(it=>{
+    if(!it.time)return; // need a specific time
+    const [h,m]=it.time.split(':').map(Number);
+    const d=dparse(it.date);
+    const itemMs=new Date(d.getFullYear(),d.getMonth(),d.getDate(),h,m,0,0).getTime();
+    [it.alarm1,it.alarm2].filter(Boolean).forEach(alarmIdx=>{
+      const offset=ALARM_OFFSET_MS[alarmIdx];
+      if(offset===null||offset===undefined)return;
+      const fireAt=itemMs-offset;
+      const delay=fireAt-now;
+      if(delay<0||delay>7*24*3600000)return; // skip past or >7 days
+      const body=it.body||it.loc||'';
+      const t=setTimeout(async()=>{
+        const granted=await requestNotifPermission();
+        if(granted){
+          try{
+            new Notification(it.title,{
+              body:body||ALARM_LABELS[alarmIdx],
+              icon:'/apple-touch-icon.png',
+              badge:'/apple-touch-icon.png',
+              tag:it.id+'-'+alarmIdx,
+              renotify:true,
+              requireInteraction:true,
+            });
+          }catch(e){
+            // Fallback in-app banner
+            showAlarmBanner(it.title,body||ALARM_LABELS[alarmIdx]);
+          }
+        } else {
+          showAlarmBanner(it.title,body||ALARM_LABELS[alarmIdx]);
+        }
+      },delay);
+      _alarmTimers.push(t);
+    });
+  });
+}
+
+// ══════════════════════════════════════════
 // RENDER ALL
 function renderAll(){renderEmBreve();renderHoje();renderEntrada();renderNavegar();}
 
@@ -994,6 +2436,19 @@ window.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('navTodayNum').textContent=today().getDate();
   buildWeek();
   renderAll();
+  initDrums();
+  // Request notification permission on first load
+  setTimeout(async()=>{
+    const granted=await requestNotifPermission();
+    if(!granted&&Notification.permission!=='denied'){
+      showSnack('Ative notificações para receber alarmes');
+    }
+    scheduleAlarms();
+  },1500);
+  // Reschedule alarms every time app is focused
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden)scheduleAlarms();
+  });
   // System dark listener
   window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',e=>{
     if(S.sys){S.dark=e.matches;applyDark();save();}
