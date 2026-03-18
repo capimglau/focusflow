@@ -33,13 +33,11 @@ html,body{height:100%;background:var(--bg);color:var(--ink);
 
 /* ─── TOP BAR ────────────────────────── */
 .topbar{
-  position:fixed;top:0;left:0;right:0;
   padding:calc(var(--safe-top) + 8px) 16px 8px;
   display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;background:transparent;
-  z-index:90;pointer-events:none;
+  position:sticky;top:0;z-index:90;
 }
-.topbar > *{pointer-events:all;}
 .topbar-title{font-size:17px;font-weight:600;color:var(--ink);text-align:center;flex:1}
 .topbar-actions{
   display:flex;align-items:center;gap:10px;
@@ -94,7 +92,6 @@ html,body{height:100%;background:var(--bg);color:var(--ink);
 .scroll{
   flex:1;overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
-  padding-top:calc(var(--safe-top) + 52px);
 }
 .scroll::-webkit-scrollbar{display:none}
 
@@ -763,30 +760,25 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
     <div class="topbar-spacer"></div>
     <div class="topbar-title" id="topbar-title-embreve">Em breve</div>
     <div class="topbar-actions">
-      <div class="topbar-btn" onclick="openSettings()">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <rect x="2" y="2" width="6" height="6" rx="1.5" fill="currentColor" opacity=".9"/>
-          <rect x="12" y="2" width="6" height="6" rx="1.5" fill="currentColor" opacity=".9"/>
-          <rect x="2" y="12" width="6" height="6" rx="1.5" fill="currentColor" opacity=".9"/>
-          <rect x="12" y="12" width="6" height="6" rx="1.5" fill="currentColor" opacity=".9"/>
+      <div class="topbar-btn" id="darkModeBtn" onclick="toggleDark()" title="Modo noturno">
+        <svg id="darkModeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
         </svg>
       </div>
       <div class="topbar-btn" onclick="openSettings()">•••</div>
     </div>
   </div>
 
-  <!-- Month header -->
-  <div class="month-hdr" id="monthHdr" onclick="shiftWeek(1)">
-    <span id="monthLabel"></span>
-    <span class="month-hdr-arrow">›</span>
+  <!-- Month header + week strip + content all in one scroll -->
+  <div class="scroll" id="scroll-embreve">
+    <div class="month-hdr" id="monthHdr">
+      <span id="monthLabel" onclick="S.weekOffset=0;S.selDay=dfmt(today());buildWeek();renderEmBreve();" style="cursor:pointer"></span>
+      <span class="month-hdr-arrow" onclick="shiftWeek(-1)" style="padding:4px 8px;cursor:pointer">‹</span>
+      <span class="month-hdr-arrow" onclick="shiftWeek(1)" style="padding:4px 8px;cursor:pointer">›</span>
+    </div>
+    <div class="week-strip" id="weekStrip"></div>
+    <div class="hdivider"></div>
   </div>
-
-  <!-- Week strip -->
-  <div class="week-strip" id="weekStrip"></div>
-  <div class="hdivider"></div>
-
-  <!-- Scroll content -->
-  <div class="scroll" id="scroll-embreve"></div>
 </div>
 
 <!-- ── PAGE: HOJE ─────────────────────── -->
@@ -1625,9 +1617,16 @@ function demo(){
 // DARK MODE
 function applyDark(){
   document.documentElement.setAttribute('data-dark',S.dark?'1':'0');
-  document.getElementById('togDark').classList.toggle('on',S.dark);
+  document.getElementById('togDark')?.classList.toggle('on',S.dark);
+  // Update topbar moon/sun icon
+  const ico=document.getElementById('darkModeIcon');
+  if(ico){
+    ico.innerHTML=S.dark
+      ?'<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-linecap="round"/>'
+      :'<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
+  }
 }
-function toggleDark(){S.sys=false;S.dark=!S.dark;document.getElementById('togSys').classList.remove('on');applyDark();save();}
+function toggleDark(){S.sys=false;S.dark=!S.dark;document.getElementById('togSys')?.classList.remove('on');applyDark();save();}
 function toggleSys(){
   S.sys=!S.sys;document.getElementById('togSys').classList.toggle('on',S.sys);
   if(S.sys){S.dark=window.matchMedia('(prefers-color-scheme:dark)').matches;applyDark();}
@@ -1639,11 +1638,11 @@ function toggleSys(){
 function buildWeek(){
   const strip=document.getElementById('weekStrip');
   const td=today();
-  // Start of week (Sunday) for current week + offset
   const base=new Date(td);
   base.setDate(td.getDate()-td.getDay()+S.weekOffset*7);
-  // Month label
-  document.getElementById('monthLabel').textContent=`${MO_ABBR[base.getMonth()]}. de ${base.getFullYear()}`;
+  // Month label with arrows
+  const monthEl=document.getElementById('monthLabel');
+  if(monthEl) monthEl.textContent=`${MO_ABBR[base.getMonth()]}. de ${base.getFullYear()}`;
   strip.innerHTML='';
   for(let i=0;i<7;i++){
     const d=new Date(base);d.setDate(base.getDate()+i);
@@ -1659,9 +1658,33 @@ function buildWeek(){
     col.onclick=()=>{S.selDay=ds;buildWeek();renderEmBreve();};
     strip.appendChild(col);
   }
+  // Add swipe support each rebuild (only once per strip)
+  if(!strip._swipeSet){
+    strip._swipeSet=true;
+    let tx=0,ty=0;
+    strip.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+    strip.addEventListener('touchend',e=>{
+      const dx=e.changedTouches[0].clientX-tx;
+      const dy=Math.abs(e.changedTouches[0].clientY-ty);
+      if(Math.abs(dx)>40&&dy<30) shiftWeek(dx<0?1:-1);
+    },{passive:true});
+  }
 }
-function shiftWeek(dir){S.weekOffset+=dir;buildWeek();renderEmBreve();}
-function toggleCalView(){/* future: month view */showSnack('Vista de mês em breve');}
+function shiftWeek(dir){
+  S.weekOffset+=dir;
+  // When moving weeks, select first day of new week (or today if current week)
+  const td=today();
+  const base=new Date(td);
+  base.setDate(td.getDate()-td.getDay()+S.weekOffset*7);
+  const todayInWeek=S.weekOffset===0;
+  if(!todayInWeek) S.selDay=dfmt(base);
+  buildWeek();renderEmBreve();
+}
+function toggleCalView(){
+  // Toggle between showing all days vs only selected day
+  S.filterByDay=!S.filterByDay;
+  renderEmBreve();
+}
 
 // ══════════════════════════════════════════
 // SVG ICONS
@@ -1743,11 +1766,15 @@ function itemHTML(it,showDate=false){
 function renderEmBreve(){
   const el=document.getElementById('scroll-embreve');
   const td=today();
-  const overdue=S.items.filter(x=>isOverdue(x));
+  const todayStr=dfmt(td);
+  const selDay=S.selDay||todayStr;
+  const filterDay=selDay!==todayStr; // if a non-today day is selected, show only that day
+
+  const overdue=filterDay?[]:S.items.filter(x=>isOverdue(x));
   let h='';
 
-  // Overdue section
-  if(overdue.length){
+  // Overdue section (only when showing "all" / today)
+  if(overdue.length&&!filterDay){
     h+=`<div class="overdue-hdr">
       <span class="overdue-hdr-title">Atrasada${overdue.length>1?'s':''}</span>
       <div class="overdue-hdr-right" onclick="toggleOver()">
@@ -1760,28 +1787,49 @@ function renderEmBreve(){
     h+=`</div>`;
   }
 
-  // Future days
-  for(let i=0;i<30;i++){
-    const d=new Date(td);d.setDate(td.getDate()+i);
-    const ds=dfmt(d);
-    const dayItems=S.items.filter(x=>x.date===ds&&!isOverdue(x));
-    const isT=i===0;
-    const isTom=i===1;
-    let label=`${d.getDate()} ${MO_ABBR[d.getMonth()]}.`;
-    if(isT)label+=' · Hoje';
-    else if(isTom)label+=' · Amanhã';
-    label+=` · ${DOW_PT[d.getDay()]}`;
-    const bold=dayItems.length>0&&!isT;
-    h+=`<div class="sec-hdr ${bold||isT?'bold':''}">${label}</div>`;
-    dayItems.forEach(it=>{ h+=itemHTML(it,false); });
+  if(filterDay){
+    // Show only selected day
+    const d=dparse(selDay);
+    const dayItems=S.items.filter(x=>x.date===selDay&&!x.done).sort((a,b)=>(a.time||'99').localeCompare(b.time||'99'));
+    const label=`${d.getDate()} ${MO_ABBR[d.getMonth()]}. · ${DOW_PT[d.getDay()]}`;
+    h+=`<div class="sec-hdr bold">${label}</div>`;
+    if(dayItems.length){
+      dayItems.forEach(it=>{ h+=itemHTML(it,false); });
+    } else {
+      h+=`<div class="empty" style="padding:40px 20px"><div class="empty-icon">📅</div>
+        <div class="empty-t">Sem itens</div>
+        <div class="empty-s">Nenhum item neste dia.</div></div>`;
+    }
+  } else {
+    // Show upcoming 30 days
+    for(let i=0;i<30;i++){
+      const d=new Date(td);d.setDate(td.getDate()+i);
+      const ds=dfmt(d);
+      const dayItems=S.items.filter(x=>x.date===ds&&!isOverdue(x)&&!x.done);
+      const isT=i===0,isTom=i===1;
+      let label=`${d.getDate()} ${MO_ABBR[d.getMonth()]}.`;
+      if(isT)label+=' · Hoje';
+      else if(isTom)label+=' · Amanhã';
+      label+=` · ${DOW_PT[d.getDay()]}`;
+      const bold=dayItems.length>0||isT;
+      h+=`<div class="sec-hdr ${bold?'bold':''}">${label}</div>`;
+      dayItems.forEach(it=>{ h+=itemHTML(it,false); });
+    }
+    if(!overdue.length&&!S.items.some(x=>!isOverdue(x)&&x.date)){
+      h+=`<div class="empty"><div class="empty-icon">🎉</div>
+        <div class="empty-t">Tudo em dia</div>
+        <div class="empty-s">Nenhum item próximo.</div></div>`;
+    }
   }
 
-  if(!overdue.length&&!S.items.some(x=>!isOverdue(x)&&x.date)){
-    h+=`<div class="empty"><div class="empty-icon">🎉</div>
-      <div class="empty-t">Tudo em dia</div>
-      <div class="empty-s">Nenhum item próximo.</div></div>`;
+  const hdivider=el.querySelector('.hdivider');
+  if(hdivider){
+    let next=hdivider.nextSibling;
+    while(next){const tmp=next.nextSibling;el.removeChild(next);next=tmp;}
+    el.insertAdjacentHTML('beforeend',h);
+  } else {
+    el.innerHTML=h;
   }
-  el.innerHTML=h;
 }
 
 let overOpen=true;
