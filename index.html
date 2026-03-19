@@ -36,11 +36,12 @@ html,body{
   background:var(--bg);color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;
 }
-html,body,.app{background:var(--bg);}
+html{background:var(--bg);}
+body{background:var(--bg);}
 .app{
   position:fixed;
   top:0;left:0;right:0;bottom:0;
-  width:100%;height:100%;
+  background:var(--bg);
   display:flex;flex-direction:column;
   overflow:hidden;
 }
@@ -1230,9 +1231,6 @@ if('serviceWorker' in navigator){
     </div>
   </div><!-- /det-card -->
 </div>
-
-<!-- Bottom background fill -->
-<div style="position:fixed;bottom:0;left:0;right:0;height:calc(env(safe-area-inset-bottom,34px) + 14px);background:var(--bg);z-index:99;"></div>
 
 <!-- notif banner removido -->
 
