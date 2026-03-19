@@ -2,12 +2,12 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="FocusFlow">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#ffffff" id="themeColor">
+<meta name="theme-color" content="#000000" id="themeColor">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232c3040'/><text y='.9em' font-size='70' x='15'>🗓</text></svg>">
 <title>FocusFlow</title>
 <style>
@@ -26,7 +26,7 @@
 /* ── Base: fill entire screen ── */
 html,body{
   margin:0;padding:0;
-  width:100%;height:100%;
+  width:100%;height:100dvh;height:-webkit-fill-available;
   /* background on html fills the status bar / Dynamic Island region in PWA */
   background:var(--bg);
   color:var(--ink);
@@ -35,12 +35,6 @@ html,body{
 }
 
 /* ─── LAYOUT ─────────────────────────── */
-/*
-  PWA (adicionado à Tela de Início) com black-translucent:
-  - O app ocupa 100% da tela incluindo a área do Dynamic Island
-  - O html/body background preenche a barra de status
-  - padding-top: env(safe-area-inset-top) empurra conteúdo para baixo da Dynamic Island
-*/
 html,body,.app{
   background:var(--bg);
 }
@@ -49,6 +43,7 @@ html,body,.app{
   top:0;left:0;right:0;bottom:0;
   display:flex;flex-direction:column;
   overflow:hidden;
+  height:100dvh;height:-webkit-fill-available;
 }
 /* Dark mode — tudo escuro */
 [data-dark="1"] html,
@@ -129,6 +124,7 @@ html,body,.app{
 .scroll{
   flex:1;overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
+  padding-bottom:calc(var(--safe-bot) + 80px);
 }
 .scroll::-webkit-scrollbar{display:none}
 
@@ -312,7 +308,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 
 .tag-wrap{display:flex;flex-wrap:wrap;gap:7px;padding:12px 14px}
 .tag-opt{padding:5px 12px;border-radius:20px;font-size:13px;font-weight:500;
-  background:var(--bg);color:var(--gray);border:.5px solid var(--sep);cursor:pointer;transition:all .12s}
+  background:var(--bg);color:var(--gray);border:.5px solid var(--sep);cursor:pointer;transition:all .12px}
 .tag-opt.on{background:var(--red);color:#fff;border-color:transparent}
 
 .sbtn{width:100%;padding:14px;border-radius:12px;font-size:16px;
@@ -352,7 +348,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 .tog.on::after{left:23px}
 
 /* ═══════════════════════════════════════
-   DETAIL MODAL — pixel-perfect iOS match
+   DETAIL MODAL
    ═══════════════════════════════════════ */
 .det-overlay{
   position:fixed;inset:0;z-index:600;
@@ -363,7 +359,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 }
 .det-overlay.open{background:rgba(0,0,0,.0);pointer-events:all;}
 
-/* The card slides up from bottom, covers full screen below status bar */
 .det-card{
   position:absolute;
   top:6px;
@@ -379,7 +374,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 [data-dark="1"] .det-card{background:#1c1c1e;}
 .det-overlay.open .det-card{transform:translateY(0);}
 
-/* ── Header: X  Title  ✓ ── */
 .det-hdr{
   display:flex;align-items:center;justify-content:space-between;
   padding:16px 16px 12px;
@@ -404,7 +398,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 }
 [data-dark="1"] .det-hdr-title{color:#fff;}
 
-/* ── iOS Calendar segmented control (Evento | Lembrete) ── */
 .cal-seg{
   display:flex;
   background:#e5e5ea;border-radius:9px;
@@ -424,27 +417,23 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 }
 [data-dark="1"] .cal-seg-btn.on{background:#636366;color:#fff;}
 
-/* ── Scroll body ── */
 .det-body{
   flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
   padding:0 16px calc(var(--safe-bot)+20px);
 }
 .det-body::-webkit-scrollbar{display:none;}
 
-/* ── Section label (gray, normal weight, like iOS) ── */
 .ios-sec{
   font-size:15px;font-weight:400;color:#8e8e93;
   padding:18px 4px 7px;letter-spacing:0;
 }
 
-/* ── White grouped card ── */
 .ios-card{
   background:var(--bg);border-radius:12px;
   overflow:visible;margin-bottom:12px;
 }
 [data-dark="1"] .ios-card{background:#2c2c2e;}
 
-/* ── Row inside card ── */
 .ios-row{
   display:flex;align-items:center;
   padding:12px 16px;min-height:50px;
@@ -458,7 +447,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 .ios-row:first-child{border-radius:12px 12px 0 0;}
 .ios-row.only{border-radius:12px;}
 
-/* row icon — exact SF Symbols sizes */
 .ios-row-ico{
   flex-shrink:0;width:30px;height:30px;
   display:flex;align-items:center;justify-content:center;
@@ -476,7 +464,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   font-size:13px;color:#c7c7cc;font-weight:500;
 }
 
-/* ── Title input ── */
 .ios-title-in{
   width:100%;font-size:17px;font-weight:400;color:#000;
   background:none;border:none;outline:none;font-family:inherit;
@@ -488,7 +475,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 .ios-divider{height:.5px;background:#c6c6c8;margin:0 16px;}
 [data-dark="1"] .ios-divider{background:#3a3a3c;}
 
-/* ── Notes textarea ── */
 .ios-notes-in{
   width:100%;font-size:17px;font-weight:400;color:#000;
   background:none;border:none;outline:none;font-family:inherit;
@@ -499,7 +485,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 [data-dark="1"] .ios-notes-in{color:#fff;}
 .ios-notes-in::placeholder{color:#c7c7cc;}
 
-/* ── URL input ── */
 .ios-url-in{
   flex:1;font-size:17px;color:#3c3c43;background:none;
   border:none;outline:none;font-family:inherit;-webkit-appearance:none;
@@ -508,7 +493,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 [data-dark="1"] .ios-url-in{color:#ebebf5;}
 .ios-url-in::placeholder{color:#c7c7cc;}
 
-/* ── Generic text input in row ── */
 .ios-row-in{
   flex:1;font-size:17px;color:#000;background:none;
   border:none;outline:none;font-family:inherit;-webkit-appearance:none;
@@ -518,7 +502,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 .ios-row-in::placeholder{color:#c7c7cc;}
 .ios-row-in.r{text-align:right;}
 
-/* ── iOS Toggle (exact Apple style) ── */
 .ios-tog{
   width:51px;height:31px;border-radius:15.5px;
   background:#e5e5ea;position:relative;
@@ -536,7 +519,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 }
 .ios-tog.on::after{left:22px;}
 
-/* ── Date/time pills (iOS Calendar style) ── */
 .dt-pill{
   background:#e9e9eb;border-radius:8px;
   padding:5px 11px;font-size:15px;color:#3c3c43;
@@ -550,7 +532,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 [data-dark="1"] .dt-pill.active-pill{background:#48484a;}
 .dt-pills{display:flex;gap:6px;flex-shrink:0;}
 
-/* ── Drum roll picker — iOS UIDatePicker pixel-perfect ── */
 .drum-picker{
   overflow:hidden;
   background:#fff;
@@ -561,14 +542,12 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 [data-dark="1"] .drum-picker{background:#1c1c1e;border-top-color:#38383a;}
 .drum-picker.open{max-height:216px;}
 
-/* drum outer container */
 .drum-wrap{
   position:relative;height:216px;overflow:hidden;
   background:var(--bg);
 }
 [data-dark="1"] .drum-wrap{background:#1c1c1e;}
 
-/* two thin horizontal lines marking selection zone — exactly like iOS */
 .drum-wrap::before,.drum-wrap::after{
   content:'';position:absolute;
   left:0;right:0;height:.5px;
@@ -580,10 +559,8 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 .drum-wrap::before{top:86px;}
 .drum-wrap::after{top:130px;}
 
-/* hide old drum-sel div */
 .drum-sel{display:none;}
 
-/* gradient masks — iOS uses stronger fade than 40% */
 .drum-fade-top,.drum-fade-bot{
   position:absolute;left:0;right:0;height:88px;pointer-events:none;z-index:6;
 }
@@ -614,7 +591,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
     rgba(28,28,30,0) 100%);
 }
 
-/* columns */
 .drum-cols{display:flex;height:216px;position:relative;z-index:3;}
 .drum-col{
   flex:1;overflow-y:scroll;height:216px;
@@ -626,7 +602,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 .drum-col::-webkit-scrollbar{display:none;}
 .drum-spacer{height:86px;flex-shrink:0;pointer-events:none;}
 
-/* items — iOS uses weight 400, size 22px, tight letter-spacing */
 .drum-item{
   height:44px;
   display:flex;align-items:center;justify-content:center;
@@ -637,7 +612,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 }
 [data-dark="1"] .drum-item{color:#fff;}
 
-/* bottom labels row */
 .drum-labels{
   display:flex;border-top:.5px solid #c6c6c8;background:var(--bg);
 }
@@ -647,12 +621,10 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   text-align:center;padding:5px 0 7px;
 }
 
-/* ── Blue subtitle under toggle label ── */
 .ios-row-sub{
   font-size:13px;color:#007aff;margin-top:1px;font-weight:400;
 }
 
-/* ── Calendar grid picker (iOS Reminders style) ── */
 .cal-picker{
   overflow:hidden;background:var(--bg);
   border-top:.5px solid #c6c6c8;
@@ -707,17 +679,11 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 .cal-day.selected{background:#007aff !important;color:#fff !important;font-weight:600;}
 .cal-day.other-month{color:#c7c7cc;}
 
-/* ── Repetição row (below time card) ── */
 .rep-card{
   background:var(--bg);border-radius:12px;margin-bottom:12px;overflow:hidden;
 }
 [data-dark="1"] .rep-card{background:#1c1c1e;}
 
-  font-size:13px;color:#8e8e93;
-  padding:6px 4px 4px;line-height:1.4;
-}
-
-/* ── Tags — pure iOS gray, no colors ── */
 .ios-tags{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 8px;}
 .ios-tag{
   padding:6px 14px;border-radius:20px;font-size:14px;font-weight:600;
@@ -728,7 +694,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 }
 .ios-tag.on{background:currentColor;color:#fff !important;}
 
-/* ── Attachments ── */
 .att-item{
   display:flex;align-items:center;padding:11px 16px;
   border-top:.5px solid #c6c6c8;gap:10px;
@@ -738,13 +703,11 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .att-rm{font-size:20px;color:#ff3b30;cursor:pointer;padding:0 2px;}
 
-/* ── Danger row ── */
 .ios-danger-row{
   color:#ff3b30;text-align:center;
   font-size:17px;font-weight:400;flex:1;
 }
 
-/* ── Type selector (4 buttons) ── */
 .type-sel-btn{
   flex:1;text-align:center;
   padding:7px 4px;font-size:13.5px;font-weight:500;
@@ -760,7 +723,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 }
 [data-dark="1"] .type-sel-btn.on{color:#fff;border-bottom-color:#fff;}
 
-/* ── Bottom toolbar — raised up from edge ── */
 .det-toolbar{
   display:flex;align-items:center;justify-content:space-around;
   background:#f2f2f7;border-top:.5px solid #c6c6c8;
@@ -787,7 +749,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 }
 .snack.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ── Comprehensive dark mode — no white surfaces ── */
+/* ── Comprehensive dark mode ── */
 [data-dark="1"] .cal-seg-btn.on{background:#3a3a3c;color:#fff;}
 [data-dark="1"] .ios-card{background:#1c1c1e !important;}
 [data-dark="1"] .ios-row{background:transparent;}
@@ -803,11 +765,8 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 [data-dark="1"] .cal-day:active{background:#2c2c2e;}
 [data-dark="1"] .cal-nav-month{color:#fff;}
 [data-dark="1"] .ios-divider{background:#38383a;}
-/* Drum sel highlight */
 [data-dark="1"] .drum-sel{background:#2c2c2e;}
-/* Fuso horario row */
 [data-dark="1"] .ios-row[style*="background:#fff"]{background:#1c1c1e !important;}
-/* Sheet and overlay */
 [data-dark="1"] .sheet{background:#1c1c1e;}
 [data-dark="1"] .set-label{color:#8e8e93;}
 [data-dark="1"] .set-row{background:transparent;}
@@ -831,7 +790,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 
 <!-- ── PAGE: EM BREVE ─────────────────── -->
 <div class="page active" id="page-embreve">
-  <!-- Top bar -->
   <div class="topbar">
     <div class="topbar-spacer"></div>
     <div class="topbar-title" id="topbar-title-embreve">Em breve</div>
@@ -844,8 +802,6 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
       <div class="topbar-btn" onclick="openSettings()">•••</div>
     </div>
   </div>
-
-  <!-- Month header + week strip + content all in one scroll -->
   <div class="scroll" id="scroll-embreve">
     <div class="month-hdr" id="monthHdr">
       <span id="monthLabel" onclick="S.weekOffset=0;S.selDay=dfmt(today());buildWeek();renderEmBreve();" style="cursor:pointer"></span>
@@ -957,11 +913,9 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   </div>
 </div>
 
-<!-- ── DETAIL MODAL — pixel-perfect iOS ── -->
+<!-- ── DETAIL MODAL ── -->
 <div id="detModal" class="det-overlay">
   <div class="det-card" id="detCard">
-
-    <!-- Header: ✕  Title  ✓ -->
     <div class="det-hdr">
       <div class="det-hdr-circ" onclick="closeDetail()">
         <svg viewBox="0 0 14 14" fill="none">
@@ -975,22 +929,14 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
         </svg>
       </div>
     </div>
-
-    <!-- Type selector — always visible, 4 options -->
     <div style="display:flex;gap:0;margin:0 0 0;padding:0 16px 10px;flex-shrink:0">
       <div id="ts-task" class="type-sel-btn on" onclick="pickType('task',this)" data-type="task">Tarefa</div>
       <div id="ts-event" class="type-sel-btn" onclick="pickType('event',this)" data-type="event">Evento</div>
       <div id="ts-note" class="type-sel-btn" onclick="pickType('note',this)" data-type="note">Nota</div>
       <div id="ts-expense" class="type-sel-btn" onclick="pickType('expense',this)" data-type="expense">Despesa</div>
     </div>
-
-    <!-- Body scroll -->
     <div class="det-body" id="detBody">
-
-      <!-- ══ TASK / LEMBRETE view ══════════════ -->
       <div id="view-task">
-
-        <!-- Title + Notes + URL card -->
         <div class="ios-card" style="margin-bottom:18px">
           <input id="dTitle" class="ios-title-in" placeholder="Título" autocomplete="off"/>
           <div class="ios-divider"></div>
@@ -1000,46 +946,24 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
             <input id="dUrl" type="url" class="ios-url-in" placeholder="URL"/>
           </div>
         </div>
-
-        <!-- Data e Hora -->
         <div class="ios-sec">Data e Hora</div>
         <div class="ios-card">
-
-          <!-- Data toggle row -->
           <div class="ios-row" onclick="tapToggle('tog-date','pk-tdate')">
-            <div class="ios-row-ico">
-              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                <rect x="2" y="3" width="18" height="17" rx="2.5"/>
-                <path d="M2 8h18"/><path d="M7 1v4M15 1v4"/>
-              </svg>
-            </div>
-            <div style="flex:1">
-              <div class="ios-row-lbl">Data</div>
-              <div class="ios-row-sub" id="disp-date-lbl" style="display:none">Hoje</div>
-            </div>
+            <div class="ios-row-ico"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="18" height="17" rx="2.5"/><path d="M2 8h18"/><path d="M7 1v4M15 1v4"/></svg></div>
+            <div style="flex:1"><div class="ios-row-lbl">Data</div><div class="ios-row-sub" id="disp-date-lbl" style="display:none">Hoje</div></div>
             <div class="ios-tog" id="tog-date" onclick="event.stopPropagation();handleTogBtn('tog-date','pk-tdate')"></div>
           </div>
-
-          <!-- Calendar grid (iOS Reminders style) -->
           <div class="cal-picker" id="pk-tdate">
-            <!-- Month nav header -->
             <div class="cal-nav">
               <button class="cal-nav-month" id="calMonthBtn" onclick="toggleMonthDrum()">
                 <span id="calMonthLabel">março de 2026</span>
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px">
-                  <path d="M2 3.5L5 6.5L8 3.5" stroke="#007aff" stroke-width="1.6" stroke-linecap="round"/>
-                </svg>
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px"><path d="M2 3.5L5 6.5L8 3.5" stroke="#007aff" stroke-width="1.6" stroke-linecap="round"/></svg>
               </button>
               <div style="display:flex;gap:18px">
-                <button class="cal-nav-arr" onclick="shiftCalMonth(-1)">
-                  <svg viewBox="0 0 10 16" fill="none"><path d="M8 2L2 8l6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <button class="cal-nav-arr" onclick="shiftCalMonth(1)">
-                  <svg viewBox="0 0 10 16" fill="none"><path d="M2 2l6 6-6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
+                <button class="cal-nav-arr" onclick="shiftCalMonth(-1)"><svg viewBox="0 0 10 16" fill="none"><path d="M8 2L2 8l6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <button class="cal-nav-arr" onclick="shiftCalMonth(1)"><svg viewBox="0 0 10 16" fill="none"><path d="M2 2l6 6-6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
               </div>
             </div>
-            <!-- Optional month/year drum (hidden by default) -->
             <div id="pk-cal-my" style="display:none;border-bottom:.5px solid #c6c6c8">
               <div class="drum-wrap" style="height:180px">
                 <div class="drum-sel"></div>
@@ -1050,227 +974,113 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
                 </div>
               </div>
             </div>
-            <!-- Day-of-week headers -->
-            <div class="cal-dow-row">
-              <span>DOM.</span><span>SEG.</span><span>TER.</span>
-              <span>QUA.</span><span>QUI.</span><span>SEX.</span><span>SÁB.</span>
-            </div>
-            <!-- Days grid -->
+            <div class="cal-dow-row"><span>DOM.</span><span>SEG.</span><span>TER.</span><span>QUA.</span><span>QUI.</span><span>SEX.</span><span>SÁB.</span></div>
             <div class="cal-grid" id="calGrid"></div>
           </div>
-
-          <!-- Horário toggle row -->
           <div class="ios-row" onclick="tapToggle('tog-time','pk-ttime')">
-            <div class="ios-row-ico">
-              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="11" cy="11" r="9"/>
-                <path d="M11 6v5.5l3.5 2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <div style="flex:1">
-              <div class="ios-row-lbl">Horário</div>
-              <div class="ios-row-sub" id="disp-time-lbl" style="display:none">08:00</div>
-            </div>
+            <div class="ios-row-ico"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="9"/><path d="M11 6v5.5l3.5 2" stroke-linecap="round"/></svg></div>
+            <div style="flex:1"><div class="ios-row-lbl">Horário</div><div class="ios-row-sub" id="disp-time-lbl" style="display:none">08:00</div></div>
             <div class="ios-tog" id="tog-time" onclick="event.stopPropagation();handleTogBtn('tog-time','pk-ttime')"></div>
           </div>
-
-          <!-- Time drum (hours + minutes by 5) -->
           <div class="drum-picker" id="pk-ttime">
             <div class="drum-wrap">
-              <div class="drum-sel"></div>
-              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
-              <div class="drum-cols">
-                <div class="drum-col" id="dc-hour"></div>
-                <div class="drum-col" id="dc-min"></div>
-              </div>
+              <div class="drum-sel"></div><div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
+              <div class="drum-cols"><div class="drum-col" id="dc-hour"></div><div class="drum-col" id="dc-min"></div></div>
             </div>
-            <!-- Fuso horário row inside time picker -->
             <div class="ios-row" style="border-top:.5px solid #c6c6c8;border-bottom:none;min-height:44px;background:var(--bg)">
-              <div class="ios-row-ico">
-                <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <circle cx="11" cy="11" r="9"/>
-                  <path d="M11 2a14 14 0 010 18M11 2a14 14 0 000 18M2 11h18" stroke-linecap="round"/>
-                </svg>
-              </div>
+              <div class="ios-row-ico"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="9"/><path d="M11 2a14 14 0 010 18M11 2a14 14 0 000 18M2 11h18" stroke-linecap="round"/></svg></div>
               <span class="ios-row-lbl">Fuso Horário</span>
               <span class="ios-row-val">São Paulo</span>
               <span class="ios-row-chev">›</span>
             </div>
           </div>
-
-          <!-- Urgente toggle -->
           <div class="ios-row" style="border-bottom:none" onclick="tapToggleSimple('tog-urgent')">
-            <div class="ios-row-ico">
-              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                <circle cx="11" cy="11" r="9"/>
-                <path d="M11 7v5M11 15v.5"/>
-              </svg>
-            </div>
+            <div class="ios-row-ico"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="9"/><path d="M11 7v5M11 15v.5"/></svg></div>
             <span class="ios-row-lbl">Urgente</span>
             <div class="ios-tog" id="tog-urgent" onclick="event.stopPropagation();tapToggleSimple('tog-urgent')"></div>
           </div>
         </div>
-
-        <!-- Repetição -->
         <div class="rep-card" onclick="tapRepetition()">
           <div class="ios-row only" style="cursor:pointer">
-            <div class="ios-row-ico">
-              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 12v-2a7 7 0 0114 0v2"/><path d="M1 12l3-3 3 3"/>
-                <path d="M18 10v2a7 7 0 01-14 0v-2"/><path d="M21 10l-3 3-3-3"/>
-              </svg>
-            </div>
+            <div class="ios-row-ico"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v-2a7 7 0 0114 0v2"/><path d="M1 12l3-3 3 3"/><path d="M18 10v2a7 7 0 01-14 0v-2"/><path d="M21 10l-3 3-3-3"/></svg></div>
             <span class="ios-row-lbl">Repetição</span>
             <span class="ios-row-val" id="repLabel">Nunca</span>
             <span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:4px">▲<br>▼</span>
           </div>
         </div>
-
-        <!-- Mais Opções -->
         <div class="ios-sec">Mais Opções</div>
-
-        <!-- Alarmes (mostrados só se urgente ativo) -->
         <div class="ios-card" id="dg-alarms" style="margin-bottom:12px">
           <div class="ios-row" onclick="tapAlarm('a1')">
-            <div class="ios-row-ico">
-              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                <path d="M11 4a7 7 0 100 14A7 7 0 0011 4z"/>
-                <path d="M11 8v4l2.5 2"/><path d="M4 2l3 3M18 2l-3 3"/>
-              </svg>
-            </div>
+            <div class="ios-row-ico"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M11 4a7 7 0 100 14A7 7 0 0011 4z"/><path d="M11 8v4l2.5 2"/><path d="M4 2l3 3M18 2l-3 3"/></svg></div>
             <span class="ios-row-lbl">Alarme</span>
             <span class="ios-row-val" id="disp-alarm1">Nenhum</span>
             <span class="ios-row-chev">›</span>
           </div>
           <div class="drum-picker" id="pk-alarm1">
-            <div class="drum-wrap">
-              <div class="drum-sel"></div>
-              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
-              <div class="drum-cols"><div class="drum-col" id="dc-alarm1"></div></div>
-            </div>
+            <div class="drum-wrap"><div class="drum-sel"></div><div class="drum-fade-top"></div><div class="drum-fade-bot"></div><div class="drum-cols"><div class="drum-col" id="dc-alarm1"></div></div></div>
           </div>
           <div class="ios-row" style="border-bottom:none" onclick="tapAlarm('a2')">
-            <div class="ios-row-ico">
-              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                <path d="M11 4a7 7 0 100 14A7 7 0 0011 4z"/>
-                <path d="M11 8v4l2.5 2"/><path d="M4 2l3 3M18 2l-3 3"/>
-              </svg>
-            </div>
+            <div class="ios-row-ico"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M11 4a7 7 0 100 14A7 7 0 0011 4z"/><path d="M11 8v4l2.5 2"/><path d="M4 2l3 3M18 2l-3 3"/></svg></div>
             <span class="ios-row-lbl">2º Alarme</span>
             <span class="ios-row-val" id="disp-alarm2">Nenhum</span>
             <span class="ios-row-chev">›</span>
           </div>
           <div class="drum-picker" id="pk-alarm2">
-            <div class="drum-wrap">
-              <div class="drum-sel"></div>
-              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
-              <div class="drum-cols"><div class="drum-col" id="dc-alarm2"></div></div>
-            </div>
+            <div class="drum-wrap"><div class="drum-sel"></div><div class="drum-fade-top"></div><div class="drum-fade-bot"></div><div class="drum-cols"><div class="drum-col" id="dc-alarm2"></div></div></div>
           </div>
         </div>
-
-        <!-- Lista / Detalhes rows -->
         <div class="ios-card">
           <div class="ios-row" onclick="tapList()">
-            <div class="ios-row-ico yellow">
-              <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                <line x1="3" y1="5" x2="15" y2="5"/>
-                <line x1="3" y1="9" x2="15" y2="9"/>
-                <line x1="3" y1="13" x2="10" y2="13"/>
-              </svg>
-            </div>
+            <div class="ios-row-ico yellow"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="5" x2="15" y2="5"/><line x1="3" y1="9" x2="15" y2="9"/><line x1="3" y1="13" x2="10" y2="13"/></svg></div>
             <span class="ios-row-lbl">Lista</span>
             <span class="ios-row-val" id="listVal">Entrada</span>
             <span class="ios-row-chev">›</span>
           </div>
           <div class="ios-row" style="border-bottom:none" onclick="tapDetails()">
-            <div class="ios-row-ico">
-              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                <circle cx="11" cy="11" r="9"/>
-                <path d="M11 10v6M11 7v.5"/>
-              </svg>
-            </div>
+            <div class="ios-row-ico"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="9"/><path d="M11 10v6M11 7v.5"/></svg></div>
             <span class="ios-row-lbl">Detalhes</span>
             <span class="ios-row-chev">›</span>
           </div>
         </div>
-
-        <!-- Subtarefas + Localização -->
         <div class="ios-card" id="dg-details" style="display:none">
           <div class="ios-row">
-            <div class="ios-row-ico">
-              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                <rect x="3" y="3" width="6" height="6" rx="1"/>
-                <rect x="3" y="13" width="6" height="6" rx="1"/>
-                <line x1="13" y1="6" x2="19" y2="6"/>
-                <line x1="13" y1="16" x2="19" y2="16"/>
-              </svg>
-            </div>
+            <div class="ios-row-ico"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="3" y="13" width="6" height="6" rx="1"/><line x1="13" y1="6" x2="19" y2="6"/><line x1="13" y1="16" x2="19" y2="16"/></svg></div>
             <span class="ios-row-lbl">Subtarefas</span>
-            <input id="dSub" type="number" min="0" placeholder="0"
-              style="width:60px;text-align:right;font-size:17px;color:#8e8e93;background:none;border:none;outline:none;font-family:inherit"/>
+            <input id="dSub" type="number" min="0" placeholder="0" style="width:60px;text-align:right;font-size:17px;color:#8e8e93;background:none;border:none;outline:none;font-family:inherit"/>
           </div>
           <div class="ios-row" style="border-bottom:none">
-            <div class="ios-row-ico">
-              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                <path d="M11 2C8 2 6 5 6 8c0 4.25 5 12 5 12s5-7.75 5-12c0-3-2-6-5-6z"/>
-                <circle cx="11" cy="8" r="2"/>
-              </svg>
-            </div>
+            <div class="ios-row-ico"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M11 2C8 2 6 5 6 8c0 4.25 5 12 5 12s5-7.75 5-12c0-3-2-6-5-6z"/><circle cx="11" cy="8" r="2"/></svg></div>
             <input id="dLoc" class="ios-row-in" placeholder="Adicionar endereço" autocomplete="off"/>
           </div>
         </div>
-
-        <!-- Tags -->
         <div class="ios-sec">Tags</div>
         <div class="ios-tags" id="dTags-task"></div>
-
-        <!-- Anexos -->
         <div class="ios-sec" style="margin-top:10px">Anexos</div>
         <div class="ios-card">
           <div class="ios-row only" onclick="document.getElementById('dFileInput').click()">
-            <div class="ios-row-ico">
-              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                <path d="M13.5 3H5a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8.5L13.5 3z"/>
-                <path d="M13 3v6h6"/><path d="M11 10v6M8 13l3-3 3 3"/>
-              </svg>
-            </div>
+            <div class="ios-row-ico"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M13.5 3H5a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8.5L13.5 3z"/><path d="M13 3v6h6"/><path d="M11 10v6M8 13l3-3 3 3"/></svg></div>
             <span class="ios-row-lbl">Adicionar anexo</span>
             <span class="ios-row-chev">›</span>
           </div>
           <div id="attachList-task"></div>
         </div>
-
         <div class="ios-card" id="dg-delete-task" style="display:none;margin-top:20px">
-          <div class="ios-row only" onclick="deleteItem()">
-            <span class="ios-danger-row">Apagar Tarefa</span>
-          </div>
+          <div class="ios-row only" onclick="deleteItem()"><span class="ios-danger-row">Apagar Tarefa</span></div>
         </div>
         <div style="height:20px"></div>
       </div><!-- /view-task -->
 
-
-      <!-- ══ EVENT view ══════════════════════ -->
       <div id="view-event" style="display:none">
-
-        <!-- Title + Location -->
         <div class="ios-card" style="margin-bottom:18px">
           <input id="eTit" class="ios-title-in" placeholder="Título" autocomplete="off"/>
           <div class="ios-divider"></div>
-          <div class="ios-row only" style="min-height:44px">
-            <input id="eLoc" class="ios-row-in" placeholder="Localização ou Ligação de Vídeo" autocomplete="off"/>
-          </div>
+          <div class="ios-row only" style="min-height:44px"><input id="eLoc" class="ios-row-in" placeholder="Localização ou Ligação de Vídeo" autocomplete="off"/></div>
         </div>
-
-        <!-- Date/time block -->
         <div class="ios-card">
-          <!-- Dia inteiro -->
           <div class="ios-row" onclick="tapToggleSimple('tog-allday')">
             <span class="ios-row-lbl">Dia inteiro</span>
             <div class="ios-tog" id="tog-allday" onclick="event.stopPropagation();toggleAllDay()"></div>
           </div>
-
-          <!-- Começa -->
           <div class="ios-row">
             <span class="ios-row-lbl">Começa</span>
             <div class="dt-pills" id="pills-start">
@@ -1278,15 +1088,9 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
               <div class="dt-pill" id="pill-stime" onclick="tapEventPill('start','time')">—</div>
             </div>
           </div>
-          <!-- Start calendar -->
           <div class="cal-picker" id="pk-estart-cal">
             <div class="cal-nav">
-              <button class="cal-nav-month" onclick="toggleEventMonthDrum('start')">
-                <span id="eStartMonthLabel">—</span>
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px">
-                  <path d="M2 3.5L5 6.5L8 3.5" stroke="#007aff" stroke-width="1.6" stroke-linecap="round"/>
-                </svg>
-              </button>
+              <button class="cal-nav-month" onclick="toggleEventMonthDrum('start')"><span id="eStartMonthLabel">—</span><svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px"><path d="M2 3.5L5 6.5L8 3.5" stroke="#007aff" stroke-width="1.6" stroke-linecap="round"/></svg></button>
               <div style="display:flex;gap:18px">
                 <button class="cal-nav-arr" onclick="shiftEventCal('start',-1)"><svg viewBox="0 0 10 16" fill="none"><path d="M8 2L2 8l6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 <button class="cal-nav-arr" onclick="shiftEventCal('start',1)"><svg viewBox="0 0 10 16" fill="none"><path d="M2 2l6 6-6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -1295,19 +1099,10 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
             <div class="cal-dow-row"><span>DOM.</span><span>SEG.</span><span>TER.</span><span>QUA.</span><span>QUI.</span><span>SEX.</span><span>SÁB.</span></div>
             <div class="cal-grid" id="eStartGrid"></div>
           </div>
-          <!-- Start time drum -->
           <div class="drum-picker" id="pk-estart-time">
-            <div class="drum-wrap">
-              <div class="drum-sel"></div><div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
-              <div class="drum-cols">
-                <div class="drum-col" id="dc-esh"></div>
-                <div class="drum-col" id="dc-esn"></div>
-              </div>
-            </div>
+            <div class="drum-wrap"><div class="drum-sel"></div><div class="drum-fade-top"></div><div class="drum-fade-bot"></div><div class="drum-cols"><div class="drum-col" id="dc-esh"></div><div class="drum-col" id="dc-esn"></div></div></div>
             <div class="drum-labels"><div class="drum-col-label">Hora</div><div class="drum-col-label">Min</div></div>
           </div>
-
-          <!-- Termina -->
           <div class="ios-row">
             <span class="ios-row-lbl">Termina</span>
             <div class="dt-pills" id="pills-end">
@@ -1315,15 +1110,9 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
               <div class="dt-pill" id="pill-etime" onclick="tapEventPill('end','time')">—</div>
             </div>
           </div>
-          <!-- End calendar -->
           <div class="cal-picker" id="pk-eend-cal">
             <div class="cal-nav">
-              <button class="cal-nav-month" onclick="toggleEventMonthDrum('end')">
-                <span id="eEndMonthLabel">—</span>
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px">
-                  <path d="M2 3.5L5 6.5L8 3.5" stroke="#007aff" stroke-width="1.6" stroke-linecap="round"/>
-                </svg>
-              </button>
+              <button class="cal-nav-month" onclick="toggleEventMonthDrum('end')"><span id="eEndMonthLabel">—</span><svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px"><path d="M2 3.5L5 6.5L8 3.5" stroke="#007aff" stroke-width="1.6" stroke-linecap="round"/></svg></button>
               <div style="display:flex;gap:18px">
                 <button class="cal-nav-arr" onclick="shiftEventCal('end',-1)"><svg viewBox="0 0 10 16" fill="none"><path d="M8 2L2 8l6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 <button class="cal-nav-arr" onclick="shiftEventCal('end',1)"><svg viewBox="0 0 10 16" fill="none"><path d="M2 2l6 6-6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -1332,149 +1121,62 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
             <div class="cal-dow-row"><span>DOM.</span><span>SEG.</span><span>TER.</span><span>QUA.</span><span>QUI.</span><span>SEX.</span><span>SÁB.</span></div>
             <div class="cal-grid" id="eEndGrid"></div>
           </div>
-          <!-- End time drum -->
           <div class="drum-picker" id="pk-eend-time">
-            <div class="drum-wrap">
-              <div class="drum-sel"></div><div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
-              <div class="drum-cols">
-                <div class="drum-col" id="dc-eeh"></div>
-                <div class="drum-col" id="dc-een"></div>
-              </div>
-            </div>
+            <div class="drum-wrap"><div class="drum-sel"></div><div class="drum-fade-top"></div><div class="drum-fade-bot"></div><div class="drum-cols"><div class="drum-col" id="dc-eeh"></div><div class="drum-col" id="dc-een"></div></div></div>
             <div class="drum-labels"><div class="drum-col-label">Hora</div><div class="drum-col-label">Min</div></div>
           </div>
-
-          <!-- Tempo de Viagem -->
           <div class="ios-row" style="border-bottom:none">
             <span class="ios-row-lbl">Tempo de Viagem</span>
             <span class="ios-row-val">Nenhum</span>
             <span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span>
           </div>
         </div>
-
-        <!-- Repete -->
         <div class="ios-card">
-          <div class="ios-row only">
-            <span class="ios-row-lbl">Repete</span>
-            <span class="ios-row-val" id="eRepete">Nunca</span>
-            <span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span>
-          </div>
+          <div class="ios-row only"><span class="ios-row-lbl">Repete</span><span class="ios-row-val" id="eRepete">Nunca</span><span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span></div>
         </div>
-
-        <!-- Calendário + Convidados -->
         <div class="ios-card">
-          <div class="ios-row">
-            <span class="ios-row-lbl">Calendário</span>
-            <span class="ios-row-val" style="display:flex;align-items:center;gap:5px">
-              <span style="width:10px;height:10px;border-radius:50%;background:#32ade6;display:inline-block"></span>
-              Padrão
-            </span>
-            <span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span>
-          </div>
-          <div class="ios-row" style="border-bottom:none">
-            <span class="ios-row-lbl">Convidados</span>
-            <span class="ios-row-val">Nenhum</span>
-            <span class="ios-row-chev">›</span>
-          </div>
+          <div class="ios-row"><span class="ios-row-lbl">Calendário</span><span class="ios-row-val" style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#32ade6;display:inline-block"></span>Padrão</span><span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span></div>
+          <div class="ios-row" style="border-bottom:none"><span class="ios-row-lbl">Convidados</span><span class="ios-row-val">Nenhum</span><span class="ios-row-chev">›</span></div>
         </div>
-
-        <!-- Alertas -->
         <div class="ios-card">
-          <div class="ios-row" onclick="tapAlarm('ea1')">
-            <span class="ios-row-lbl">Alerta</span>
-            <span class="ios-row-val" id="disp-ealarm1">Nenhum</span>
-            <span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span>
-          </div>
-          <div class="drum-picker" id="pk-ealarm1">
-            <div class="drum-wrap">
-              <div class="drum-sel"></div>
-              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
-              <div class="drum-cols"><div class="drum-col" id="dc-ealarm1"></div></div>
-            </div>
-          </div>
-          <div class="ios-row" style="border-bottom:none" onclick="tapAlarm('ea2')">
-            <span class="ios-row-lbl">2º Alerta</span>
-            <span class="ios-row-val" id="disp-ealarm2">Nenhum</span>
-            <span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span>
-          </div>
-          <div class="drum-picker" id="pk-ealarm2">
-            <div class="drum-wrap">
-              <div class="drum-sel"></div>
-              <div class="drum-fade-top"></div><div class="drum-fade-bot"></div>
-              <div class="drum-cols"><div class="drum-col" id="dc-ealarm2"></div></div>
-            </div>
-          </div>
+          <div class="ios-row" onclick="tapAlarm('ea1')"><span class="ios-row-lbl">Alerta</span><span class="ios-row-val" id="disp-ealarm1">Nenhum</span><span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span></div>
+          <div class="drum-picker" id="pk-ealarm1"><div class="drum-wrap"><div class="drum-sel"></div><div class="drum-fade-top"></div><div class="drum-fade-bot"></div><div class="drum-cols"><div class="drum-col" id="dc-ealarm1"></div></div></div></div>
+          <div class="ios-row" style="border-bottom:none" onclick="tapAlarm('ea2')"><span class="ios-row-lbl">2º Alerta</span><span class="ios-row-val" id="disp-ealarm2">Nenhum</span><span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span></div>
+          <div class="drum-picker" id="pk-ealarm2"><div class="drum-wrap"><div class="drum-sel"></div><div class="drum-fade-top"></div><div class="drum-fade-bot"></div><div class="drum-cols"><div class="drum-col" id="dc-ealarm2"></div></div></div></div>
         </div>
-
-        <!-- Notas + URL -->
         <div class="ios-card">
           <textarea id="eBody" class="ios-notes-in" placeholder="Notas" rows="3" style="padding:14px 16px"></textarea>
           <div class="ios-divider"></div>
-          <div class="ios-row only" style="min-height:44px">
-            <input id="eUrl" type="url" class="ios-url-in" placeholder="URL"/>
-          </div>
+          <div class="ios-row only" style="min-height:44px"><input id="eUrl" type="url" class="ios-url-in" placeholder="URL"/></div>
         </div>
-
-        <!-- Tags -->
-        <div class="ios-sec">Tags</div>
-        <div class="ios-tags" id="dTags-event"></div>
-
-        <!-- Anexos -->
+        <div class="ios-sec">Tags</div><div class="ios-tags" id="dTags-event"></div>
         <div class="ios-sec" style="margin-top:10px">Anexos</div>
         <div class="ios-card">
-          <div class="ios-row only" onclick="document.getElementById('dFileInput').click()">
-            <div class="ios-row-ico">
-              <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                <path d="M13.5 3H5a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8.5L13.5 3z"/>
-                <path d="M13 3v6h6"/><path d="M11 10v6M8 13l3-3 3 3"/>
-              </svg>
-            </div>
-            <span class="ios-row-lbl">Adicionar anexo</span>
-            <span class="ios-row-chev">›</span>
-          </div>
+          <div class="ios-row only" onclick="document.getElementById('dFileInput').click()"><div class="ios-row-ico"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M13.5 3H5a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8.5L13.5 3z"/><path d="M13 3v6h6"/><path d="M11 10v6M8 13l3-3 3 3"/></svg></div><span class="ios-row-lbl">Adicionar anexo</span><span class="ios-row-chev">›</span></div>
           <div id="attachList-event"></div>
         </div>
-
-        <div class="ios-card" id="dg-delete-event" style="display:none;margin-top:20px">
-          <div class="ios-row only" onclick="deleteItem()">
-            <span class="ios-danger-row">Apagar Evento</span>
-          </div>
-        </div>
+        <div class="ios-card" id="dg-delete-event" style="display:none;margin-top:20px"><div class="ios-row only" onclick="deleteItem()"><span class="ios-danger-row">Apagar Evento</span></div></div>
         <div style="height:20px"></div>
       </div><!-- /view-event -->
 
-
-      <!-- ══ NOTE view ═══════════════════════ -->
       <div id="view-note" style="display:none">
         <div class="ios-card">
           <input id="nTit" class="ios-title-in" placeholder="Título" autocomplete="off"/>
           <div class="ios-divider"></div>
           <textarea id="nBody" class="ios-notes-in" placeholder="Notas" rows="8" style="padding:12px 16px"></textarea>
           <div class="ios-divider"></div>
-          <div class="ios-row only" style="min-height:44px">
-            <input id="nUrl" type="url" class="ios-url-in" placeholder="URL"/>
-          </div>
+          <div class="ios-row only" style="min-height:44px"><input id="nUrl" type="url" class="ios-url-in" placeholder="URL"/></div>
         </div>
-        <div class="ios-sec">Tags</div>
-        <div class="ios-tags" id="dTags-note"></div>
+        <div class="ios-sec">Tags</div><div class="ios-tags" id="dTags-note"></div>
         <div class="ios-sec" style="margin-top:10px">Anexos</div>
         <div class="ios-card">
-          <div class="ios-row only" onclick="document.getElementById('dFileInput').click()">
-            <span class="ios-row-lbl" style="color:#8e8e93">Adicionar anexo</span>
-            <span class="ios-row-chev">›</span>
-          </div>
+          <div class="ios-row only" onclick="document.getElementById('dFileInput').click()"><span class="ios-row-lbl" style="color:#8e8e93">Adicionar anexo</span><span class="ios-row-chev">›</span></div>
           <div id="attachList-note"></div>
         </div>
-        <div class="ios-card" id="dg-delete-note" style="display:none;margin-top:20px">
-          <div class="ios-row only" onclick="deleteItem()">
-            <span class="ios-danger-row">Apagar Nota</span>
-          </div>
-        </div>
+        <div class="ios-card" id="dg-delete-note" style="display:none;margin-top:20px"><div class="ios-row only" onclick="deleteItem()"><span class="ios-danger-row">Apagar Nota</span></div></div>
         <div style="height:20px"></div>
       </div><!-- /view-note -->
 
-
-      <!-- ══ EXPENSE view ═════════════════════ -->
       <div id="view-expense" style="display:none">
         <div class="ios-card">
           <input id="xTit" class="ios-title-in" placeholder="Título" autocomplete="off"/>
@@ -1484,23 +1186,16 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
         <div class="ios-card">
           <div class="ios-row">
             <span class="ios-row-lbl">Valor R$</span>
-            <input id="dVal" type="number" step="0.01" placeholder="0,00"
-              style="flex:1;text-align:right;font-size:17px;color:#8e8e93;background:none;border:none;outline:none;font-family:inherit;-webkit-appearance:none"/>
+            <input id="dVal" type="number" step="0.01" placeholder="0,00" style="flex:1;text-align:right;font-size:17px;color:#8e8e93;background:none;border:none;outline:none;font-family:inherit;-webkit-appearance:none"/>
           </div>
           <div class="ios-row" onclick="tapExpenseCal()" style="border-bottom:none">
             <span class="ios-row-lbl">Data</span>
             <span class="ios-row-val" id="disp-xdate">Hoje</span>
             <span class="ios-row-chev">›</span>
           </div>
-          <!-- Expense calendar -->
           <div class="cal-picker" id="pk-xdate">
             <div class="cal-nav">
-              <button class="cal-nav-month" onclick="toggleExpMonthDrum()">
-                <span id="xCalMonthLabel">—</span>
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px">
-                  <path d="M2 3.5L5 6.5L8 3.5" stroke="#007aff" stroke-width="1.6" stroke-linecap="round"/>
-                </svg>
-              </button>
+              <button class="cal-nav-month" onclick="toggleExpMonthDrum()"><span id="xCalMonthLabel">—</span><svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px"><path d="M2 3.5L5 6.5L8 3.5" stroke="#007aff" stroke-width="1.6" stroke-linecap="round"/></svg></button>
               <div style="display:flex;gap:18px">
                 <button class="cal-nav-arr" onclick="shiftXCal(-1)"><svg viewBox="0 0 10 16" fill="none"><path d="M8 2L2 8l6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 <button class="cal-nav-arr" onclick="shiftXCal(1)"><svg viewBox="0 0 10 16" fill="none"><path d="M2 2l6 6-6 6" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -1510,77 +1205,32 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
             <div class="cal-grid" id="xCalGrid"></div>
           </div>
         </div>
-        <div class="ios-sec">Tags</div>
-        <div class="ios-tags" id="dTags-expense"></div>
-        <div class="ios-card" id="dg-delete-expense" style="display:none;margin-top:20px">
-          <div class="ios-row only" onclick="deleteItem()">
-            <span class="ios-danger-row">Apagar Despesa</span>
-          </div>
-        </div>
+        <div class="ios-sec">Tags</div><div class="ios-tags" id="dTags-expense"></div>
+        <div class="ios-card" id="dg-delete-expense" style="display:none;margin-top:20px"><div class="ios-row only" onclick="deleteItem()"><span class="ios-danger-row">Apagar Despesa</span></div></div>
         <div style="height:20px"></div>
       </div><!-- /view-expense -->
 
     </div><!-- /det-body -->
 
-    <!-- ── Bottom toolbar (exact iOS Reminders icons) ── -->
     <div class="det-toolbar" id="det-toolbar-task">
-      <!-- Date/time -->
-      <div class="det-tb-btn" onclick="tapToggle('tog-date','pk-tdate')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-          <rect x="2" y="4" width="20" height="18" rx="3"/>
-          <path d="M2 9h20"/><path d="M8 2v4M16 2v4"/>
-          <circle cx="8" cy="14" r="1.2" fill="currentColor"/>
-          <text x="16" y="19" font-size="5" font-weight="700" text-anchor="middle" fill="currentColor" stroke="none">!</text>
-        </svg>
-      </div>
-      <!-- Location -->
-      <div class="det-tb-btn" onclick="showDetails()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-          <path d="M12 2C9 2 6 5 6 9c0 5 6 13 6 13s6-8 6-13c0-4-3-7-6-7z"/>
-          <circle cx="12" cy="9" r="2.5"/>
-        </svg>
-      </div>
-      <!-- Hash/Tags -->
-      <div class="det-tb-btn" onclick="document.getElementById('dTags-'+curType)?.scrollIntoView({behavior:'smooth'})">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-          <line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/>
-          <line x1="10" y1="4" x2="8" y2="20"/><line x1="16" y1="4" x2="14" y2="20"/>
-        </svg>
-      </div>
-      <!-- Flag/Urgente -->
-      <div class="det-tb-btn" onclick="tapToggleSimple('tog-urgent')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-          <path d="M5 3v18M5 3l14 6-14 6"/>
-        </svg>
-      </div>
-      <!-- Camera/Attach -->
-      <div class="det-tb-btn" onclick="document.getElementById('dFileInput').click()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-          <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
-      </div>
+      <div class="det-tb-btn" onclick="tapToggle('tog-date','pk-tdate')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="2" y="4" width="20" height="18" rx="3"/><path d="M2 9h20"/><path d="M8 2v4M16 2v4"/><circle cx="8" cy="14" r="1.2" fill="currentColor"/><text x="16" y="19" font-size="5" font-weight="700" text-anchor="middle" fill="currentColor" stroke="none">!</text></svg></div>
+      <div class="det-tb-btn" onclick="showDetails()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 2C9 2 6 5 6 9c0 5 6 13 6 13s6-8 6-13c0-4-3-7-6-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+      <div class="det-tb-btn" onclick="document.getElementById('dTags-'+curType)?.scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="10" y1="4" x2="8" y2="20"/><line x1="16" y1="4" x2="14" y2="20"/></svg></div>
+      <div class="det-tb-btn" onclick="tapToggleSimple('tog-urgent')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 3v18M5 3l14 6-14 6"/></svg></div>
+      <div class="det-tb-btn" onclick="document.getElementById('dFileInput').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
     </div>
-
   </div><!-- /det-card -->
 </div>
 
-<!-- ── NOTIFICATION BANNER ──────────────── -->
-<div id="notifBanner" style="display:none;position:fixed;top:calc(env(safe-area-inset-top,0px)+12px);left:16px;right:16px;z-index:900;
-  background:#1c1c1e;border-radius:16px;padding:14px 16px;
-  align-items:center;gap:12px;
-  box-shadow:0 4px 24px rgba(0,0,0,.35);
-  transform:translateY(-120%);transition:transform .35s cubic-bezier(.32,1,.65,1);">
-  <div style="font-size:24px">🔔</div>
-  <div style="flex:1">
-    <div style="font-size:14px;font-weight:600;color:#fff">Ativar notificações</div>
-    <div style="font-size:12px;color:#8e8e93;margin-top:2px">Receba alarmes dos seus lembretes</div>
-  </div>
-  <button onclick="enableNotifFromBanner()" style="background:#0a84ff;color:#fff;border:none;border-radius:10px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Ativar</button>
-  <button onclick="closeNotifBanner()" style="background:none;border:none;color:#8e8e93;font-size:20px;cursor:pointer;padding:0 4px;line-height:1">✕</button>
+<!-- ── NOTIFICATION BANNER ── -->
+<div id="notifBanner" style="display:none;position:fixed;top:12px;left:12px;right:12px;z-index:900;background:#1c1c1e;border-radius:16px;padding:12px 14px;align-items:center;gap:10px;box-shadow:0 4px 24px rgba(0,0,0,.45);transform:translateY(-140%);transition:transform .35s cubic-bezier(.32,1,.65,1);">
+  <div style="font-size:22px;flex-shrink:0">🔔</div>
+  <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ativar notificações</div><div style="font-size:11px;color:#8e8e93;margin-top:1px">Receba alarmes dos seus lembretes</div></div>
+  <button onclick="enableNotifFromBanner()" style="background:#0a84ff;color:#fff;border:none;border-radius:9px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0;white-space:nowrap">Ativar</button>
+  <button onclick="closeNotifBanner()" style="background:none;border:none;color:#636366;font-size:18px;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0">✕</button>
 </div>
 
-<!-- ── RECURRENCE PICKER ──────────────────── -->
+<!-- ── RECURRENCE PICKER ── -->
 <div class="overlay" id="repOverlay" onclick="closeRep(event)" style="z-index:700">
   <div class="sheet" style="padding-bottom:calc(var(--safe-bot)+16px)">
     <div class="sheet-handle"></div>
@@ -1590,7 +1240,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   </div>
 </div>
 
-<!-- ── SETTINGS SHEET ─────────────────── -->
+<!-- ── SETTINGS SHEET ── -->
 <div class="overlay" id="settingsOverlay" onclick="closeSettings(event)">
   <div class="sheet">
     <div class="sheet-handle"></div>
@@ -1614,14 +1264,8 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
       <div class="set-group" style="margin-top:20px">
         <div class="set-label">AutoGest</div>
         <div class="set-card">
-          <div class="set-row" onclick="requestNotifNow()">
-            <span class="set-ico">🔔</span><span class="set-txt">Ativar notificações</span>
-            <span class="set-val" id="notifStatus">—</span>
-          </div>
-          <div class="set-row" onclick="syncAutoGest()">
-            <span class="set-ico">🔄</span><span class="set-txt">Sincronizar despesas</span>
-            <span class="set-val" id="syncLabel">—</span>
-          </div>
+          <div class="set-row" onclick="requestNotifNow()"><span class="set-ico">🔔</span><span class="set-txt">Ativar notificações</span><span class="set-val" id="notifStatus">—</span></div>
+          <div class="set-row" onclick="syncAutoGest()"><span class="set-ico">🔄</span><span class="set-txt">Sincronizar despesas</span><span class="set-val" id="syncLabel">—</span></div>
         </div>
       </div>
       <div class="set-group" style="margin-top:20px;margin-bottom:20px">
@@ -1645,15 +1289,12 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 const SB='https://jsyiriqtzpbuqvjrkwin.supabase.co';
 const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzeWlyaXF0enBidXF2anJrd2luIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMDEyNjksImV4cCI6MjA4ODU3NzI2OX0.BCeCKcwLGnrRhfaFryeTbbCRoGyt3wRPlZzfsxuV0mM';
 async function sbGet(t,q=''){
-  try{
-    const r=await fetch(`${SB}/rest/v1/${t}${q}`,{headers:{'apikey':SK,'Authorization':'Bearer '+SK}});
-    return r.ok?await r.json():null;
-  }catch{return null;}
+  try{const r=await fetch(`${SB}/rest/v1/${t}${q}`,{headers:{'apikey':SK,'Authorization':'Bearer '+SK}});return r.ok?await r.json():null;}catch{return null;}
 }
 
 // ══════════════════════════════════════════
 // CONSTANTS
-const DNAMES=['D','S','T','Q','Q','S','S'];// Sun=D Mon=S...
+const DNAMES=['D','S','T','Q','Q','S','S'];
 const MO_ABBR=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 const MO_FULL=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const DOW_PT=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
@@ -1662,15 +1303,7 @@ const TAG_C={Trabalho:'#007aff',Pessoal:'#34c759',Saúde:'#30b0c7',Financeiro:'#
 
 // ══════════════════════════════════════════
 // STATE
-let S={
-  items:[],
-  dark:false,sys:false,
-  selDay:null,
-  weekOffset:0,
-  editId:null,
-  editType:'task',
-  filterE:'all',
-};
+let S={items:[],dark:false,sys:false,selDay:null,weekOffset:0,editId:null,editType:'task',filterE:'all'};
 
 // ── DATE UTILS ──
 function today(){const d=new Date();d.setHours(0,0,0,0);return d;}
@@ -1690,19 +1323,12 @@ function load(){
   S.selDay=dfmt(today());
 }
 function demo(){
-  const t=dfmt(today());
-  const tom=dfmt(new Date(Date.now()+864e5));
-  const d2=dfmt(new Date(Date.now()+2*864e5));
-  const yst7=dfmt(new Date(Date.now()-7*864e5));
-  const yst2=dfmt(new Date(Date.now()-2*864e5));
+  const t=dfmt(today());const tom=dfmt(new Date(Date.now()+864e5));const d2=dfmt(new Date(Date.now()+2*864e5));const yst7=dfmt(new Date(Date.now()-7*864e5));const yst2=dfmt(new Date(Date.now()-2*864e5));
   return[
     {id:uid(),type:'expense',title:'Condomínio',body:'Moradia',date:yst7,time:'',timeEnd:'',loc:'',done:false,tags:['Financeiro','AutoGest'],val:1571.39,sub:0,subDone:0},
-    {id:uid(),type:'task',title:'Pagar Claro',body:'Quando abrir o app, conteúdo do Instagram, texto que só pode...',date:yst2,time:'',timeEnd:'',loc:'',done:false,tags:['Financeiro'],val:0,sub:0,subDone:0,comments:1},
+    {id:uid(),type:'task',title:'Pagar Claro',body:'Quando abrir o app, conteúdo do Instagram...',date:yst2,time:'',timeEnd:'',loc:'',done:false,tags:['Financeiro'],val:0,sub:0,subDone:0,comments:1},
     {id:uid(),type:'task',title:'Manejem',body:'',date:yst2,time:'',timeEnd:'',loc:'',done:false,tags:[],val:0,sub:1,subDone:0,comments:1},
-    {id:uid(),type:'task',title:'Hajsjsjjwne',body:'',date:dfmt(new Date(Date.now()-11*864e5)),time:'',timeEnd:'',loc:'',done:false,tags:[],val:0,sub:1,subDone:0,comments:1},
-    {id:uid(),type:'task',title:'#anjwjkwkkjw',body:'',date:dfmt(new Date(Date.now()-3*864e5)),time:'',timeEnd:'',loc:'',done:false,tags:[],val:0,sub:0,subDone:0},
-    {id:uid(),type:'task',title:'Hhgbbbgg',body:'',date:tom,time:'',timeEnd:'',loc:'',done:false,tags:[],val:0,sub:0,subDone:0},
-    {id:uid(),type:'event',title:'Reunião de alinhamento',body:'Google Meet às 10h',date:tom,time:'10:00',timeEnd:'11:00',loc:'',done:false,tags:['Trabalho'],val:0,sub:0,subDone:0},
+    {id:uid(),type:'task',title:'Reunião de alinhamento',body:'Google Meet às 10h',date:tom,time:'10:00',timeEnd:'11:00',loc:'',done:false,tags:['Trabalho'],val:0,sub:0,subDone:0},
     {id:uid(),type:'note',title:'Ideias do projeto',body:'Novo layout mobile\nIntegração com API\nTestes A/B',date:t,time:'',timeEnd:'',loc:'',done:false,tags:['Trabalho'],val:0,sub:0,subDone:0},
     {id:uid(),type:'task',title:'Comprar medicamentos',body:'',date:d2,time:'08:00',timeEnd:'',loc:'',done:false,tags:['Saúde'],val:0,sub:0,subDone:0},
   ];
@@ -1711,90 +1337,59 @@ function demo(){
 // ══════════════════════════════════════════
 // DARK MODE
 function applyDark(){
-  const dark = S.dark;
-  document.documentElement.setAttribute('data-dark', dark ? '1' : '0');
-  // Set bg directly on html/body with !important via setProperty
-  const bg = dark ? '#000000' : '#ffffff';
-  document.documentElement.style.setProperty('background', bg, 'important');
-  document.documentElement.style.setProperty('background-color', bg, 'important');
-  document.body.style.setProperty('background', bg, 'important');
-  document.body.style.setProperty('background-color', bg, 'important');
-  document.getElementById('togDark')?.classList.toggle('on', dark);
-  // Moon → sun icon swap
-  const ico = document.getElementById('darkModeIcon');
+  const dark=S.dark;
+  document.documentElement.setAttribute('data-dark',dark?'1':'0');
+  const bg=dark?'#000000':'#ffffff';
+  document.documentElement.style.setProperty('background',bg,'important');
+  document.documentElement.style.setProperty('background-color',bg,'important');
+  document.body.style.setProperty('background',bg,'important');
+  document.body.style.setProperty('background-color',bg,'important');
+  // Update theme-color meta
+  const tc=document.getElementById('themeColor');
+  if(tc)tc.content=dark?'#000000':'#ffffff';
+  document.getElementById('togDark')?.classList.toggle('on',dark);
+  const ico=document.getElementById('darkModeIcon');
   if(ico){
-    ico.innerHTML = dark
-      ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3" stroke-linecap="round"/><line x1="12" y1="21" x2="12" y2="23" stroke-linecap="round"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke-linecap="round"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke-linecap="round"/><line x1="1" y1="12" x2="3" y2="12" stroke-linecap="round"/><line x1="21" y1="12" x2="23" y2="12" stroke-linecap="round"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke-linecap="round"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke-linecap="round"/>'
-      : '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
+    ico.innerHTML=dark
+      ?'<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3" stroke-linecap="round"/><line x1="12" y1="21" x2="12" y2="23" stroke-linecap="round"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke-linecap="round"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke-linecap="round"/><line x1="1" y1="12" x2="3" y2="12" stroke-linecap="round"/><line x1="21" y1="12" x2="23" y2="12" stroke-linecap="round"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke-linecap="round"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke-linecap="round"/>'
+      :'<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
   }
 }
 function toggleDark(){S.sys=false;S.dark=!S.dark;document.getElementById('togSys')?.classList.remove('on');applyDark();save();}
-function toggleSys(){
-  S.sys=!S.sys;document.getElementById('togSys').classList.toggle('on',S.sys);
-  if(S.sys){S.dark=window.matchMedia('(prefers-color-scheme:dark)').matches;applyDark();}
-  save();
-}
+function toggleSys(){S.sys=!S.sys;document.getElementById('togSys').classList.toggle('on',S.sys);if(S.sys){S.dark=window.matchMedia('(prefers-color-scheme:dark)').matches;applyDark();}save();}
 
 // ══════════════════════════════════════════
 // WEEK STRIP
 function buildWeek(){
   const strip=document.getElementById('weekStrip');
   const td=today();
-  // Start from Sunday of current week, then offset by N weeks
-  const sun=new Date(td);
-  sun.setHours(0,0,0,0);
-  sun.setDate(td.getDate()-td.getDay()); // Sunday of this week
-  const base=new Date(sun);
-  base.setDate(sun.getDate()+S.weekOffset*7); // + N weeks
-  // Month label with arrows
+  const sun=new Date(td);sun.setHours(0,0,0,0);sun.setDate(td.getDate()-td.getDay());
+  const base=new Date(sun);base.setDate(sun.getDate()+S.weekOffset*7);
   const monthEl=document.getElementById('monthLabel');
-  if(monthEl) monthEl.textContent=`${MO_ABBR[base.getMonth()]}. de ${base.getFullYear()}`;
+  if(monthEl)monthEl.textContent=`${MO_ABBR[base.getMonth()]}. de ${base.getFullYear()}`;
   strip.innerHTML='';
   for(let i=0;i<7;i++){
     const d=new Date(base);d.setDate(base.getDate()+i);
     const ds=dfmt(d);
-    const isT=ds===dfmt(td);
-    const isSel=ds===S.selDay;
-    const hasDot=S.items.some(x=>x.date===ds&&!x.done);
+    const isT=ds===dfmt(td),isSel=ds===S.selDay,hasDot=S.items.some(x=>x.date===ds&&!x.done);
     const col=document.createElement('div');
     col.className='wcol'+(isT?' today':'')+(isSel&&!isT?' sel':'')+(hasDot?' has-dot':'');
-    col.innerHTML=`<div class="wlabel">${DNAMES[d.getDay()]}</div>
-      <div class="wnum">${d.getDate()}</div>
-      <div class="wdot"></div>`;
+    col.innerHTML=`<div class="wlabel">${DNAMES[d.getDay()]}</div><div class="wnum">${d.getDate()}</div><div class="wdot"></div>`;
     col.onclick=()=>{S.selDay=ds;buildWeek();renderEmBreve();};
     strip.appendChild(col);
   }
-  // Add swipe support each rebuild (only once per strip)
   if(!strip._swipeSet){
-    strip._swipeSet=true;
-    let tx=0,ty=0;
+    strip._swipeSet=true;let tx=0,ty=0;
     strip.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
-    strip.addEventListener('touchend',e=>{
-      const dx=e.changedTouches[0].clientX-tx;
-      const dy=Math.abs(e.changedTouches[0].clientY-ty);
-      if(Math.abs(dx)>40&&dy<30) shiftWeek(dx<0?1:-1);
-    },{passive:true});
+    strip.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;const dy=Math.abs(e.changedTouches[0].clientY-ty);if(Math.abs(dx)>40&&dy<30)shiftWeek(dx<0?1:-1);},{passive:true});
   }
 }
 function shiftWeek(dir){
   S.weekOffset+=dir;
   const td=today();
-  if(S.weekOffset===0){
-    // Back to current week - select today
-    S.selDay=dfmt(td);
-  } else {
-    // Select first day of new week (Sunday)
-    const sun=new Date(td);
-    sun.setHours(0,0,0,0);
-    sun.setDate(td.getDate()-td.getDay()+S.weekOffset*7);
-    S.selDay=dfmt(sun);
-  }
+  if(S.weekOffset===0){S.selDay=dfmt(td);}
+  else{const sun=new Date(td);sun.setHours(0,0,0,0);sun.setDate(td.getDate()-td.getDay()+S.weekOffset*7);S.selDay=dfmt(sun);}
   buildWeek();renderEmBreve();
-}
-function toggleCalView(){
-  // Toggle between showing all days vs only selected day
-  S.filterByDay=!S.filterByDay;
-  renderEmBreve();
 }
 
 // ══════════════════════════════════════════
@@ -1805,235 +1400,110 @@ const SVG_SUB=`<svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path
 const SVG_CHK=`<svg class="chk-check" viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3.5 3.5 5.5-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const SVG_INB=`<svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1 8l2.5-5h7L13 8v3a1 1 0 01-1 1H2a1 1 0 01-1-1V8z" stroke="currentColor" stroke-width="1.2"/><path d="M1 8h3.5l1 2h3l1-2H13" stroke="currentColor" stroke-width="1.2"/></svg>`;
 
-// ── BUILD ITEM ROW ──
 function itemHTML(it,showDate=false){
-  const over=isOverdue(it);
-  let meta=[];
-
-  if(it.sub>0) meta.push(`<span class="meta-icon">${SVG_SUB} ${it.subDone||0}/${it.sub}</span>`);
-
-  if(it.date&&(showDate||over)){
-    const d=dparse(it.date);
-    const label=`${d.getDate()} ${MO_ABBR[d.getMonth()]}.`;
-    meta.push(`<span class="meta-icon ${over?'meta-date-red':''}">${SVG_CAL} ${label}</span>`);
-  } else if(it.time){
-    meta.push(`<span class="meta-icon">${SVG_CAL} ${it.time}${it.timeEnd?'–'+it.timeEnd:''}</span>`);
-  }
-  if(it.comments) meta.push(`<span class="meta-icon">${SVG_CHT} ${it.comments}</span>`);
-  if(it.alarm1>0) meta.push(`<span class="meta-icon">🔔 ${ALARM_LABELS[it.alarm1]}</span>`);
-  if(it.recur && it.recur!=='never') meta.push(`<span class="meta-icon">🔁 ${RECUR_OPTIONS.find(o=>o.val===it.recur)?.label||''}</span>`);
-  if(it.loc) meta.push(`<span class="meta-icon" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">📍 ${it.loc}</span>`);
-  if(it.url) meta.push(`<span class="meta-icon" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🔗 ${it.url}</span>`);
-
-  const tags=it.tags&&it.tags.length
-    ?it.tags.map(t=>`<span style="font-size:11px;padding:2px 8px;border-radius:20px;background:#f2f2f7;color:#636366;border:.5px solid #e5e5ea">${t}</span>`).join('')
-    :'';
-
+  const over=isOverdue(it);let meta=[];
+  if(it.sub>0)meta.push(`<span class="meta-icon">${SVG_SUB} ${it.subDone||0}/${it.sub}</span>`);
+  if(it.date&&(showDate||over)){const d=dparse(it.date);const label=`${d.getDate()} ${MO_ABBR[d.getMonth()]}.`;meta.push(`<span class="meta-icon ${over?'meta-date-red':''}">${SVG_CAL} ${label}</span>`);}
+  else if(it.time){meta.push(`<span class="meta-icon">${SVG_CAL} ${it.time}${it.timeEnd?'–'+it.timeEnd:''}</span>`);}
+  if(it.comments)meta.push(`<span class="meta-icon">${SVG_CHT} ${it.comments}</span>`);
+  if(it.alarm1>0)meta.push(`<span class="meta-icon">🔔 ${ALARM_LABELS[it.alarm1]}</span>`);
+  if(it.recur&&it.recur!=='never')meta.push(`<span class="meta-icon">🔁 ${RECUR_OPTIONS.find(o=>o.val===it.recur)?.label||''}</span>`);
+  if(it.loc)meta.push(`<span class="meta-icon" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">📍 ${it.loc}</span>`);
+  if(it.url)meta.push(`<span class="meta-icon" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🔗 ${it.url}</span>`);
+  const tags=it.tags&&it.tags.length?it.tags.map(t=>`<span style="font-size:11px;padding:2px 8px;border-radius:20px;background:#f2f2f7;color:#636366;border:.5px solid #e5e5ea">${t}</span>`).join(''):'';
   let notePreview='';
-  if(it.type==='note'&&it.body){
-    const lines=it.body.split('\n').slice(0,5).join('\n');
-    notePreview=`<div class="note-preview">${lines.replace(/\n/g,'<br>')}</div>`;
-  }
-  if(it.type==='expense'&&it.val){
-    meta.push(`<span class="meta-icon">R$ ${Number(it.val).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>`);
-  }
-  if(it.attachments&&it.attachments.length){
-    meta.push(`<span class="meta-icon">📎 ${it.attachments.length}</span>`);
-  }
-
-  // Cap meta to 4 items (so total with note/body = 5 lines)
+  if(it.type==='note'&&it.body){const lines=it.body.split('\n').slice(0,5).join('\n');notePreview=`<div class="note-preview">${lines.replace(/\n/g,'<br>')}</div>`;}
+  if(it.type==='expense'&&it.val)meta.push(`<span class="meta-icon">R$ ${Number(it.val).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>`);
+  if(it.attachments&&it.attachments.length)meta.push(`<span class="meta-icon">📎 ${it.attachments.length}</span>`);
   const metaToShow=meta.slice(0,4);
-
-  const leftEl = it.type === 'event'
-    ? `<div class="ev-ico" onclick="openEdit('${it.id}')">
-        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
-          <rect x="1" y="3" width="20" height="18" rx="3"/>
-          <path d="M1 8h20"/>
-          <path d="M7 1v4M15 1v4"/>
-          <text x="11" y="18" font-size="7" font-weight="600" text-anchor="middle" 
-            fill="currentColor" stroke="none">${it.date?new Date(it.date+'T12:00').getDate():''}</text>
-        </svg>
-      </div>`
-    : `<div class="chk ${it.done?'done':''}" onclick="toggleDone('${it.id}',event)">${SVG_CHK}</div>`;
-
-  return`<div class="item-row" id="row-${it.id}">
-    ${leftEl}
-    <div class="item-body" onclick="openEdit('${it.id}')">
-      <div class="item-title ${it.done?'done-text':''}">${it.title}</div>
-      ${it.body&&it.type!='note'?`<div class="item-note">${it.body}</div>`:''}
-      ${notePreview}
-      ${metaToShow.length?`<div class="item-subtitle">${metaToShow.join('')}</div>`:''}
-      ${tags?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${tags}</div>`:''}
-    </div>
-    <div class="item-right" onclick="openEdit('${it.id}')">
-      <span class="inbox-tag">Entrada</span>
-      <span class="inbox-icon">${SVG_INB}</span>
-    </div>
-  </div>`;
+  const leftEl=it.type==='event'
+    ?`<div class="ev-ico" onclick="openEdit('${it.id}')"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="1" y="3" width="20" height="18" rx="3"/><path d="M1 8h20"/><path d="M7 1v4M15 1v4"/><text x="11" y="18" font-size="7" font-weight="600" text-anchor="middle" fill="currentColor" stroke="none">${it.date?new Date(it.date+'T12:00').getDate():''}</text></svg></div>`
+    :`<div class="chk ${it.done?'done':''}" onclick="toggleDone('${it.id}',event)">${SVG_CHK}</div>`;
+  return`<div class="item-row" id="row-${it.id}">${leftEl}<div class="item-body" onclick="openEdit('${it.id}')"><div class="item-title ${it.done?'done-text':''}">${it.title}</div>${it.body&&it.type!='note'?`<div class="item-note">${it.body}</div>`:''}${notePreview}${metaToShow.length?`<div class="item-subtitle">${metaToShow.join('')}</div>`:''}${tags?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${tags}</div>`:''}</div><div class="item-right" onclick="openEdit('${it.id}')"><span class="inbox-tag">Entrada</span><span class="inbox-icon">${SVG_INB}</span></div></div>`;
 }
 
 // ══════════════════════════════════════════
 // RENDER EM BREVE
 function renderEmBreve(){
   const el=document.getElementById('scroll-embreve');
-  const td=today();
-  const todayStr=dfmt(td);
-  const selDay=S.selDay||todayStr;
-  const filterDay=selDay!==todayStr; // if a non-today day is selected, show only that day
-
+  const td=today(),todayStr=dfmt(td),selDay=S.selDay||todayStr,filterDay=selDay!==todayStr;
   const overdue=filterDay?[]:S.items.filter(x=>isOverdue(x));
   let h='';
-
-  // Overdue section (only when showing "all" / today)
   if(overdue.length&&!filterDay){
-    h+=`<div class="overdue-hdr">
-      <span class="overdue-hdr-title">Atrasada${overdue.length>1?'s':''}</span>
-      <div class="overdue-hdr-right" onclick="toggleOver()">
-        <span class="overdue-hdr-action">Reagendar</span>
-        <span class="overdue-hdr-chevron" id="overChev">⌄</span>
-      </div>
-    </div>
-    <div id="overItems">`;
-    overdue.forEach(it=>{ h+=itemHTML(it,true); });
+    h+=`<div class="overdue-hdr"><span class="overdue-hdr-title">Atrasada${overdue.length>1?'s':''}</span><div class="overdue-hdr-right" onclick="toggleOver()"><span class="overdue-hdr-action">Reagendar</span><span class="overdue-hdr-chevron" id="overChev">⌄</span></div></div><div id="overItems">`;
+    overdue.forEach(it=>{h+=itemHTML(it,true);});
     h+=`</div>`;
   }
-
   if(filterDay){
-    // Show only selected day
     const d=dparse(selDay);
     const dayItems=S.items.filter(x=>x.date===selDay&&!x.done).sort((a,b)=>(a.time||'99').localeCompare(b.time||'99'));
     const label=`${d.getDate()} ${MO_ABBR[d.getMonth()]}. · ${DOW_PT[d.getDay()]}`;
     h+=`<div class="sec-hdr bold">${label}</div>`;
-    if(dayItems.length){
-      dayItems.forEach(it=>{ h+=itemHTML(it,false); });
-    } else {
-      h+=`<div class="empty" style="padding:40px 20px"><div class="empty-icon">📅</div>
-        <div class="empty-t">Sem itens</div>
-        <div class="empty-s">Nenhum item neste dia.</div></div>`;
-    }
+    if(dayItems.length){dayItems.forEach(it=>{h+=itemHTML(it,false);});}
+    else{h+=`<div class="empty" style="padding:40px 20px"><div class="empty-icon">📅</div><div class="empty-t">Sem itens</div><div class="empty-s">Nenhum item neste dia.</div></div>`;}
   } else {
-    // Show upcoming 30 days
     for(let i=0;i<30;i++){
-      const d=new Date(td);d.setDate(td.getDate()+i);
-      const ds=dfmt(d);
+      const d=new Date(td);d.setDate(td.getDate()+i);const ds=dfmt(d);
       const dayItems=S.items.filter(x=>x.date===ds&&!isOverdue(x)&&!x.done);
       const isT=i===0,isTom=i===1;
       let label=`${d.getDate()} ${MO_ABBR[d.getMonth()]}.`;
-      if(isT)label+=' · Hoje';
-      else if(isTom)label+=' · Amanhã';
+      if(isT)label+=' · Hoje';else if(isTom)label+=' · Amanhã';
       label+=` · ${DOW_PT[d.getDay()]}`;
       const bold=dayItems.length>0||isT;
       h+=`<div class="sec-hdr ${bold?'bold':''}">${label}</div>`;
-      dayItems.forEach(it=>{ h+=itemHTML(it,false); });
+      dayItems.forEach(it=>{h+=itemHTML(it,false);});
     }
-    if(!overdue.length&&!S.items.some(x=>!isOverdue(x)&&x.date)){
-      h+=`<div class="empty"><div class="empty-icon">🎉</div>
-        <div class="empty-t">Tudo em dia</div>
-        <div class="empty-s">Nenhum item próximo.</div></div>`;
-    }
+    if(!overdue.length&&!S.items.some(x=>!isOverdue(x)&&x.date)){h+=`<div class="empty"><div class="empty-icon">🎉</div><div class="empty-t">Tudo em dia</div><div class="empty-s">Nenhum item próximo.</div></div>`;}
   }
-
+  h+=`<div style="height:110px"></div>`;
   const hdivider=el.querySelector('.hdivider');
-  if(hdivider){
-    let next=hdivider.nextSibling;
-    while(next){const tmp=next.nextSibling;el.removeChild(next);next=tmp;}
-    el.insertAdjacentHTML('beforeend',h);
-  } else {
-    el.innerHTML=h;
-  }
+  if(hdivider){let next=hdivider.nextSibling;while(next){const tmp=next.nextSibling;el.removeChild(next);next=tmp;}el.insertAdjacentHTML('beforeend',h);}
+  else{el.innerHTML=h;}
 }
-
 let overOpen=true;
-function toggleOver(){
-  overOpen=!overOpen;
-  const el=document.getElementById('overItems');
-  const ch=document.getElementById('overChev');
-  if(el)el.style.display=overOpen?'':'none';
-  if(ch)ch.style.transform=overOpen?'':'rotate(-90deg)';
-}
+function toggleOver(){overOpen=!overOpen;const el=document.getElementById('overItems');const ch=document.getElementById('overChev');if(el)el.style.display=overOpen?'':'none';if(ch)ch.style.transform=overOpen?'':'rotate(-90deg)';}
 
 // ══════════════════════════════════════════
 // RENDER HOJE
 function renderHoje(){
-  const el=document.getElementById('scroll-hoje');
-  const ds=dfmt(today());
-  const td=today();
+  const el=document.getElementById('scroll-hoje');const ds=dfmt(today());const td=today();
   const overdue=S.items.filter(x=>isOverdue(x)&&!x.done).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
   const todayItems=S.items.filter(x=>x.date===ds&&!x.done).sort((a,b)=>(a.time||'99').localeCompare(b.time||'99'));
-  let h=`<div class="sec-hdr bold" style="padding-top:14px">
-    ${td.getDate()} de ${MO_FULL[td.getMonth()]} · ${DOW_PT[td.getDay()]}
-  </div>`;
-  // Atrasadas
-  if(overdue.length){
-    h+=`<div class="overdue-hdr">
-      <span class="overdue-hdr-title">Atrasada${overdue.length>1?'s':''}</span>
-    </div>`;
-    overdue.forEach(it=>{ h+=itemHTML(it,true); });
-  }
-  // Hoje
-  if(todayItems.length){
-    if(overdue.length) h+=`<div class="sec-hdr bold" style="padding-top:14px;padding-bottom:2px">Hoje</div>`;
-    todayItems.forEach(it=>{ h+=itemHTML(it,false); });
-  }
-  if(!overdue.length&&!todayItems.length){
-    h+=`<div class="empty"><div class="empty-icon">☀️</div>
-      <div class="empty-t">Dia livre</div>
-      <div class="empty-s">Nenhum item para hoje.</div></div>`;
-  }
-  el.innerHTML=h;
+  let h=`<div class="sec-hdr bold" style="padding-top:14px">${td.getDate()} de ${MO_FULL[td.getMonth()]} · ${DOW_PT[td.getDay()]}</div>`;
+  if(overdue.length){h+=`<div class="overdue-hdr"><span class="overdue-hdr-title">Atrasada${overdue.length>1?'s':''}</span></div>`;overdue.forEach(it=>{h+=itemHTML(it,true);});}
+  if(todayItems.length){if(overdue.length)h+=`<div class="sec-hdr bold" style="padding-top:14px;padding-bottom:2px">Hoje</div>`;todayItems.forEach(it=>{h+=itemHTML(it,false);});}
+  if(!overdue.length&&!todayItems.length){h+=`<div class="empty"><div class="empty-icon">☀️</div><div class="empty-t">Dia livre</div><div class="empty-s">Nenhum item para hoje.</div></div>`;}
+  h+=`<div style="height:110px"></div>`;el.innerHTML=h;
 }
 
 // ══════════════════════════════════════════
 // RENDER ENTRADA
 function renderEntrada(){
-  const el=document.getElementById('scroll-entrada');
-  let items=[...S.items];
-  const f=S.filterE;
+  const el=document.getElementById('scroll-entrada');let items=[...S.items];const f=S.filterE;
   if(f==='overdue')items=items.filter(x=>isOverdue(x));
   else if(f==='today')items=items.filter(x=>isToday(x));
   else if(f==='done')items=items.filter(x=>x.done);
   else items=items.filter(x=>!x.done);
   items.sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.time||'').localeCompare(b.time||''));
   let h='';
-  if(!items.length){
-    h=`<div class="empty"><div class="empty-icon">📥</div>
-      <div class="empty-t">Entrada vazia</div>
-      <div class="empty-s">Adicione tarefas, eventos ou notas.</div></div>`;
-  } else {
-    items.forEach(it=>{ h+=itemHTML(it,true); });
-  }
-  el.innerHTML=h;
+  if(!items.length){h=`<div class="empty"><div class="empty-icon">📥</div><div class="empty-t">Entrada vazia</div><div class="empty-s">Adicione tarefas, eventos ou notas.</div></div>`;}
+  else{items.forEach(it=>{h+=itemHTML(it,true);});}
+  h+=`<div style="height:110px"></div>`;el.innerHTML=h;
 }
-function setFilter(el,f){
-  S.filterE=f;
-  document.querySelectorAll('#filter-entrada .tag-opt').forEach(x=>x.classList.remove('on'));
-  el.classList.add('on');
-  renderEntrada();
-}
+function setFilter(el,f){S.filterE=f;document.querySelectorAll('#filter-entrada .tag-opt').forEach(x=>x.classList.remove('on'));el.classList.add('on');renderEntrada();}
 
 // ══════════════════════════════════════════
 // RENDER NAVEGAR
 function renderNavegar(){
   const types={task:'Tarefas',event:'Eventos',note:'Notas',expense:'Despesas'};
   const icons={task:'✅',event:'📅',note:'📝',expense:'💰'};
-  const ng=document.getElementById('navGrid');
-  let h='';
-  Object.entries(types).forEach(([k,v])=>{
-    const count=S.items.filter(x=>x.type===k&&!x.done).length;
-    h+=`<div class="nav-card" onclick="filterNav('${k}')">
-      <div class="nav-card-icon">${icons[k]}</div>
-      <div class="nav-card-title">${v}</div>
-      <div class="nav-card-count">${count} item${count!==1?'s':''}</div>
-    </div>`;
-  });
+  const ng=document.getElementById('navGrid');let h='';
+  Object.entries(types).forEach(([k,v])=>{const count=S.items.filter(x=>x.type===k&&!x.done).length;h+=`<div class="nav-card" onclick="filterNav('${k}')"><div class="nav-card-icon">${icons[k]}</div><div class="nav-card-title">${v}</div><div class="nav-card-count">${count} item${count!==1?'s':''}</div></div>`;});
   ng.innerHTML=h;
 }
 function filterNav(type){
-  S.filterE=type;
-  document.querySelectorAll('#filter-entrada .tag-opt').forEach(x=>x.classList.remove('on'));
-  // custom filter: by type
-  S._typeFilter=type;
-  goPage('entrada');
+  S.filterE=type;document.querySelectorAll('#filter-entrada .tag-opt').forEach(x=>x.classList.remove('on'));
+  S._typeFilter=type;goPage('entrada');
   const el=document.getElementById('scroll-entrada');
   const items=S.items.filter(x=>x.type===type&&!x.done);
   if(!items.length){el.innerHTML=`<div class="empty"><div class="empty-icon">${{task:'✅',event:'📅',note:'📝',expense:'💰'}[type]}</div><div class="empty-t">Nenhum item</div></div>`;return;}
@@ -2059,958 +1529,345 @@ function goPage(p){
 // ALARM OPTIONS
 const ALARM_LABELS=['Nenhum','Na hora','5 min antes','10 min antes','15 min antes','30 min antes','1h antes','2h antes','1 dia antes'];
 const MONTHS_DRUM=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-const MONTHS_DRUM_FULL=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const ITEM_H=44;
 
-// ── Drum engine — iOS-identical with haptics ──────────────
-const ITEM_H = 44;
+function haptic(){if(navigator.vibrate)navigator.vibrate(4);}
 
-// Haptic: 1ms light pulse per tick — feels like iOS
-function haptic(){
-  if(navigator.vibrate) navigator.vibrate(4);
-}
-
-function buildDrum(colId, items, initIdx=0){
-  const col = document.getElementById(colId);
-  if(!col) return;
-  col.innerHTML =
-    '<div class="drum-spacer"></div>' +
-    items.map(v=>`<div class="drum-item">${v}</div>`).join('') +
-    '<div class="drum-spacer"></div>';
-  col._items = items;
-  col._lastIdx = Math.max(0, Math.min(initIdx, items.length-1));
-  col.scrollTop = col._lastIdx * ITEM_H;
-  _updateDrumHighlight(col, col._lastIdx);
-
-  let rafId, scrollEndTimer;
-  col.addEventListener('scroll', ()=>{
-    // Cancel previous snap timer
+function buildDrum(colId,items,initIdx=0){
+  const col=document.getElementById(colId);if(!col)return;
+  col.innerHTML='<div class="drum-spacer"></div>'+items.map(v=>`<div class="drum-item">${v}</div>`).join('')+'<div class="drum-spacer"></div>';
+  col._items=items;col._lastIdx=Math.max(0,Math.min(initIdx,items.length-1));
+  col.scrollTop=col._lastIdx*ITEM_H;_updateDrumHighlight(col,col._lastIdx);
+  let rafId,scrollEndTimer;
+  col.addEventListener('scroll',()=>{
     clearTimeout(scrollEndTimer);
-    // Highlight nearest item live while scrolling
-    if(rafId) cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(()=>{
-      const i = Math.round(col.scrollTop / ITEM_H);
-      _updateDrumHighlight(col, i);
-      // Haptic on each new index
-      if(i !== col._lastIdx){
-        haptic();
-        col._lastIdx = i;
-        onDrumChange(colId, i);
-        updateDrumDisplays();
-      }
+    if(rafId)cancelAnimationFrame(rafId);
+    rafId=requestAnimationFrame(()=>{
+      const i=Math.round(col.scrollTop/ITEM_H);_updateDrumHighlight(col,i);
+      if(i!==col._lastIdx){haptic();col._lastIdx=i;onDrumChange(colId,i);updateDrumDisplays();}
     });
-    // Snap after scroll ends
-    scrollEndTimer = setTimeout(()=>{
-      const i = Math.round(col.scrollTop / ITEM_H);
-      const clamped = Math.max(0, Math.min(i, (col._items||[]).length-1));
-      col.scrollTo({top: clamped * ITEM_H, behavior:'smooth'});
-      _updateDrumHighlight(col, clamped);
-      col._lastIdx = clamped;
-    }, 80);
-  }, {passive:true});
+    scrollEndTimer=setTimeout(()=>{
+      const i=Math.round(col.scrollTop/ITEM_H);const clamped=Math.max(0,Math.min(i,(col._items||[]).length-1));
+      col.scrollTo({top:clamped*ITEM_H,behavior:'smooth'});_updateDrumHighlight(col,clamped);col._lastIdx=clamped;
+    },80);
+  },{passive:true});
 }
 
-function _updateDrumHighlight(col, activeIdx){
-  const items = col.querySelectorAll('.drum-item');
-  items.forEach((el, i)=>{
-    const dist = Math.abs(i - activeIdx);
-    if(dist === 0){
-      el.style.opacity = '1';
-      el.style.fontSize = '22px';
-      el.style.fontWeight = '400';
-      el.style.color = '';
-    } else if(dist === 1){
-      el.style.opacity = '.55';
-      el.style.fontSize = '20px';
-      el.style.fontWeight = '300';
-      el.style.color = '';
-    } else if(dist === 2){
-      el.style.opacity = '.25';
-      el.style.fontSize = '18px';
-      el.style.fontWeight = '300';
-    } else {
-      el.style.opacity = '.1';
-      el.style.fontSize = '16px';
-      el.style.fontWeight = '300';
-    }
+function _updateDrumHighlight(col,activeIdx){
+  const items=col.querySelectorAll('.drum-item');
+  items.forEach((el,i)=>{
+    const dist=Math.abs(i-activeIdx);
+    if(dist===0){el.style.opacity='1';el.style.fontSize='22px';el.style.fontWeight='400';el.style.color='';}
+    else if(dist===1){el.style.opacity='.55';el.style.fontSize='20px';el.style.fontWeight='300';el.style.color='';}
+    else if(dist===2){el.style.opacity='.25';el.style.fontSize='18px';el.style.fontWeight='300';}
+    else{el.style.opacity='.1';el.style.fontSize='16px';el.style.fontWeight='300';}
   });
 }
 
-function getDrumIdx(colId){
-  const col = document.getElementById(colId);
-  return col ? Math.round(col.scrollTop / ITEM_H) : 0;
-}
+function getDrumIdx(colId){const col=document.getElementById(colId);return col?Math.round(col.scrollTop/ITEM_H):0;}
+function setDrumIdx(colId,idx){const col=document.getElementById(colId);if(!col)return;const safe=Math.max(0,idx);setTimeout(()=>{col.scrollTop=safe*ITEM_H;col._lastIdx=safe;_updateDrumHighlight(col,safe);},40);}
+function daysInMonth(m,y){return new Date(y,m+1,0).getDate();}
 
-function setDrumIdx(colId, idx){
-  const col = document.getElementById(colId);
-  if(!col) return;
-  const safe = Math.max(0, idx);
-  // Use timeout to ensure DOM is laid out
-  setTimeout(()=>{
-    col.scrollTop = safe * ITEM_H;
-    col._lastIdx = safe;
-    _updateDrumHighlight(col, safe);
-  }, 40);
-}
-
-function daysInMonth(m,y){ return new Date(y, m+1, 0).getDate(); }
-
-// DR: shared date state
-let DR={day:1,mo:0,yr:2026,h:8,mi:0,
-  eh:9,emi:0,esd:1,esm:0,esy:2026,esh:8,esn:0,
-  eed:1,eem:0,eey:2026,eeh:9,een:0,
-  xd:1,xm:0,xy:2026,
-  alarm1:0,alarm2:0,ealarm1:0,ealarm2:0};
-
-// ── Event & Expense calendar states ──────
-let ECAL = {
-  start: { viewY:2026, viewM:0, selY:2026, selM:0, selD:1 },
-  end:   { viewY:2026, viewM:0, selY:2026, selM:0, selD:1 },
-  x:     { viewY:2026, viewM:0, selY:2026, selM:0, selD:1 },
-};
+let DR={day:1,mo:0,yr:2026,h:8,mi:0,eh:9,emi:0,esd:1,esm:0,esy:2026,esh:8,esn:0,eed:1,eem:0,eey:2026,eeh:9,een:0,xd:1,xm:0,xy:2026,alarm1:0,alarm2:0,ealarm1:0,ealarm2:0};
+let ECAL={start:{viewY:2026,viewM:0,selY:2026,selM:0,selD:1},end:{viewY:2026,viewM:0,selY:2026,selM:0,selD:1},x:{viewY:2026,viewM:0,selY:2026,selM:0,selD:1}};
 
 function initEventCals(){
-  const td = today();
-  ['start','end','x'].forEach(k=>{
-    ECAL[k] = { viewY:td.getFullYear(), viewM:td.getMonth(),
-      selY:td.getFullYear(), selM:td.getMonth(), selD:td.getDate() };
-  });
-  renderEventCal('start');
-  renderEventCal('end');
-  renderXCal();
-  updateEventPills();
-  updateXDateLabel();
+  const td=today();
+  ['start','end','x'].forEach(k=>{ECAL[k]={viewY:td.getFullYear(),viewM:td.getMonth(),selY:td.getFullYear(),selM:td.getMonth(),selD:td.getDate()};});
+  renderEventCal('start');renderEventCal('end');renderXCal();updateEventPills();updateXDateLabel();
 }
 
+const MO_CAL_PT=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+const MO_CAL_ABBR=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
 function renderEventCal(which){
-  const state = ECAL[which];
-  const td = today();
-  const lbl = document.getElementById(which==='start'?'eStartMonthLabel':'eEndMonthLabel');
-  if(lbl) lbl.textContent = `${MO_CAL_PT[state.viewM]} de ${state.viewY}`;
-  const grid = document.getElementById(which==='start'?'eStartGrid':'eEndGrid');
-  if(!grid) return;
-  const firstDay = new Date(state.viewY, state.viewM, 1).getDay();
-  const daysInM = new Date(state.viewY, state.viewM+1, 0).getDate();
-  let html = '';
-  for(let i=0;i<firstDay;i++) html+='<div class="cal-day empty"></div>';
+  const state=ECAL[which];const td=today();
+  const lbl=document.getElementById(which==='start'?'eStartMonthLabel':'eEndMonthLabel');
+  if(lbl)lbl.textContent=`${MO_CAL_PT[state.viewM]} de ${state.viewY}`;
+  const grid=document.getElementById(which==='start'?'eStartGrid':'eEndGrid');if(!grid)return;
+  const firstDay=new Date(state.viewY,state.viewM,1).getDay();const daysInM=new Date(state.viewY,state.viewM+1,0).getDate();
+  let html='';
+  for(let i=0;i<firstDay;i++)html+='<div class="cal-day empty"></div>';
   for(let d=1;d<=daysInM;d++){
     const isToday=(d===td.getDate()&&state.viewM===td.getMonth()&&state.viewY===td.getFullYear());
     const isSel=(d===state.selD&&state.viewM===state.selM&&state.viewY===state.selY);
     html+=`<div class="cal-day${isToday?' today':''}${isSel?' selected':''}" onclick="selEventCalDay('${which}',${d})">${d}</div>`;
   }
-  grid.innerHTML = html;
-}
-
-function selEventCalDay(which, d){
-  const state = ECAL[which];
-  state.selD=d; state.selM=state.viewM; state.selY=state.viewY;
-  if(which==='start'){
-    DR.esd=d; DR.esm=state.viewM; DR.esy=state.viewY;
-    // Close cal, keep time open or close both
-    document.getElementById('pk-estart-cal')?.classList.remove('open');
-  } else {
-    DR.eed=d; DR.eem=state.viewM; DR.eey=state.viewY;
-    document.getElementById('pk-eend-cal')?.classList.remove('open');
-  }
-  haptic();
-  renderEventCal(which);
-  updateEventPills();
-}
-
-function shiftEventCal(which, dir){
-  const state = ECAL[which];
-  state.viewM += dir;
-  if(state.viewM>11){state.viewM=0;state.viewY++;}
-  if(state.viewM<0){state.viewM=11;state.viewY--;}
-  haptic();
-  renderEventCal(which);
-}
-
-function toggleEventMonthDrum(which){ /* future: month/year drum */ }
-
-function tapEventPicker(which){
-  // Close all event pickers first
-  ['pk-estart-cal','pk-estart-time','pk-eend-cal','pk-eend-time'].forEach(id=>{
-    document.getElementById(id)?.classList.remove('open');
-  });
-  // Determine which pill was tapped (date or time) based on last tap
-  // Default: open calendar
-  if(which==='start'){
-    document.getElementById('pk-estart-cal')?.classList.add('open');
-  } else {
-    document.getElementById('pk-eend-cal')?.classList.add('open');
-  }
-}
-
-function tapEventPill(which, part){
-  // part = 'date' or 'time'
-  const calId = `pk-e${which}-cal`;
-  const timeId = `pk-e${which}-time`;
-  const otherCal = which==='start'?'pk-eend-cal':'pk-estart-cal';
-  const otherTime = which==='start'?'pk-eend-time':'pk-estart-time';
-  // Close others
-  [otherCal, otherTime].forEach(id=>document.getElementById(id)?.classList.remove('open'));
-  const pkId = part==='date' ? calId : timeId;
-  const pk = document.getElementById(pkId);
-  if(!pk) return;
-  const wasOpen = pk.classList.contains('open');
-  // Close the sibling too
-  document.getElementById(part==='date'?timeId:calId)?.classList.remove('open');
-  pk.classList.toggle('open', !wasOpen);
-  haptic();
-}
-
-function updateEventPills(){
-  const p2x = n=>String(n).padStart(2,'0');
-  const df=(d,m,y)=>`${d} ${MO_CAL_ABBR[m]} ${y}`;
-  const tf=(h,mi)=>`${p2x(h)}:${p2x(mi*5)}`;
-  const sd=document.getElementById('pill-sdate');
-  const st=document.getElementById('pill-stime');
-  const ed=document.getElementById('pill-edate');
-  const et=document.getElementById('pill-etime');
-  if(sd) sd.textContent=df(ECAL.start.selD,ECAL.start.selM,ECAL.start.selY);
-  if(st) st.textContent=tf(DR.esh,DR.esn);
-  if(ed) ed.textContent=df(ECAL.end.selD,ECAL.end.selM,ECAL.end.selY);
-  if(et) et.textContent=tf(DR.eeh,DR.een);
-}
-
-// ── Expense calendar ──────────────────────
-function renderXCal(){
-  const state = ECAL.x;
-  const td = today();
-  const lbl = document.getElementById('xCalMonthLabel');
-  if(lbl) lbl.textContent = `${MO_CAL_PT[state.viewM]} de ${state.viewY}`;
-  const grid = document.getElementById('xCalGrid');
-  if(!grid) return;
-  const firstDay = new Date(state.viewY, state.viewM, 1).getDay();
-  const daysInM = new Date(state.viewY, state.viewM+1, 0).getDate();
-  let html='';
-  for(let i=0;i<firstDay;i++) html+='<div class="cal-day empty"></div>';
-  for(let d=1;d<=daysInM;d++){
-    const isToday=(d===td.getDate()&&state.viewM===td.getMonth()&&state.viewY===td.getFullYear());
-    const isSel=(d===state.selD&&state.viewM===state.selM&&state.viewY===state.selY);
-    html+=`<div class="cal-day${isToday?' today':''}${isSel?' selected':''}" onclick="selXCalDay(${d})">${d}</div>`;
-  }
   grid.innerHTML=html;
 }
-
-function selXCalDay(d){
-  ECAL.x.selD=d; ECAL.x.selM=ECAL.x.viewM; ECAL.x.selY=ECAL.x.viewY;
-  DR.xd=d; DR.xm=ECAL.x.viewM; DR.xy=ECAL.x.viewY;
-  haptic();
-  renderXCal();
-  updateXDateLabel();
-  document.getElementById('pk-xdate')?.classList.remove('open');
+function selEventCalDay(which,d){
+  const state=ECAL[which];state.selD=d;state.selM=state.viewM;state.selY=state.viewY;
+  if(which==='start'){DR.esd=d;DR.esm=state.viewM;DR.esy=state.viewY;document.getElementById('pk-estart-cal')?.classList.remove('open');}
+  else{DR.eed=d;DR.eem=state.viewM;DR.eey=state.viewY;document.getElementById('pk-eend-cal')?.classList.remove('open');}
+  haptic();renderEventCal(which);updateEventPills();
 }
-
-function shiftXCal(dir){
-  ECAL.x.viewM+=dir;
-  if(ECAL.x.viewM>11){ECAL.x.viewM=0;ECAL.x.viewY++;}
-  if(ECAL.x.viewM<0){ECAL.x.viewM=11;ECAL.x.viewY--;}
-  haptic();
-  renderXCal();
+function shiftEventCal(which,dir){
+  const state=ECAL[which];state.viewM+=dir;
+  if(state.viewM>11){state.viewM=0;state.viewY++;}if(state.viewM<0){state.viewM=11;state.viewY--;}
+  haptic();renderEventCal(which);
 }
-
-function tapExpenseCal(){
-  const pk=document.getElementById('pk-xdate');
-  if(!pk)return;
-  pk.classList.toggle('open');
+function toggleEventMonthDrum(which){}
+function tapEventPill(which,part){
+  const calId=`pk-e${which}-cal`,timeId=`pk-e${which}-time`;
+  const otherCal=which==='start'?'pk-eend-cal':'pk-estart-cal',otherTime=which==='start'?'pk-eend-time':'pk-estart-time';
+  [otherCal,otherTime].forEach(id=>document.getElementById(id)?.classList.remove('open'));
+  const pkId=part==='date'?calId:timeId;const pk=document.getElementById(pkId);if(!pk)return;
+  const wasOpen=pk.classList.contains('open');document.getElementById(part==='date'?timeId:calId)?.classList.remove('open');
+  pk.classList.toggle('open',!wasOpen);haptic();
 }
-
-function toggleExpMonthDrum(){ /* future */ }
-
-function updateXDateLabel(){
-  const td=today();
-  const s=ECAL.x;
-  const isToday=(s.selD===td.getDate()&&s.selM===td.getMonth()&&s.selY===td.getFullYear());
-  const lbl=document.getElementById('disp-xdate');
-  if(lbl) lbl.textContent=isToday?'Hoje':`${s.selD} ${MO_CAL_ABBR[s.selM]} ${s.selY}`;
+function updateEventPills(){
+  const p2x=n=>String(n).padStart(2,'0');
+  const df=(d,m,y)=>`${d} ${MO_CAL_ABBR[m]} ${y}`;const tf=(h,mi)=>`${p2x(h)}:${p2x(mi*5)}`;
+  const sd=document.getElementById('pill-sdate'),st=document.getElementById('pill-stime');
+  const ed=document.getElementById('pill-edate'),et=document.getElementById('pill-etime');
+  if(sd)sd.textContent=df(ECAL.start.selD,ECAL.start.selM,ECAL.start.selY);
+  if(st)st.textContent=tf(DR.esh,DR.esn);
+  if(ed)ed.textContent=df(ECAL.end.selD,ECAL.end.selM,ECAL.end.selY);
+  if(et)et.textContent=tf(DR.eeh,DR.een);
 }
-
-let CAL = { viewY: 2026, viewM: 0, selY: 2026, selM: 0, selD: 1 };
-
-function initCalendar(){
-  const td = today();
-  CAL.viewY = td.getFullYear(); CAL.viewM = td.getMonth();
-  CAL.selY = td.getFullYear(); CAL.selM = td.getMonth(); CAL.selD = td.getDate();
-  renderCalGrid();
-  updateDateLabel();
+function renderXCal(){
+  const state=ECAL.x;const td=today();
+  const lbl=document.getElementById('xCalMonthLabel');if(lbl)lbl.textContent=`${MO_CAL_PT[state.viewM]} de ${state.viewY}`;
+  const grid=document.getElementById('xCalGrid');if(!grid)return;
+  const firstDay=new Date(state.viewY,state.viewM,1).getDay();const daysInM=new Date(state.viewY,state.viewM+1,0).getDate();
+  let html='';for(let i=0;i<firstDay;i++)html+='<div class="cal-day empty"></div>';
+  for(let d=1;d<=daysInM;d++){const isToday=(d===td.getDate()&&state.viewM===td.getMonth()&&state.viewY===td.getFullYear());const isSel=(d===state.selD&&state.viewM===state.selM&&state.viewY===state.selY);html+=`<div class="cal-day${isToday?' today':''}${isSel?' selected':''}" onclick="selXCalDay(${d})">${d}</div>`;}
+  grid.innerHTML=html;
 }
+function selXCalDay(d){ECAL.x.selD=d;ECAL.x.selM=ECAL.x.viewM;ECAL.x.selY=ECAL.x.viewY;DR.xd=d;DR.xm=ECAL.x.viewM;DR.xy=ECAL.x.viewY;haptic();renderXCal();updateXDateLabel();document.getElementById('pk-xdate')?.classList.remove('open');}
+function shiftXCal(dir){ECAL.x.viewM+=dir;if(ECAL.x.viewM>11){ECAL.x.viewM=0;ECAL.x.viewY++;}if(ECAL.x.viewM<0){ECAL.x.viewM=11;ECAL.x.viewY--;}haptic();renderXCal();}
+function tapExpenseCal(){const pk=document.getElementById('pk-xdate');if(!pk)return;pk.classList.toggle('open');}
+function toggleExpMonthDrum(){}
+function updateXDateLabel(){const td=today();const s=ECAL.x;const isToday=(s.selD===td.getDate()&&s.selM===td.getMonth()&&s.selY===td.getFullYear());const lbl=document.getElementById('disp-xdate');if(lbl)lbl.textContent=isToday?'Hoje':`${s.selD} ${MO_CAL_ABBR[s.selM]} ${s.selY}`;}
 
-const MO_CAL_PT = ['janeiro','fevereiro','março','abril','maio','junho',
-  'julho','agosto','setembro','outubro','novembro','dezembro'];
-const MO_CAL_ABBR = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-
+let CAL={viewY:2026,viewM:0,selY:2026,selM:0,selD:1};
+function initCalendar(){const td=today();CAL.viewY=td.getFullYear();CAL.viewM=td.getMonth();CAL.selY=td.getFullYear();CAL.selM=td.getMonth();CAL.selD=td.getDate();renderCalGrid();updateDateLabel();}
 function renderCalGrid(){
-  const lbl = document.getElementById('calMonthLabel');
-  if(lbl) lbl.textContent = `${MO_CAL_PT[CAL.viewM]} de ${CAL.viewY}`;
-  const grid = document.getElementById('calGrid');
-  if(!grid) return;
-  const td = today();
-  const firstDay = new Date(CAL.viewY, CAL.viewM, 1).getDay(); // 0=Sun
-  const daysInM = new Date(CAL.viewY, CAL.viewM+1, 0).getDate();
-  let html = '';
-  // Leading empty cells
-  for(let i=0; i<firstDay; i++) html += '<div class="cal-day empty"></div>';
-  // Day cells
-  for(let d=1; d<=daysInM; d++){
-    const isToday = (d===td.getDate()&&CAL.viewM===td.getMonth()&&CAL.viewY===td.getFullYear());
-    const isSel = (d===CAL.selD&&CAL.viewM===CAL.selM&&CAL.viewY===CAL.selY);
-    html += `<div class="cal-day${isToday?' today':''}${isSel?' selected':''}" onclick="selCalDay(${d})">${d}</div>`;
-  }
-  grid.innerHTML = html;
+  const lbl=document.getElementById('calMonthLabel');if(lbl)lbl.textContent=`${MO_CAL_PT[CAL.viewM]} de ${CAL.viewY}`;
+  const grid=document.getElementById('calGrid');if(!grid)return;
+  const td=today();const firstDay=new Date(CAL.viewY,CAL.viewM,1).getDay();const daysInM=new Date(CAL.viewY,CAL.viewM+1,0).getDate();
+  let html='';for(let i=0;i<firstDay;i++)html+='<div class="cal-day empty"></div>';
+  for(let d=1;d<=daysInM;d++){const isToday=(d===td.getDate()&&CAL.viewM===td.getMonth()&&CAL.viewY===td.getFullYear());const isSel=(d===CAL.selD&&CAL.viewM===CAL.selM&&CAL.viewY===CAL.selY);html+=`<div class="cal-day${isToday?' today':''}${isSel?' selected':''}" onclick="selCalDay(${d})">${d}</div>`;}
+  grid.innerHTML=html;
 }
-
-function selCalDay(d){
-  CAL.selD = d; CAL.selM = CAL.viewM; CAL.selY = CAL.viewY;
-  DR.day = d; DR.mo = CAL.viewM; DR.yr = CAL.viewY;
-  haptic();
-  renderCalGrid();
-  updateDateLabel();
-  updateDrumDisplays();
-  // Close calendar after selection — like iOS
-  const pk = document.getElementById('pk-tdate');
-  if(pk) pk.classList.remove('open');
-  // Don't turn off the toggle — date stays selected, just picker collapses
-}
-
-function shiftCalMonth(dir){
-  CAL.viewM += dir;
-  if(CAL.viewM > 11){ CAL.viewM = 0; CAL.viewY++; }
-  if(CAL.viewM < 0){ CAL.viewM = 11; CAL.viewY--; }
-  haptic();
-  renderCalGrid();
-}
-
-function toggleMonthDrum(){
-  const pk = document.getElementById('pk-cal-my');
-  if(!pk) return;
-  const open = pk.style.display !== 'none';
-  pk.style.display = open ? 'none' : '';
-  if(!open){
-    // Build month/year drums
-    const yrs = [];
-    for(let y=CAL.viewY-5; y<=CAL.viewY+10; y++) yrs.push(String(y));
-    buildDrum('dc-cal-month', MO_CAL_ABBR, CAL.viewM);
-    buildDrum('dc-cal-year', yrs, 5);
-  }
-}
-
-function updateDateLabel(){
-  const td = today();
-  const lbl = document.getElementById('disp-date-lbl');
-  if(!lbl) return;
-  const isToday = CAL.selD===td.getDate()&&CAL.selM===td.getMonth()&&CAL.selY===td.getFullYear();
-  lbl.textContent = isToday ? 'Hoje' : `${CAL.selD} de ${MO_CAL_PT[CAL.selM]}`;
-}
-
-function updateTimeLabel(){
-  const lbl = document.getElementById('disp-time-lbl');
-  if(lbl) lbl.textContent = `${p2(DR.h)}:${p2(DR.mi*5)}`;
-}
+function selCalDay(d){CAL.selD=d;CAL.selM=CAL.viewM;CAL.selY=CAL.viewY;DR.day=d;DR.mo=CAL.viewM;DR.yr=CAL.viewY;haptic();renderCalGrid();updateDateLabel();updateDrumDisplays();const pk=document.getElementById('pk-tdate');if(pk)pk.classList.remove('open');}
+function shiftCalMonth(dir){CAL.viewM+=dir;if(CAL.viewM>11){CAL.viewM=0;CAL.viewY++;}if(CAL.viewM<0){CAL.viewM=11;CAL.viewY--;}haptic();renderCalGrid();}
+function toggleMonthDrum(){const pk=document.getElementById('pk-cal-my');if(!pk)return;const open=pk.style.display!=='none';pk.style.display=open?'none':'';if(!open){const yrs=[];for(let y=CAL.viewY-5;y<=CAL.viewY+10;y++)yrs.push(String(y));buildDrum('dc-cal-month',MO_CAL_ABBR,CAL.viewM);buildDrum('dc-cal-year',yrs,5);}}
+function updateDateLabel(){const td=today();const lbl=document.getElementById('disp-date-lbl');if(!lbl)return;const isToday=CAL.selD===td.getDate()&&CAL.selM===td.getMonth()&&CAL.selY===td.getFullYear();lbl.textContent=isToday?'Hoje':`${CAL.selD} de ${MO_CAL_PT[CAL.selM]}`;}
+function updateTimeLabel(){const lbl=document.getElementById('disp-time-lbl');if(lbl)lbl.textContent=`${p2(DR.h)}:${p2(DR.mi*5)}`;}
 
 function initDrums(){
-  const td = today();
+  const td=today();
   DR.esd=td.getDate();DR.esm=td.getMonth();DR.esy=td.getFullYear();DR.esh=8;DR.esn=0;
   DR.eed=td.getDate();DR.eem=td.getMonth();DR.eey=td.getFullYear();DR.eeh=9;DR.een=0;
   DR.xd=td.getDate();DR.xm=td.getMonth();DR.xy=td.getFullYear();
-  DR.alarm1=0;DR.alarm2=0;DR.ealarm1=0;DR.ealarm2=0;
-  DR.h=8;DR.mi=0; // mi = index into 5-min array (0=00, 1=05, 2=10...)
-
-  const yrs=[];for(let y=td.getFullYear()-2;y<=td.getFullYear()+10;y++)yrs.push(String(y));
-  const hrs = Array.from({length:24},(_,i)=>p2(i));
-  // Minutes in steps of 5
-  const mins5 = Array.from({length:12},(_,i)=>p2(i*5));
-
-  // Time drums (no date drums anymore — date uses calendar)
-  buildDrum('dc-hour', hrs, DR.h);
-  buildDrum('dc-min', mins5, DR.mi);
-  buildDrum('dc-alarm1', ALARM_LABELS, 0);
-  buildDrum('dc-alarm2', ALARM_LABELS, 0);
-
-  // Event drums (time only — date uses calendar)
-  buildDrum('dc-esh', hrs, DR.esh);
-  buildDrum('dc-esn', mins5, DR.esn);
-  buildDrum('dc-eeh', hrs, DR.eeh);
-  buildDrum('dc-een', mins5, DR.een);
-  buildDrum('dc-ealarm1', ALARM_LABELS, 0);
-  buildDrum('dc-ealarm2', ALARM_LABELS, 0);
-
-  // Expense — date uses calendar, no drums needed
-
-  initCalendar();
-  initEventCals();
-  updateDrumDisplays();
+  DR.alarm1=0;DR.alarm2=0;DR.ealarm1=0;DR.ealarm2=0;DR.h=8;DR.mi=0;
+  const hrs=Array.from({length:24},(_,i)=>p2(i));const mins5=Array.from({length:12},(_,i)=>p2(i*5));
+  buildDrum('dc-hour',hrs,DR.h);buildDrum('dc-min',mins5,DR.mi);
+  buildDrum('dc-alarm1',ALARM_LABELS,0);buildDrum('dc-alarm2',ALARM_LABELS,0);
+  buildDrum('dc-esh',hrs,DR.esh);buildDrum('dc-esn',mins5,DR.esn);
+  buildDrum('dc-eeh',hrs,DR.eeh);buildDrum('dc-een',mins5,DR.een);
+  buildDrum('dc-ealarm1',ALARM_LABELS,0);buildDrum('dc-ealarm2',ALARM_LABELS,0);
+  initCalendar();initEventCals();updateDrumDisplays();
 }
-
 function onDrumChange(id,idx){
-  if(id==='dc-day')DR.day=idx+1;
-  else if(id==='dc-month'){DR.mo=idx;buildDrum('dc-day',Array.from({length:daysInMonth(DR.mo,DR.yr)},(_,i)=>String(i+1)),DR.day-1);}
-  else if(id==='dc-year')DR.yr=2026-2+idx;
-  else if(id==='dc-hour')DR.h=idx;
-  else if(id==='dc-min')DR.mi=idx;
-  else if(id==='dc-alarm1')DR.alarm1=idx;
-  else if(id==='dc-alarm2')DR.alarm2=idx;
-  else if(id==='dc-esh'){DR.esh=idx;updateEventPills();}
-  else if(id==='dc-esn'){DR.esn=idx;updateEventPills();}
-  else if(id==='dc-eeh'){DR.eeh=idx;updateEventPills();}
-  else if(id==='dc-een'){DR.een=idx;updateEventPills();}
-  else if(id==='dc-ealarm1')DR.ealarm1=idx;
-  else if(id==='dc-ealarm2')DR.ealarm2=idx;
-  // expense date now uses ECAL.x calendar, no drum handlers needed
-  // updateDrumDisplays called by scroll handler
+  if(id==='dc-hour')DR.h=idx;else if(id==='dc-min')DR.mi=idx;
+  else if(id==='dc-alarm1')DR.alarm1=idx;else if(id==='dc-alarm2')DR.alarm2=idx;
+  else if(id==='dc-esh'){DR.esh=idx;updateEventPills();}else if(id==='dc-esn'){DR.esn=idx;updateEventPills();}
+  else if(id==='dc-eeh'){DR.eeh=idx;updateEventPills();}else if(id==='dc-een'){DR.een=idx;updateEventPills();}
+  else if(id==='dc-ealarm1')DR.ealarm1=idx;else if(id==='dc-ealarm2')DR.ealarm2=idx;
 }
-
 function updateDrumDisplays(){
   const el=id=>document.getElementById(id);
   if(el('disp-alarm1'))el('disp-alarm1').textContent=ALARM_LABELS[DR.alarm1]||'Nenhum';
   if(el('disp-alarm2'))el('disp-alarm2').textContent=ALARM_LABELS[DR.alarm2]||'Nenhum';
   if(el('disp-ealarm1'))el('disp-ealarm1').textContent=ALARM_LABELS[DR.ealarm1]||'Nenhum';
   if(el('disp-ealarm2'))el('disp-ealarm2').textContent=ALARM_LABELS[DR.ealarm2]||'Nenhum';
-  if(typeof updateEventPills==='function') updateEventPills();
-  if(typeof updateXDateLabel==='function') updateXDateLabel();
+  if(typeof updateEventPills==='function')updateEventPills();
+  if(typeof updateXDateLabel==='function')updateXDateLabel();
 }
 
-// ── Toggle helpers (new drum-picker CSS transition) ──
-function openDrum(pkId){
-  const pk=document.getElementById(pkId);
-  if(pk)pk.classList.add('open');
-}
-function closeDrum(pkId){
-  const pk=document.getElementById(pkId);
-  if(pk)pk.classList.remove('open');
-}
-function tapToggle(togId, pkId){
-  const tog = document.getElementById(togId);
-  const pk  = document.getElementById(pkId);
-  if(!tog) return;
-
-  const alreadyOpen = pk && pk.classList.contains('open');
-
-  // Row tap: if picker already open → collapse it (scroll past)
-  // Row tap: if picker closed → open it
-  if(alreadyOpen){
-    pk.classList.remove('open');
-    return;
-  }
-
-  // Opening: turn toggle on, close sibling picker
+function openDrum(pkId){const pk=document.getElementById(pkId);if(pk)pk.classList.add('open');}
+function closeDrum(pkId){const pk=document.getElementById(pkId);if(pk)pk.classList.remove('open');}
+function tapToggle(togId,pkId){
+  const tog=document.getElementById(togId);const pk=document.getElementById(pkId);if(!tog)return;
+  const alreadyOpen=pk&&pk.classList.contains('open');
+  if(alreadyOpen){pk.classList.remove('open');return;}
   tog.classList.add('on');
-  if(togId==='tog-date'){
-    document.getElementById('pk-ttime')?.classList.remove('open');
-  } else if(togId==='tog-time'){
-    document.getElementById('pk-tdate')?.classList.remove('open');
-  }
-  if(pk) pk.classList.add('open');
-
-  // Blue subtitle
-  if(togId==='tog-date'){
-    const sub = document.getElementById('disp-date-lbl');
-    if(sub){ sub.style.display=''; updateDateLabel(); }
-  }
-  if(togId==='tog-time'){
-    const sub = document.getElementById('disp-time-lbl');
-    if(sub){ sub.style.display=''; updateTimeLabel(); }
-    // Auto-enable date if not on
-    if(!document.getElementById('tog-date')?.classList.contains('on')){
-      document.getElementById('tog-date')?.classList.add('on');
-      const ds = document.getElementById('disp-date-lbl');
-      if(ds){ ds.style.display=''; updateDateLabel(); }
-    }
-    // Scroll body so time drum is visible
-    setTimeout(()=>{
-      pk?.scrollIntoView({behavior:'smooth', block:'nearest'});
-    }, 320);
-  }
+  if(togId==='tog-date')document.getElementById('pk-ttime')?.classList.remove('open');
+  else if(togId==='tog-time')document.getElementById('pk-tdate')?.classList.remove('open');
+  if(pk)pk.classList.add('open');
+  if(togId==='tog-date'){const sub=document.getElementById('disp-date-lbl');if(sub){sub.style.display='';updateDateLabel();}}
+  if(togId==='tog-time'){const sub=document.getElementById('disp-time-lbl');if(sub){sub.style.display='';updateTimeLabel();}
+    if(!document.getElementById('tog-date')?.classList.contains('on')){document.getElementById('tog-date')?.classList.add('on');const ds=document.getElementById('disp-date-lbl');if(ds){ds.style.display='';updateDateLabel();}}
+    setTimeout(()=>{pk?.scrollIntoView({behavior:'smooth',block:'nearest'});},320);}
 }
-function _closePicker(togId, pkId){
-  // Turn off toggle completely
-  document.getElementById(togId)?.classList.remove('on');
-  document.getElementById(pkId)?.classList.remove('open');
-  if(togId==='tog-date'){
-    document.getElementById('disp-date-lbl') && (document.getElementById('disp-date-lbl').style.display='none');
-    _closePicker('tog-time','pk-ttime');
-  }
-  if(togId==='tog-time'){
-    document.getElementById('disp-time-lbl') && (document.getElementById('disp-time-lbl').style.display='none');
-  }
+function _closePicker(togId,pkId){
+  document.getElementById(togId)?.classList.remove('on');document.getElementById(pkId)?.classList.remove('open');
+  if(togId==='tog-date'){const el=document.getElementById('disp-date-lbl');if(el)el.style.display='none';_closePicker('tog-time','pk-ttime');}
+  if(togId==='tog-time'){const el=document.getElementById('disp-time-lbl');if(el)el.style.display='none';}
 }
-function handleTogBtn(togId, pkId){
-  // Toggle button: if ON → turn completely off. If OFF → open picker.
-  const tog = document.getElementById(togId);
-  if(!tog) return;
-  if(tog.classList.contains('on')){
-    _closePicker(togId, pkId);
-  } else {
-    tapToggle(togId, pkId);
-  }
-}
-function tapToggleSimple(togId){
-  const tog=document.getElementById(togId);
-  if(!tog)return;
-  tog.classList.toggle('on');
-  // urgent: visual only
-  // allday
-  if(togId==='tog-allday'){
-    const on=tog.classList.contains('on');
-    const st=document.getElementById('pill-stime');
-    const et=document.getElementById('pill-etime');
-    if(st)st.style.display=on?'none':'';
-    if(et)et.style.display=on?'none':'';
-  }
-}
-function tapEventPicker(which){
-  const ids=['start','end'];
-  ids.forEach(w=>{
-    const pk=document.getElementById('pk-e'+w);
-    if(!pk)return;
-    if(w===which){pk.classList.toggle('open');}
-    else{pk.classList.remove('open');}
-  });
-}
-function tapAlarm(key){
-  const map={a1:'pk-alarm1',a2:'pk-alarm2',ea1:'pk-ealarm1',ea2:'pk-ealarm2'};
-  Object.entries(map).forEach(([k,pkId])=>{
-    const pk=document.getElementById(pkId);
-    if(!pk)return;
-    if(k===key){pk.classList.toggle('open');}
-    else{pk.classList.remove('open');}
-  });
-}
+function handleTogBtn(togId,pkId){const tog=document.getElementById(togId);if(!tog)return;if(tog.classList.contains('on'))_closePicker(togId,pkId);else tapToggle(togId,pkId);}
+function tapToggleSimple(togId){const tog=document.getElementById(togId);if(!tog)return;tog.classList.toggle('on');if(togId==='tog-allday'){const on=tog.classList.contains('on');const st=document.getElementById('pill-stime');const et=document.getElementById('pill-etime');if(st)st.style.display=on?'none':'';if(et)et.style.display=on?'none':'';}}
+function tapAlarm(key){const map={a1:'pk-alarm1',a2:'pk-alarm2',ea1:'pk-ealarm1',ea2:'pk-ealarm2'};Object.entries(map).forEach(([k,pkId])=>{const pk=document.getElementById(pkId);if(!pk)return;if(k===key)pk.classList.toggle('open');else pk.classList.remove('open');});}
 function toggleAllDay(){tapToggleSimple('tog-allday');}
 function tapList(){showSnack('Lista: Entrada');}
-function tapDetails(){
-  const d=document.getElementById('dg-details');
-  if(d)d.style.display=d.style.display?'':'block';
-}
+function tapDetails(){const d=document.getElementById('dg-details');if(d)d.style.display=d.style.display?'':'block';}
 function showDetails(){tapDetails();}
 
-// ── Type switching ────────────────────────
 let curType='task';
-function pickType(t, btn){
-  curType = t;
-  // Update type selector underline buttons
+function pickType(t,btn){
+  curType=t;
   document.querySelectorAll('.type-sel-btn').forEach(b=>b.classList.remove('on'));
-  const ts = document.getElementById('ts-'+t);
-  if(ts) ts.classList.add('on');
-  // Also sync cal-seg if present
+  const ts=document.getElementById('ts-'+t);if(ts)ts.classList.add('on');
   document.querySelectorAll('.cal-seg-btn').forEach(b=>b.classList.remove('on'));
-  // Show/hide views
-  ['task','event','note','expense'].forEach(v=>{
-    const el = document.getElementById('view-'+v);
-    if(el) el.style.display = v===t ? '' : 'none';
-  });
-  // Update header title
-  const titles = {task:'Nova Tarefa', event:'Novo Evento', note:'Nova Nota', expense:'Nova Despesa'};
-  if(!S.editId) document.getElementById('detNavTitle').textContent = titles[t];
-  // Toolbar: show for task only
-  const tb = document.getElementById('det-toolbar-task');
-  if(tb) tb.style.display = (t==='task') ? '' : 'none';
+  ['task','event','note','expense'].forEach(v=>{const el=document.getElementById('view-'+v);if(el)el.style.display=v===t?'':'none';});
+  const titles={task:'Nova Tarefa',event:'Novo Evento',note:'Nova Nota',expense:'Nova Despesa'};
+  if(!S.editId)document.getElementById('detNavTitle').textContent=titles[t];
+  const tb=document.getElementById('det-toolbar-task');if(tb)tb.style.display=(t==='task')?'':'none';
 }
 
-// ── Tags per view ─────────────────────────
-function buildTagsForView(viewId, sel=[]){
-  const el = document.getElementById('dTags-'+viewId);
-  if(!el) return;
-  el.innerHTML = TAGS.map(t=>{
-    const c = TAG_C[t] || '#8e8e93';
-    const on = sel.includes(t);
-    return `<div class="ios-tag ${on?'on':''}" 
-      style="color:${c}${on?';background:'+c:''}"
-      onclick="toggleIosTag(this,'${c}')">${t}</div>`;
-  }).join('');
+function buildTagsForView(viewId,sel=[]){
+  const el=document.getElementById('dTags-'+viewId);if(!el)return;
+  el.innerHTML=TAGS.map(t=>{const c=TAG_C[t]||'#8e8e93';const on=sel.includes(t);return`<div class="ios-tag ${on?'on':''}" style="color:${c}${on?';background:'+c:''}" onclick="toggleIosTag(this,'${c}')">${t}</div>`;}).join('');
 }
-function toggleIosTag(el, c){
-  el.classList.toggle('on');
-  if(el.classList.contains('on')){
-    el.style.background = c;
-    el.style.color = '#fff';
-    el.style.borderColor = c;
-  } else {
-    el.style.background = 'transparent';
-    el.style.color = c;
-    el.style.borderColor = c;
-  }
-}
-function getTagsForView(viewId){
-  const el = document.getElementById('dTags-'+viewId);
-  if(!el) return [];
-  return [...el.querySelectorAll('.ios-tag.on')].map(x=>x.textContent.trim());
-}
-function getTagsForView(viewId){
-  const el=document.getElementById('dTags-'+viewId);
-  if(!el)return[];
-  return [...el.querySelectorAll('.ios-tag.on')].map(x=>x.textContent.trim());
-}
+function toggleIosTag(el,c){el.classList.toggle('on');if(el.classList.contains('on')){el.style.background=c;el.style.color='#fff';el.style.borderColor=c;}else{el.style.background='transparent';el.style.color=c;el.style.borderColor=c;}}
+function getTagsForView(viewId){const el=document.getElementById('dTags-'+viewId);if(!el)return[];return[...el.querySelectorAll('.ios-tag.on')].map(x=>x.textContent.trim());}
 
-// ── Attachments ────────────────────────────
 let pendingAttachments=[];
-let activeAttachView='task';
-function handleAttach(e){
-  [...e.target.files].forEach(f=>{
-    pendingAttachments.push({name:f.name,size:f.size,type:f.type});
-  });
-  renderAttachList();
-}
-function renderAttachList(){
-  ['task','event','note'].forEach(v=>{
-    const el=document.getElementById('attachList-'+v);
-    if(el)el.innerHTML=pendingAttachments.map((a,i)=>`
-      <div class="att-item">
-        <span style="font-size:16px">${a.type&&a.type.startsWith('image')?'🖼':'📄'}</span>
-        <span class="att-name">${a.name}</span>
-        <span class="att-rm" onclick="removeAttach(${i})">✕</span>
-      </div>`).join('');
-  });
-}
+function handleAttach(e){[...e.target.files].forEach(f=>{pendingAttachments.push({name:f.name,size:f.size,type:f.type});});renderAttachList();}
+function renderAttachList(){['task','event','note'].forEach(v=>{const el=document.getElementById('attachList-'+v);if(el)el.innerHTML=pendingAttachments.map((a,i)=>`<div class="att-item"><span style="font-size:16px">${a.type&&a.type.startsWith('image')?'🖼':'📄'}</span><span class="att-name">${a.name}</span><span class="att-rm" onclick="removeAttach(${i})">✕</span></div>`).join('');});}
 function removeAttach(i){pendingAttachments.splice(i,1);renderAttachList();}
-
-// ── Open/Close ────────────────────────────
-function overlayTap(e){/* no-op, close only via X button */}
 
 function _resetModal(){
   document.querySelectorAll('.drum-picker,.cal-picker').forEach(p=>p.classList.remove('open'));
-  ['tog-date','tog-time','tog-urgent','tog-allday'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.classList.remove('on');
-  });
-  ['disp-date-lbl','disp-time-lbl'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.style.display='none';
-  });
-  // alarms always shown
+  ['tog-date','tog-time','tog-urgent','tog-allday'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('on');});
+  ['disp-date-lbl','disp-time-lbl'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
   const det=document.getElementById('dg-details');if(det)det.style.display='none';
   updateDrumDisplays();
 }
 function openNew(){
-  S.editId=null; curType='task'; pendingAttachments=[];
+  S.editId=null;curType='task';pendingAttachments=[];
   document.getElementById('detNavTitle').textContent='Nova Tarefa';
-  // Clear all text fields
-  ['dTitle','dBody','dUrl','dLoc','dSub','eTit','eLoc','eBody','eUrl','nTit','nBody','nUrl','xTit','xBody','dVal'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.value='';
-  });
-  // Activate task type button
+  ['dTitle','dBody','dUrl','dLoc','dSub','eTit','eLoc','eBody','eUrl','nTit','nBody','nUrl','xTit','xBody','dVal'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.querySelectorAll('.type-sel-btn').forEach(b=>b.classList.remove('on'));
-  const tsBtn = document.getElementById('ts-task');
-  if(tsBtn) tsBtn.classList.add('on');
+  const tsBtn=document.getElementById('ts-task');if(tsBtn)tsBtn.classList.add('on');
   curType='task';
-  // Show task view, hide others
-  ['task','event','note','expense'].forEach((v,i)=>{
-    const el=document.getElementById('view-'+v);if(el)el.style.display=i===0?'':'none';
-  });
-  ['task','event','note','expense'].forEach(v=>{
-    const el=document.getElementById('dg-delete-'+v);if(el)el.style.display='none';
-  });
+  ['task','event','note','expense'].forEach((v,i)=>{const el=document.getElementById('view-'+v);if(el)el.style.display=i===0?'':'none';});
+  ['task','event','note','expense'].forEach(v=>{const el=document.getElementById('dg-delete-'+v);if(el)el.style.display='none';});
   buildTagsForView('task');buildTagsForView('event');buildTagsForView('note');buildTagsForView('expense');
-  renderAttachList();
-  _resetModal();
-  initDrums();
-  // Date = selected day
+  renderAttachList();_resetModal();initDrums();
   const sel=S.selDay?dparse(S.selDay):today();
   DR.day=sel.getDate();DR.mo=sel.getMonth();DR.yr=sel.getFullYear();
   DR.esd=DR.day;DR.esm=DR.mo;DR.esy=DR.yr;DR.xd=DR.day;DR.xm=DR.mo;DR.xy=DR.yr;
-  setDrumIdx('dc-day',DR.day-1);setDrumIdx('dc-month',DR.mo);setDrumIdx('dc-year',DR.yr-2026+2);
-  setDrumIdx('dc-esd',DR.esd-1);setDrumIdx('dc-esm',DR.esm);setDrumIdx('dc-esy',DR.esy-2026+2);
-  setDrumIdx('dc-xd',DR.xd-1);setDrumIdx('dc-xm',DR.xm);setDrumIdx('dc-xy',DR.xy-2026+2);
-  updateDrumDisplays();
-  // Reset recurrence
-  curRecur = 'never';
-  const repLbl = document.getElementById('repLabel');
-  if(repLbl) repLbl.textContent = 'Nunca';
+  curRecur='never';const repLbl=document.getElementById('repLabel');if(repLbl)repLbl.textContent='Nunca';
   document.getElementById('detModal').classList.add('open');
   setTimeout(()=>document.getElementById('dTitle').focus(),400);
 }
-
 function openEdit(id){
   const it=S.items.find(x=>x.id===id);if(!it)return;
   S.editId=id;curType=it.type;pendingAttachments=it.attachments||[];
   const titles={task:'Lembrete',event:'Evento',note:'Nota',expense:'Despesa'};
   document.getElementById('detNavTitle').textContent=titles[it.type]||'Item';
-  ['task','event','note','expense'].forEach(v=>{
-    const el=document.getElementById('view-'+v);if(el)el.style.display=v===it.type?'':'none';
-  });
+  ['task','event','note','expense'].forEach(v=>{const el=document.getElementById('view-'+v);if(el)el.style.display=v===it.type?'':'none';});
   document.querySelectorAll('.type-sel-btn').forEach(b=>b.classList.remove('on'));
-  const tsE = document.getElementById('ts-'+it.type);
-  if(tsE) tsE.classList.add('on');
-  document.querySelectorAll('.cal-seg-btn').forEach(b=>b.classList.remove('on'));
-  ['task','event','note','expense'].forEach(v=>{
-    const el=document.getElementById('dg-delete-'+v);if(el)el.style.display=v===it.type?'':'none';
-  });
-  const gv=(id)=>{const e=document.getElementById(id);return e?e.value='':null;};
+  const tsE=document.getElementById('ts-'+it.type);if(tsE)tsE.classList.add('on');
+  ['task','event','note','expense'].forEach(v=>{const el=document.getElementById('dg-delete-'+v);if(el)el.style.display=v===it.type?'':'none';});
   const sv=(id,val)=>{const e=document.getElementById(id);if(e)e.value=val||'';};
   sv('dTitle',it.title);sv('dBody',it.body);sv('dUrl',it.url);sv('dLoc',it.loc);sv('dSub',it.sub);
   sv('eTit',it.title);sv('eBody',it.body);sv('eUrl',it.url);sv('eLoc',it.loc);
   sv('nTit',it.title);sv('nBody',it.body);sv('nUrl',it.url);
   sv('xTit',it.title);sv('xBody',it.body);sv('dVal',it.val);
   buildTagsForView(it.type,it.tags||[]);renderAttachList();
-  // Load recurrence
-  curRecur = it.recur || 'never';
-  const repLbl2 = document.getElementById('repLabel');
-  if(repLbl2) repLbl2.textContent = RECUR_OPTIONS.find(o=>o.val===curRecur)?.label || 'Nunca';
+  curRecur=it.recur||'never';const repLbl2=document.getElementById('repLabel');if(repLbl2)repLbl2.textContent=RECUR_OPTIONS.find(o=>o.val===curRecur)?.label||'Nunca';
   _resetModal();initDrums();
-  if(it.date){
-    const d=dparse(it.date);
-    DR.day=d.getDate();DR.mo=d.getMonth();DR.yr=d.getFullYear();
-    DR.esd=DR.day;DR.esm=DR.mo;DR.esy=DR.yr;DR.xd=DR.day;DR.xm=DR.mo;DR.xy=DR.yr;
-    setDrumIdx('dc-day',DR.day-1);setDrumIdx('dc-month',DR.mo);setDrumIdx('dc-year',DR.yr-2026+2);
-    setDrumIdx('dc-esd',DR.esd-1);setDrumIdx('dc-esm',DR.esm);setDrumIdx('dc-esy',DR.esy-2026+2);
-    setDrumIdx('dc-xd',DR.xd-1);setDrumIdx('dc-xm',DR.xm);setDrumIdx('dc-xy',DR.xy-2026+2);
-    if(it.type==='task'){
-      document.getElementById('tog-date')?.classList.add('on');
-      document.getElementById('pk-tdate')?.classList.add('open');
-    }
-  }
-  if(it.time){const[h,m]=it.time.split(':').map(Number);DR.h=h;DR.mi=m;DR.esh=h;DR.esn=m;
-    setDrumIdx('dc-hour',h);setDrumIdx('dc-min',m);setDrumIdx('dc-esh',h);setDrumIdx('dc-esn',m);
-    if(it.type==='task'){document.getElementById('tog-time')?.classList.add('on');document.getElementById('pk-ttime')?.classList.add('open');}
-  }
+  if(it.date){const d=dparse(it.date);DR.day=d.getDate();DR.mo=d.getMonth();DR.yr=d.getFullYear();DR.esd=DR.day;DR.esm=DR.mo;DR.esy=DR.yr;DR.xd=DR.day;DR.xm=DR.mo;DR.xy=DR.yr;setDrumIdx('dc-day',DR.day-1);setDrumIdx('dc-month',DR.mo);setDrumIdx('dc-year',DR.yr-2026+2);setDrumIdx('dc-esd',DR.esd-1);setDrumIdx('dc-esm',DR.esm);setDrumIdx('dc-esy',DR.esy-2026+2);setDrumIdx('dc-xd',DR.xd-1);setDrumIdx('dc-xm',DR.xm);setDrumIdx('dc-xy',DR.xy-2026+2);if(it.type==='task'){document.getElementById('tog-date')?.classList.add('on');document.getElementById('pk-tdate')?.classList.add('open');}}
+  if(it.time){const[h,m]=it.time.split(':').map(Number);DR.h=h;DR.mi=m;DR.esh=h;DR.esn=m;setDrumIdx('dc-hour',h);setDrumIdx('dc-min',m);setDrumIdx('dc-esh',h);setDrumIdx('dc-esn',m);if(it.type==='task'){document.getElementById('tog-time')?.classList.add('on');document.getElementById('pk-ttime')?.classList.add('open');}}
   if(it.timeEnd){const[h,m]=it.timeEnd.split(':').map(Number);DR.eeh=h;DR.een=m;setDrumIdx('dc-eeh',h);setDrumIdx('dc-een',m);}
   DR.alarm1=it.alarm1||0;DR.alarm2=it.alarm2||0;DR.ealarm1=it.alarm1||0;DR.ealarm2=it.alarm2||0;
-  setDrumIdx('dc-alarm1',DR.alarm1);setDrumIdx('dc-alarm2',DR.alarm2);
-  setDrumIdx('dc-ealarm1',DR.ealarm1);setDrumIdx('dc-ealarm2',DR.ealarm2);
+  setDrumIdx('dc-alarm1',DR.alarm1);setDrumIdx('dc-alarm2',DR.alarm2);setDrumIdx('dc-ealarm1',DR.ealarm1);setDrumIdx('dc-ealarm2',DR.ealarm2);
   updateDrumDisplays();
   const tb=document.getElementById('det-toolbar-task');if(tb)tb.style.display=it.type==='task'?'':'none';
   document.getElementById('detModal').classList.add('open');
 }
-
-function closeDetail(){
-  document.getElementById('detModal').classList.remove('open');
-}
-
-function getTitle(){
-  const map={task:'dTitle',event:'eTit',note:'nTit',expense:'xTit'};
-  const el=document.getElementById(map[curType]);
-  return el?el.value.trim():'';
-}
+function closeDetail(){document.getElementById('detModal').classList.remove('open');}
+function getTitle(){const map={task:'dTitle',event:'eTit',note:'nTit',expense:'xTit'};const el=document.getElementById(map[curType]);return el?el.value.trim():'';}
 function getField(id){const el=document.getElementById(id);return el?el.value.trim():'';}
 
 function saveItem(){
-  const title=getTitle();
-  if(!title){showSnack('Digite um título');return;}
-
-  // Read values — task date comes from calendar, not drum
-  if(curType==='task'){
-    if(document.getElementById('tog-date').classList.contains('on')){
-      DR.day=CAL.selD; DR.mo=CAL.selM; DR.yr=CAL.selY;
-    }
-    if(document.getElementById('tog-time').classList.contains('on')){
-      DR.h=getDrumIdx('dc-hour');
-      DR.mi=getDrumIdx('dc-min'); // index × 5 = actual minutes
-    }
-    DR.alarm1=getDrumIdx('dc-alarm1');DR.alarm2=getDrumIdx('dc-alarm2');
-  } else if(curType==='event'){
-    // Dates from ECAL calendars, times from drums
-    DR.esd=ECAL.start.selD; DR.esm=ECAL.start.selM; DR.esy=ECAL.start.selY;
-    DR.esh=getDrumIdx('dc-esh'); DR.esn=getDrumIdx('dc-esn');
-    DR.eed=ECAL.end.selD; DR.eem=ECAL.end.selM; DR.eey=ECAL.end.selY;
-    DR.eeh=getDrumIdx('dc-eeh'); DR.een=getDrumIdx('dc-een');
-    DR.ealarm1=getDrumIdx('dc-ealarm1'); DR.ealarm2=getDrumIdx('dc-ealarm2');
-  } else if(curType==='expense'){
-    DR.xd=ECAL.x.selD; DR.xm=ECAL.x.selM; DR.xy=ECAL.x.selY;
-  }
-
+  const title=getTitle();if(!title){showSnack('Digite um título');return;}
+  if(curType==='task'){if(document.getElementById('tog-date').classList.contains('on')){DR.day=CAL.selD;DR.mo=CAL.selM;DR.yr=CAL.selY;}if(document.getElementById('tog-time').classList.contains('on')){DR.h=getDrumIdx('dc-hour');DR.mi=getDrumIdx('dc-min');}DR.alarm1=getDrumIdx('dc-alarm1');DR.alarm2=getDrumIdx('dc-alarm2');}
+  else if(curType==='event'){DR.esd=ECAL.start.selD;DR.esm=ECAL.start.selM;DR.esy=ECAL.start.selY;DR.esh=getDrumIdx('dc-esh');DR.esn=getDrumIdx('dc-esn');DR.eed=ECAL.end.selD;DR.eem=ECAL.end.selM;DR.eey=ECAL.end.selY;DR.eeh=getDrumIdx('dc-eeh');DR.een=getDrumIdx('dc-een');DR.ealarm1=getDrumIdx('dc-ealarm1');DR.ealarm2=getDrumIdx('dc-ealarm2');}
+  else if(curType==='expense'){DR.xd=ECAL.x.selD;DR.xm=ECAL.x.selM;DR.xy=ECAL.x.selY;}
   const hasDate=curType==='task'?document.getElementById('tog-date').classList.contains('on'):true;
-  const dateStr=(curType==='task'&&!hasDate)?'':
-    curType==='event'?`${DR.esy}-${p2(DR.esm+1)}-${p2(DR.esd)}`:
-    curType==='expense'?`${DR.xy}-${p2(DR.xm+1)}-${p2(DR.xd)}`:
-    `${DR.yr}-${p2(DR.mo+1)}-${p2(DR.day)}`;
+  const dateStr=(curType==='task'&&!hasDate)?'':curType==='event'?`${DR.esy}-${p2(DR.esm+1)}-${p2(DR.esd)}`:curType==='expense'?`${DR.xy}-${p2(DR.xm+1)}-${p2(DR.xd)}`:`${DR.yr}-${p2(DR.mo+1)}-${p2(DR.day)}`;
   const hasTime=curType==='task'?document.getElementById('tog-time').classList.contains('on'):curType==='event';
-  // DR.mi and DR.esn/een are indices into 5-min array, multiply by 5
-  const timeStr=!hasTime?'':
-    curType==='event'?`${p2(DR.esh)}:${p2(DR.esn*5)}`:`${p2(DR.h)}:${p2(DR.mi*5)}`;
+  const timeStr=!hasTime?'':curType==='event'?`${p2(DR.esh)}:${p2(DR.esn*5)}`:`${p2(DR.h)}:${p2(DR.mi*5)}`;
   const endStr=curType==='event'?`${p2(DR.eeh)}:${p2(DR.een*5)}`:'';
-
   const bodyMap={task:'dBody',event:'eBody',note:'nBody',expense:'xBody'};
   const locMap={task:getField('dLoc'),event:getField('eLoc')};
   const urlMap={task:getField('dUrl'),event:getField('eUrl'),note:getField('nUrl')};
-
-  const it={
-    id:S.editId||uid(), type:curType, title,
-    body:getField(bodyMap[curType])||'',
-    date:dateStr, time:timeStr, timeEnd:endStr,
-    loc:locMap[curType]||'',
-    url:urlMap[curType]||'',
-    done:false,
-    tags:getTagsForView(curType),
-    val:parseFloat(document.getElementById('dVal')?.value)||0,
-    sub:parseInt(document.getElementById('dSub')?.value)||0,
-    subDone:0, comments:0,
-    alarm1:curType==='event'?DR.ealarm1:DR.alarm1,
-    alarm2:curType==='event'?DR.ealarm2:DR.alarm2,
-    attachments:[...pendingAttachments],
-    // Recurrence: store chosen frequency + anchor date (original due day)
-    recur: curType==='task' ? curRecur : 'never',
-    anchorDate: curType==='task' && dateStr ? dateStr : null,
-  };
-  if(S.editId){
-    const idx=S.items.findIndex(x=>x.id===S.editId);
-    if(idx>=0){it.done=S.items[idx].done;it.subDone=S.items[idx].subDone||0;S.items[idx]=it;}
-  } else {S.items.unshift(it);}
-  save();renderAll();buildWeek();scheduleAlarms();
-  closeDetail();
-  showSnack(S.editId?'Salvo':'Adicionado');
-  S.editId=null;
+  const it={id:S.editId||uid(),type:curType,title,body:getField(bodyMap[curType])||'',date:dateStr,time:timeStr,timeEnd:endStr,loc:locMap[curType]||'',url:urlMap[curType]||'',done:false,tags:getTagsForView(curType),val:parseFloat(document.getElementById('dVal')?.value)||0,sub:parseInt(document.getElementById('dSub')?.value)||0,subDone:0,comments:0,alarm1:curType==='event'?DR.ealarm1:DR.alarm1,alarm2:curType==='event'?DR.ealarm2:DR.alarm2,attachments:[...pendingAttachments],recur:curType==='task'?curRecur:'never',anchorDate:curType==='task'&&dateStr?dateStr:null};
+  if(S.editId){const idx=S.items.findIndex(x=>x.id===S.editId);if(idx>=0){it.done=S.items[idx].done;it.subDone=S.items[idx].subDone||0;S.items[idx]=it;}}
+  else{S.items.unshift(it);}
+  save();renderAll();buildWeek();scheduleAlarms();closeDetail();showSnack(S.editId?'Salvo':'Adicionado');S.editId=null;
 }
-
-function deleteItem(){
-  if(!S.editId)return;
-  if(!confirm('Apagar este item?'))return;
-  S.items=S.items.filter(x=>x.id!==S.editId);
-  save();renderAll();buildWeek();
-  closeDetail();
-  showSnack('Apagado');S.editId=null;
-}
-
+function deleteItem(){if(!S.editId)return;if(!confirm('Apagar este item?'))return;S.items=S.items.filter(x=>x.id!==S.editId);save();renderAll();buildWeek();closeDetail();showSnack('Apagado');S.editId=null;}
 function toggleDone(id,e){
-  e.stopPropagation();
-  const it=S.items.find(x=>x.id===id);if(!it)return;
-  const wasNotDone = !it.done;
-  it.done=!it.done;
-  // When completing a recurring task → spawn next occurrence using anchor date
-  if(wasNotDone && it.recur && it.recur!=='never'){
-    spawnNextRecurrence(it);
-  }
+  e.stopPropagation();const it=S.items.find(x=>x.id===id);if(!it)return;
+  const wasNotDone=!it.done;it.done=!it.done;
+  if(wasNotDone&&it.recur&&it.recur!=='never')spawnNextRecurrence(it);
   save();renderAll();buildWeek();
 }
 
 // ══════════════════════════════════════════
 // RECURRENCE ENGINE
-// Key rule: next occurrence always uses the ORIGINAL due day (anchor),
-// never the completion date. Boleto vence dia 10 → sempre dia 10.
-
-const RECUR_OPTIONS = [
-  {val:'never',   label:'Nunca'},
-  {val:'daily',   label:'Todo dia'},
-  {val:'weekly',  label:'Toda semana'},
-  {val:'biweek',  label:'A cada 2 semanas'},
-  {val:'monthly', label:'Todo mês'},
-  {val:'bimonth', label:'A cada 2 meses'},
-  {val:'trimest', label:'A cada 3 meses'},
-  {val:'semester',label:'A cada 6 meses'},
-  {val:'yearly',  label:'Todo ano'},
+const RECUR_OPTIONS=[
+  {val:'never',label:'Nunca'},{val:'daily',label:'Todo dia'},{val:'weekly',label:'Toda semana'},
+  {val:'biweek',label:'A cada 2 semanas'},{val:'monthly',label:'Todo mês'},
+  {val:'bimonth',label:'A cada 2 meses'},{val:'trimest',label:'A cada 3 meses'},
+  {val:'semester',label:'A cada 6 meses'},{val:'yearly',label:'Todo ano'},
 ];
-
-let curRecur = 'never';
+let curRecur='never';
 
 function tapRepetition(){
-  const ol = document.getElementById('repList');
-  const card = document.createElement('div');
-  card.className = 'ios-card';
-  card.style.marginBottom = '0';
-  card.innerHTML = RECUR_OPTIONS.map(o =>
-    `<div class="ios-row ${o.val===curRecur?'':''}rep-opt"
-      style="cursor:pointer;${o.val===curRecur?'':'border-bottom:.5px solid #c6c6c8'}"
-      onclick="selectRecur('${o.val}')">
-      <span class="ios-row-lbl">${o.label}</span>
-      ${o.val===curRecur?`<svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <path d="M3 9l4.5 5L15 4" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>`:''}
-    </div>`
-  ).join('');
-  // fix last row
-  const rows = card.querySelectorAll('.ios-row');
-  rows[rows.length-1].style.borderBottom = 'none';
-  ol.innerHTML = '';
-  ol.appendChild(card);
+  const ol=document.getElementById('repList');
+  const card=document.createElement('div');card.className='ios-card';card.style.marginBottom='0';
+  card.innerHTML=RECUR_OPTIONS.map(o=>`<div class="ios-row rep-opt" style="cursor:pointer;${o.val===curRecur?'':'border-bottom:.5px solid #c6c6c8'}" onclick="selectRecur('${o.val}')"><span class="ios-row-lbl">${o.label}</span>${o.val===curRecur?`<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4.5 5L15 4" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`:''}</div>`).join('');
+  const rows=card.querySelectorAll('.ios-row');rows[rows.length-1].style.borderBottom='none';
+  ol.innerHTML='';ol.appendChild(card);
   document.getElementById('repOverlay').classList.add('show');
 }
+function selectRecur(val){curRecur=val;const lbl=RECUR_OPTIONS.find(o=>o.val===val)?.label||'Nunca';const el=document.getElementById('repLabel');if(el)el.textContent=lbl;document.getElementById('repOverlay').classList.remove('show');}
+function closeRep(e){if(e.target===document.getElementById('repOverlay'))document.getElementById('repOverlay').classList.remove('show');}
 
-function selectRecur(val){
-  curRecur = val;
-  const lbl = RECUR_OPTIONS.find(o=>o.val===val)?.label || 'Nunca';
-  const el = document.getElementById('repLabel');
-  if(el) el.textContent = lbl;
-  document.getElementById('repOverlay').classList.remove('show');
-}
-
-function closeRep(e){
-  if(e.target===document.getElementById('repOverlay'))
-    document.getElementById('repOverlay').classList.remove('show');
-}
-
-// Calculate next due date using ANCHOR (original day of month), not completion date
-function nextRecurDate(anchorDateStr, recur){
-  if(!anchorDateStr || recur==='never') return null;
-  const anchor = dparse(anchorDateStr);
-  const anchorDay = anchor.getDate(); // e.g. 10
-  const today_ = today();
-
-  let next = new Date(anchor);
-
-  const advanceMonth = (d, months) => {
-    const y = d.getFullYear();
-    const m = d.getMonth() + months;
-    const newY = y + Math.floor(m/12);
-    const newM = ((m % 12) + 12) % 12;
-    // Clamp day to valid range for target month
-    const maxDay = new Date(newY, newM+1, 0).getDate();
-    return new Date(newY, newM, Math.min(anchorDay, maxDay));
-  };
-
-  if(recur==='daily'){
-    next = new Date(today_); next.setDate(today_.getDate()+1);
-  } else if(recur==='weekly'){
-    next = new Date(anchor);
-    while(next <= today_) next.setDate(next.getDate()+7);
-  } else if(recur==='biweek'){
-    next = new Date(anchor);
-    while(next <= today_) next.setDate(next.getDate()+14);
-  } else if(recur==='monthly'){
-    next = advanceMonth(anchor, 1);
-    let safety=0;
-    while(next <= today_ && safety++<24) next = advanceMonth(next,1);
-    // Ensure day is always the anchor day
-    const maxD = new Date(next.getFullYear(), next.getMonth()+1, 0).getDate();
-    next.setDate(Math.min(anchorDay, maxD));
-  } else if(recur==='bimonth'){
-    next = advanceMonth(anchor, 2);
-    let safety=0;
-    while(next <= today_ && safety++<24) next = advanceMonth(next,2);
-    const maxD = new Date(next.getFullYear(), next.getMonth()+1, 0).getDate();
-    next.setDate(Math.min(anchorDay, maxD));
-  } else if(recur==='trimest'){
-    next = advanceMonth(anchor, 3);
-    let safety=0;
-    while(next <= today_ && safety++<24) next = advanceMonth(next,3);
-    const maxD = new Date(next.getFullYear(), next.getMonth()+1, 0).getDate();
-    next.setDate(Math.min(anchorDay, maxD));
-  } else if(recur==='semester'){
-    next = advanceMonth(anchor, 6);
-    let safety=0;
-    while(next <= today_ && safety++<24) next = advanceMonth(next,6);
-    const maxD = new Date(next.getFullYear(), next.getMonth()+1, 0).getDate();
-    next.setDate(Math.min(anchorDay, maxD));
-  } else if(recur==='yearly'){
-    next = new Date(anchor.getFullYear()+1, anchor.getMonth(), anchorDay);
-    let safety=0;
-    while(next <= today_ && safety++<10) next = new Date(next.getFullYear()+1, next.getMonth(), anchorDay);
-  }
-
+function nextRecurDate(anchorDateStr,recur){
+  if(!anchorDateStr||recur==='never')return null;
+  const anchor=dparse(anchorDateStr);const anchorDay=anchor.getDate();const today_=today();
+  let next=new Date(anchor);
+  const advanceMonth=(d,months)=>{const y=d.getFullYear();const m=d.getMonth()+months;const newY=y+Math.floor(m/12);const newM=((m%12)+12)%12;const maxDay=new Date(newY,newM+1,0).getDate();return new Date(newY,newM,Math.min(anchorDay,maxDay));};
+  if(recur==='daily'){next=new Date(today_);next.setDate(today_.getDate()+1);}
+  else if(recur==='weekly'){next=new Date(anchor);while(next<=today_)next.setDate(next.getDate()+7);}
+  else if(recur==='biweek'){next=new Date(anchor);while(next<=today_)next.setDate(next.getDate()+14);}
+  else if(recur==='monthly'){next=advanceMonth(anchor,1);let s=0;while(next<=today_&&s++<24)next=advanceMonth(next,1);const maxD=new Date(next.getFullYear(),next.getMonth()+1,0).getDate();next.setDate(Math.min(anchorDay,maxD));}
+  else if(recur==='bimonth'){next=advanceMonth(anchor,2);let s=0;while(next<=today_&&s++<24)next=advanceMonth(next,2);const maxD=new Date(next.getFullYear(),next.getMonth()+1,0).getDate();next.setDate(Math.min(anchorDay,maxD));}
+  else if(recur==='trimest'){next=advanceMonth(anchor,3);let s=0;while(next<=today_&&s++<24)next=advanceMonth(next,3);const maxD=new Date(next.getFullYear(),next.getMonth()+1,0).getDate();next.setDate(Math.min(anchorDay,maxD));}
+  else if(recur==='semester'){next=advanceMonth(anchor,6);let s=0;while(next<=today_&&s++<24)next=advanceMonth(next,6);const maxD=new Date(next.getFullYear(),next.getMonth()+1,0).getDate();next.setDate(Math.min(anchorDay,maxD));}
+  else if(recur==='yearly'){next=new Date(anchor.getFullYear()+1,anchor.getMonth(),anchorDay);let s=0;while(next<=today_&&s++<10)next=new Date(next.getFullYear()+1,next.getMonth(),anchorDay);}
   return dfmt(next);
 }
-
-// Called when toggling a recurring task done — spawns the next occurrence
 function spawnNextRecurrence(it){
-  if(!it.recur || it.recur==='never' || !it.date) return;
-  // anchorDate is always the ORIGINAL due date stored in the item
-  const anchorDate = it.anchorDate || it.date; // anchorDate preserved across recurrences
-  const nextDate = nextRecurDate(anchorDate, it.recur);
-  if(!nextDate) return;
-  // Don't duplicate if already exists
-  if(S.items.find(x=>x.date===nextDate&&x.title===it.title&&x.recur===it.recur&&!x.done)) return;
-
-  const next = {
-    ...it,
-    id: uid(),
-    done: false,
-    subDone: 0,
-    date: nextDate,
-    anchorDate: anchorDate, // preserve original anchor day
-    createdFrom: it.id,
-  };
+  if(!it.recur||it.recur==='never'||!it.date)return;
+  const anchorDate=it.anchorDate||it.date;const nextDate=nextRecurDate(anchorDate,it.recur);if(!nextDate)return;
+  if(S.items.find(x=>x.date===nextDate&&x.title===it.title&&x.recur===it.recur&&!x.done))return;
+  const next={...it,id:uid(),done:false,subDone:0,date:nextDate,anchorDate:anchorDate,createdFrom:it.id};
   S.items.unshift(next);
 }
 
-
+// ══════════════════════════════════════════
+// NOTIFICATIONS
 async function requestNotifNow(){
-  if(!('Notification' in window)){showSnack('Notificações não suportadas');return;}
+  if(!('Notification'in window)){showSnack('Notificações não suportadas');return;}
   if(Notification.permission==='granted'){showSnack('Notificações já ativas ✓');return;}
   if(Notification.permission==='denied'){showSnack('Bloqueado — ative em Ajustes > FocusFlow');return;}
   const p=await Notification.requestPermission();
@@ -3018,189 +1875,45 @@ async function requestNotifNow(){
   if(p==='granted'){if(el)el.textContent='Ativo';showSnack('Notificações ativadas ✓');scheduleAlarms();}
   else{if(el)el.textContent='Negado';showSnack('Permissão negada');}
 }
-
-function showNotifBanner(){
-  const b=document.getElementById('notifBanner');
-  if(b){b.style.display='flex';setTimeout(()=>b.classList.add('show'),50);}
-}
-function closeNotifBanner(){
-  const b=document.getElementById('notifBanner');
-  if(b){b.classList.remove('show');setTimeout(()=>b.style.display='none',300);}
-}
-async function enableNotifFromBanner(){
-  closeNotifBanner();
-  await requestNotifNow();
-}
+function showNotifBanner(){const b=document.getElementById('notifBanner');if(b){b.style.display='flex';setTimeout(()=>b.classList.add('show'),50);}}
+function closeNotifBanner(){const b=document.getElementById('notifBanner');if(b){b.classList.remove('show');setTimeout(()=>b.style.display='none',300);}}
+async function enableNotifFromBanner(){closeNotifBanner();await requestNotifNow();}
 function openSettings(){document.getElementById('settingsOverlay').classList.add('show');}
 function closeSettings(e){if(e.target===document.getElementById('settingsOverlay'))document.getElementById('settingsOverlay').classList.remove('show');}
-function exportData(){
-  const b=new Blob([JSON.stringify(S.items,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(b);
-  a.download=`focusflow_${dfmt(today())}.json`;a.click();
-}
+function exportData(){const b=new Blob([JSON.stringify(S.items,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`focusflow_${dfmt(today())}.json`;a.click();}
 function importData(){document.getElementById('importFile').click();}
-function handleImport(e){
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    try{const d=JSON.parse(ev.target.result);if(Array.isArray(d)){S.items=d;save();renderAll();buildWeek();showSnack(d.length+' itens importados');}}
-    catch{showSnack('Erro ao importar');}
-  };r.readAsText(f);
-}
-function clearData(){
-  if(!confirm('Apagar todos os dados?'))return;
-  S.items=[];save();renderAll();buildWeek();showSnack('Dados apagados');
-}
+function handleImport(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(Array.isArray(d)){S.items=d;save();renderAll();buildWeek();showSnack(d.length+' itens importados');}}catch{showSnack('Erro ao importar');}};r.readAsText(f);}
+function clearData(){if(!confirm('Apagar todos os dados?'))return;S.items=[];save();renderAll();buildWeek();showSnack('Dados apagados');}
 async function syncAutoGest(){
   showSnack('Sincronizando…');
   const data=await sbGet('expenses','?select=*&order=date.desc&limit=100');
-  if(data&&data.length){
-    let n=0;
-    data.forEach(x=>{
-      const title=x.description||x.name||x.title||'Despesa';
-      if(!S.items.find(i=>i.type==='expense'&&i.title===title&&i.date===x.date)){
-        S.items.unshift({id:uid(),type:'expense',title,body:x.category||'',date:x.date||dfmt(today()),
-          time:'',timeEnd:'',loc:'',done:false,tags:['AutoGest',x.category||''].filter(Boolean),
-          val:x.amount||0,sub:0,subDone:0});n++;
-      }
-    });
-    save();renderAll();buildWeek();
-    const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    document.getElementById('syncLabel').textContent=t;
-    showSnack(n?n+' despesas importadas':'Já sincronizado');
-  }else{
-    document.getElementById('syncLabel').textContent=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    showSnack('Sem novas despesas');
-  }
+  if(data&&data.length){let n=0;data.forEach(x=>{const title=x.description||x.name||x.title||'Despesa';if(!S.items.find(i=>i.type==='expense'&&i.title===title&&i.date===x.date)){S.items.unshift({id:uid(),type:'expense',title,body:x.category||'',date:x.date||dfmt(today()),time:'',timeEnd:'',loc:'',done:false,tags:['AutoGest',x.category||''].filter(Boolean),val:x.amount||0,sub:0,subDone:0});n++;}});save();renderAll();buildWeek();const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});document.getElementById('syncLabel').textContent=t;showSnack(n?n+' despesas importadas':'Já sincronizado');}
+  else{document.getElementById('syncLabel').textContent=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});showSnack('Sem novas despesas');}
 }
 
 // ══════════════════════════════════════════
 // SNACK
-function showSnack(msg){
-  const s=document.getElementById('snack');
-  s.textContent=msg;s.classList.add('show');
-  clearTimeout(s._t);s._t=setTimeout(()=>s.classList.remove('show'),2200);
-}
+function showSnack(msg){const s=document.getElementById('snack');s.textContent=msg;s.classList.add('show');clearTimeout(s._t);s._t=setTimeout(()=>s.classList.remove('show'),2200);}
 
 // ══════════════════════════════════════════
-// ALARM ENGINE — Safari / iOS compatible
-// iOS Safari supports Notifications only as PWA (added to Home Screen)
-// Fallback: in-app alert banner + vibration + Audio beep
-
+// ALARM ENGINE
 let _alarmTimers=[];
+const ALARM_OFFSET_MS=[null,0,5*60000,10*60000,15*60000,30*60000,60*60000,120*60000,86400000];
 
-// Map alarm option index → offset in ms before item time
-const ALARM_OFFSET_MS=[
-  null,      // 0 = Nenhum
-  0,         // 1 = Na hora
-  5*60000,   // 2 = 5 min antes
-  10*60000,  // 3 = 10 min antes
-  15*60000,  // 4 = 15 min antes
-  30*60000,  // 5 = 30 min antes
-  60*60000,  // 6 = 1h antes
-  120*60000, // 7 = 2h antes
-  86400000,  // 8 = 1 dia antes
-];
-
-async function requestNotifPermission(){
-  if(!('Notification' in window)) return false;
-  if(Notification.permission==='granted') return true;
-  if(Notification.permission==='denied') return false;
-  const p=await Notification.requestPermission();
-  return p==='granted';
-}
-
-function alarmBeep(){
-  try{
-    const ctx=new (window.AudioContext||window.webkitAudioContext)();
-    const osc=ctx.createOscillator();
-    const gain=ctx.createGain();
-    osc.connect(gain);gain.connect(ctx.destination);
-    osc.frequency.value=880;
-    gain.gain.setValueAtTime(0.4,ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.6);
-    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.6);
-  }catch(e){}
-  if(navigator.vibrate)navigator.vibrate([300,100,300]);
-}
-
-function showAlarmBanner(title,body){
-  // Remove any existing
-  const old=document.getElementById('alarm-banner');
-  if(old)old.remove();
-  const el=document.createElement('div');
-  el.id='alarm-banner';
-  el.style.cssText=`
-    position:fixed;top:calc(env(safe-area-inset-top,44px)+12px);left:16px;right:16px;
-    background:rgba(30,30,30,.96);color:#fff;
-    border-radius:16px;padding:14px 16px;z-index:2000;
-    box-shadow:0 4px 24px rgba(0,0,0,.4);
-    display:flex;align-items:flex-start;gap:12px;
-    animation:bannerIn .3s cubic-bezier(.32,1,.65,1);
-    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-  `;
-  el.innerHTML=`
-    <div style="font-size:24px;flex-shrink:0">🔔</div>
-    <div style="flex:1;min-width:0">
-      <div style="font-size:14px;font-weight:700;margin-bottom:2px;
-        white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</div>
-      ${body?`<div style="font-size:13px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${body}</div>`:''}
-    </div>
-    <div onclick="this.parentElement.remove()" style="font-size:18px;opacity:.6;cursor:pointer;padding:0 2px">✕</div>
-  `;
-  document.body.appendChild(el);
-  alarmBeep();
-  // Auto-dismiss after 8s
-  setTimeout(()=>{if(el.parentNode)el.style.opacity='0',setTimeout(()=>el.remove(),300);},8000);
-}
-
-// Inject banner animation CSS once
-(function(){
-  if(document.getElementById('alarm-style'))return;
-  const s=document.createElement('style');
-  s.id='alarm-style';
-  s.textContent=`@keyframes bannerIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}`;
-  document.head.appendChild(s);
-})();
-
+async function requestNotifPermission(){if(!('Notification'in window))return false;if(Notification.permission==='granted')return true;if(Notification.permission==='denied')return false;const p=await Notification.requestPermission();return p==='granted';}
+function alarmBeep(){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.frequency.value=880;gain.gain.setValueAtTime(0.4,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.6);osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.6);}catch(e){}if(navigator.vibrate)navigator.vibrate([300,100,300]);}
+function showAlarmBanner(title,body){const old=document.getElementById('alarm-banner');if(old)old.remove();const el=document.createElement('div');el.id='alarm-banner';el.style.cssText=`position:fixed;top:calc(env(safe-area-inset-top,44px)+12px);left:16px;right:16px;background:rgba(30,30,30,.96);color:#fff;border-radius:16px;padding:14px 16px;z-index:2000;box-shadow:0 4px 24px rgba(0,0,0,.4);display:flex;align-items:flex-start;gap:12px;animation:bannerIn .3s cubic-bezier(.32,1,.65,1);font-family:-apple-system,BlinkMacSystemFont,sans-serif;`;el.innerHTML=`<div style="font-size:24px;flex-shrink:0">🔔</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</div>${body?`<div style="font-size:13px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${body}</div>`:''}</div><div onclick="this.parentElement.remove()" style="font-size:18px;opacity:.6;cursor:pointer;padding:0 2px">✕</div>`;document.body.appendChild(el);alarmBeep();setTimeout(()=>{if(el.parentNode)el.style.opacity='0',setTimeout(()=>el.remove(),300);},8000);}
+(function(){if(document.getElementById('alarm-style'))return;const s=document.createElement('style');s.id='alarm-style';s.textContent=`@keyframes bannerIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}`;document.head.appendChild(s);})();
 function scheduleAlarms(){
-  // Cancel all existing timers
-  _alarmTimers.forEach(t=>clearTimeout(t));
-  _alarmTimers=[];
-
+  _alarmTimers.forEach(t=>clearTimeout(t));_alarmTimers=[];
   const now=Date.now();
   S.items.filter(x=>!x.done&&(x.alarm1>0||x.alarm2>0)&&x.date).forEach(it=>{
-    if(!it.time)return; // need a specific time
-    const [h,m]=it.time.split(':').map(Number);
-    const d=dparse(it.date);
-    const itemMs=new Date(d.getFullYear(),d.getMonth(),d.getDate(),h,m,0,0).getTime();
+    if(!it.time)return;const[h,m]=it.time.split(':').map(Number);const d=dparse(it.date);const itemMs=new Date(d.getFullYear(),d.getMonth(),d.getDate(),h,m,0,0).getTime();
     [it.alarm1,it.alarm2].filter(Boolean).forEach(alarmIdx=>{
-      const offset=ALARM_OFFSET_MS[alarmIdx];
-      if(offset===null||offset===undefined)return;
-      const fireAt=itemMs-offset;
-      const delay=fireAt-now;
-      if(delay<0||delay>7*24*3600000)return; // skip past or >7 days
+      const offset=ALARM_OFFSET_MS[alarmIdx];if(offset===null||offset===undefined)return;
+      const fireAt=itemMs-offset;const delay=fireAt-now;if(delay<0||delay>7*24*3600000)return;
       const body=it.body||it.loc||'';
-      const t=setTimeout(async()=>{
-        const granted=await requestNotifPermission();
-        if(granted){
-          try{
-            new Notification(it.title,{
-              body:body||ALARM_LABELS[alarmIdx],
-              icon:'/apple-touch-icon.png',
-              badge:'/apple-touch-icon.png',
-              tag:it.id+'-'+alarmIdx,
-              renotify:true,
-              requireInteraction:true,
-            });
-          }catch(e){
-            // Fallback in-app banner
-            showAlarmBanner(it.title,body||ALARM_LABELS[alarmIdx]);
-          }
-        } else {
-          showAlarmBanner(it.title,body||ALARM_LABELS[alarmIdx]);
-        }
-      },delay);
+      const t=setTimeout(async()=>{const granted=await requestNotifPermission();if(granted){try{new Notification(it.title,{body:body||ALARM_LABELS[alarmIdx],tag:it.id+'-'+alarmIdx,renotify:true,requireInteraction:true});}catch(e){showAlarmBanner(it.title,body||ALARM_LABELS[alarmIdx]);}}else{showAlarmBanner(it.title,body||ALARM_LABELS[alarmIdx]);}},delay);
       _alarmTimers.push(t);
     });
   });
@@ -3217,52 +1930,22 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(S.sys)S.dark=window.matchMedia('(prefers-color-scheme:dark)').matches;
   applyDark();
   document.getElementById('togSys').classList.toggle('on',S.sys);
-  // Set today num in nav
   document.getElementById('navTodayNum').textContent=today().getDate();
-  buildWeek();
-  renderAll();
-  initDrums();
-// Schedule alarms silently
+  buildWeek();renderAll();initDrums();
   setTimeout(()=>{
     scheduleAlarms();
     const el=document.getElementById('notifStatus');
-    if(el&&'Notification' in window)
-      el.textContent=Notification.permission==='granted'?'Ativo':Notification.permission==='denied'?'Negado':'Toque para ativar';
-    // Show in-app banner once to request notifications
-    if('Notification' in window && Notification.permission==='default' && !S.notifBannerShown){
-      S.notifBannerShown=true; save();
-      showNotifBanner();
-    }
-  }, 1000);
-  // Reschedule alarms every time app is focused
-  document.addEventListener('visibilitychange',()=>{
-    if(!document.hidden)scheduleAlarms();
-  });
-  // System dark listener
-  window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',e=>{
-    if(S.sys){S.dark=e.matches;applyDark();save();}
-  });
-  // Swipe left on week to go forward
+    if(el&&'Notification'in window)el.textContent=Notification.permission==='granted'?'Ativo':Notification.permission==='denied'?'Negado':'Toque para ativar';
+    if('Notification'in window&&Notification.permission==='default'&&!S.notifBannerShown){S.notifBannerShown=true;save();showNotifBanner();}
+  },1000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleAlarms();});
+  window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',e=>{if(S.sys){S.dark=e.matches;applyDark();save();}});
   let tx=0;
   document.getElementById('weekStrip').addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
-  document.getElementById('weekStrip').addEventListener('touchend',e=>{
-    const dx=e.changedTouches[0].clientX-tx;
-    if(Math.abs(dx)>50)shiftWeek(dx<0?1:-1);
-  },{passive:true});
-  // Close open drum/cal pickers when user scrolls in det-body
-  let _lastScrollY = 0;
-  const detBody = document.getElementById('detBody');
-  if(detBody){
-    detBody.addEventListener('scroll', ()=>{
-      const dy = detBody.scrollTop - _lastScrollY;
-      _lastScrollY = detBody.scrollTop;
-      // If scrolling down more than 30px, collapse any open picker
-      if(dy > 30){
-        document.getElementById('pk-ttime')?.classList.remove('open');
-        document.getElementById('pk-tdate')?.classList.remove('open');
-      }
-    },{passive:true});
-  }
+  document.getElementById('weekStrip').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)shiftWeek(dx<0?1:-1);},{passive:true});
+  let _lastScrollY=0;
+  const detBody=document.getElementById('detBody');
+  if(detBody){detBody.addEventListener('scroll',()=>{const dy=detBody.scrollTop-_lastScrollY;_lastScrollY=detBody.scrollTop;if(dy>30){document.getElementById('pk-ttime')?.classList.remove('open');document.getElementById('pk-tdate')?.classList.remove('open');}},{passive:true});}
 });
 </script>
 </body>
