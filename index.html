@@ -207,7 +207,7 @@ html,body,.app{background:var(--bg);}
 
 /* ─── FAB ────────────────────────────── */
 .fab{
-  position:fixed;bottom:calc(var(--safe-bot) + 76px);right:22px;
+  position:fixed;bottom:calc(env(safe-area-inset-bottom) + 84px);right:22px;
   width:50px;height:50px;border-radius:50%;
   background:#5a6070;color:#fff;
   display:flex;align-items:center;justify-content:center;
@@ -222,7 +222,7 @@ html,body,.app{background:var(--bg);}
 /* ─── BOTTOM NAV — Liquid Glass ────────── */
 .nav{
   position:fixed;
-  bottom:calc(var(--safe-bot) - 11px);
+  bottom:calc(env(safe-area-inset-bottom) + 8px);
   left:50%;transform:translateX(-50%);
   width:auto;min-width:336px;max-width:408px;
   background:rgba(255,255,255,0.55);
@@ -365,7 +365,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   display:flex;flex-direction:column;
   transform:translateY(110%);
   transition:transform .38s cubic-bezier(.22,1,.36,1);
-  overflow:hidden;
+  overflow:visible;
   box-shadow:0 -2px 20px rgba(0,0,0,.18);
 }
 [data-dark="1"] .det-card{background:#1c1c1e;}
