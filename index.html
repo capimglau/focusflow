@@ -124,7 +124,7 @@ body{background:var(--bg);}
 .scroll{
   flex:1;overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
-  padding-bottom:calc(var(--safe-bot) + 80px);
+  padding-bottom:calc(env(safe-area-inset-bottom,34px) + 120px);
 }
 .scroll::-webkit-scrollbar{display:none}
 
@@ -210,7 +210,7 @@ body{background:var(--bg);}
 
 /* ─── FAB ────────────────────────────── */
 .fab{
-  position:fixed;bottom:calc(env(safe-area-inset-bottom) + 84px);right:22px;
+  position:fixed;bottom:calc(env(safe-area-inset-bottom,8px) + 64px);right:22px;
   width:50px;height:50px;border-radius:50%;
   background:#5a6070;color:#fff;
   display:flex;align-items:center;justify-content:center;
@@ -225,7 +225,7 @@ body{background:var(--bg);}
 /* ─── BOTTOM NAV — Liquid Glass ────────── */
 .nav{
   position:fixed;
-  bottom:calc(env(safe-area-inset-bottom,34px) + 12px);
+  bottom:env(safe-area-inset-bottom,8px);
   left:50%;transform:translateX(-50%);
   width:auto;min-width:336px;max-width:408px;
   background:rgba(255,255,255,0.55);
@@ -1458,7 +1458,7 @@ function renderEmBreve(){
     }
     if(!overdue.length&&!S.items.some(x=>!isOverdue(x)&&x.date)){h+=`<div class="empty"><div class="empty-icon">🎉</div><div class="empty-t">Tudo em dia</div><div class="empty-s">Nenhum item próximo.</div></div>`;}
   }
-  h+=`<div style="height:110px"></div>`;
+  h+=`<div style="height:160px"></div>`;
   const hdivider=el.querySelector('.hdivider');
   if(hdivider){let next=hdivider.nextSibling;while(next){const tmp=next.nextSibling;el.removeChild(next);next=tmp;}el.insertAdjacentHTML('beforeend',h);}
   else{el.innerHTML=h;}
@@ -1477,7 +1477,7 @@ function renderHoje(){
   if(overdue.length){h+=`<div class="overdue-hdr"><span class="overdue-hdr-title">Atrasada${overdue.length>1?'s':''}</span></div>`;overdue.forEach(it=>{h+=itemHTML(it,true);});}
   if(todayItems.length){if(overdue.length)h+=`<div class="sec-hdr bold" style="padding-top:14px;padding-bottom:2px">Hoje</div>`;todayItems.forEach(it=>{h+=itemHTML(it,false);});}
   if(!overdue.length&&!todayItems.length){h+=`<div class="empty"><div class="empty-icon">☀️</div><div class="empty-t">Dia livre</div><div class="empty-s">Nenhum item para hoje.</div></div>`;}
-  h+=`<div style="height:110px"></div>`;el.innerHTML=h;
+  h+=`<div style="height:160px"></div>`;el.innerHTML=h;
 }
 
 // ══════════════════════════════════════════
@@ -1492,7 +1492,7 @@ function renderEntrada(){
   let h='';
   if(!items.length){h=`<div class="empty"><div class="empty-icon">📥</div><div class="empty-t">Entrada vazia</div><div class="empty-s">Adicione tarefas, eventos ou notas.</div></div>`;}
   else{items.forEach(it=>{h+=itemHTML(it,true);});}
-  h+=`<div style="height:110px"></div>`;el.innerHTML=h;
+  h+=`<div style="height:160px"></div>`;el.innerHTML=h;
 }
 function setFilter(el,f){S.filterE=f;document.querySelectorAll('#filter-entrada .tag-opt').forEach(x=>x.classList.remove('on'));el.classList.add('on');renderEntrada();}
 
