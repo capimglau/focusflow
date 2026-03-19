@@ -8,11 +8,17 @@
 <meta name="apple-mobile-web-app-title" content="FocusFlow">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#000000" id="themeColor">
+<link rel="manifest" href='data:application/manifest+json,{"name":"FocusFlow","short_name":"FocusFlow","display":"standalone","start_url":".","background_color":"#ffffff","theme_color":"#000000","icons":[{"src":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==","sizes":"512x512","type":"image/png"}]}'>
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232c3040'/><text y='.9em' font-size='70' x='15'>🗓</text></svg>">
 <title>FocusFlow</title>
 <style>
-/* ─── RESET & BASE ─────────────────── */
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+/* ─── RESET ─── */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+input,textarea{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;}
+/* Fonte não escala ao girar */
+html{-webkit-text-size-adjust:none;text-size-adjust:none;background:#000;}
+/* ─── VARS ─── */
 :root{
   --red:#d94030;--accent:#5a6070;--ink:#000;--ink2:#3c3c43;--gray:#8e8e93;--gray2:#aeaeb2;
   --sep:#e5e5ea;--bg:#fff;--bg2:#f2f2f7;
@@ -23,27 +29,18 @@
   --accent:#e5e5ea;--ink:#fff;--ink2:#ebebf5;--gray:#8e8e93;--gray2:#636366;
   --sep:#38383a;--bg:#000;--bg2:#1c1c1e;
 }
-/* ── Base: fill entire screen ── */
+/* ─── BASE ─── */
 html,body{
-  margin:0;padding:0;
-  width:100%;height:100dvh;height:-webkit-fill-available;
-  /* background on html fills the status bar / Dynamic Island region in PWA */
-  background:var(--bg);
-  color:var(--ink);
+  margin:0;padding:0;width:100%;height:100dvh;
+  position:fixed;overflow:hidden;
+  background:var(--bg);color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;
-  overflow:hidden;
 }
-
-/* ─── LAYOUT ─────────────────────────── */
-html,body,.app{
-  background:var(--bg);
-}
+html,body,.app{background:var(--bg);}
 .app{
-  position:fixed;
-  top:0;left:0;right:0;bottom:0;
-  display:flex;flex-direction:column;
-  overflow:hidden;
-  height:100dvh;height:-webkit-fill-available;
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  width:100%;height:100dvh;
+  display:flex;flex-direction:column;overflow:hidden;
 }
 /* Dark mode — tudo escuro */
 [data-dark="1"] html,
@@ -65,7 +62,7 @@ html,body,.app{
 
 /* ─── TOP BAR ────────────────────────── */
 .topbar{
-  padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 8px;
+  padding:calc(env(safe-area-inset-top) + 10px) 16px 8px;
   display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;background:transparent;
   position:sticky;top:0;z-index:90;
@@ -361,7 +358,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 
 .det-card{
   position:absolute;
-  top:6px;
+  top:0;
   left:0;right:0;bottom:0;
   background:#f2f2f7;
   border-radius:20px 20px 0 0;
@@ -376,7 +373,8 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 
 .det-hdr{
   display:flex;align-items:center;justify-content:space-between;
-  padding:16px 16px 12px;
+  /* max() garante pelo menos 80px no topo — cobre Dynamic Island de qualquer iPhone */
+  padding:calc(env(safe-area-inset-top) + 16px) 16px 14px;
   background:#f2f2f7;
   flex-shrink:0;
 }
@@ -782,8 +780,17 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 [data-dark="1"] .overdue-hdr{background:transparent;}
 [data-dark="1"] .month-hdr,[data-dark="1"] .week-strip{background:transparent;}
 [data-dark="1"] .snack{background:rgba(100,100,100,.95);}
-#notifBanner.show{transform:translateY(0) !important;}
+
 </style>
+
+<script>
+// Force PWA cache update
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    regs.forEach(function(r){r.unregister();});
+  });
+}
+</script>
 </head>
 <body>
 <div class="app">
@@ -792,7 +799,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
 <div class="page active" id="page-embreve">
   <div class="topbar">
     <div class="topbar-spacer"></div>
-    <div class="topbar-title" id="topbar-title-embreve">Em breve</div>
+    <div class="topbar-title" id="topbar-title-embreve">Em breve <span style="font-size:10px;opacity:.4">v9</span></div>
     <div class="topbar-actions">
       <div class="topbar-btn" id="darkModeBtn" onclick="toggleDark()" title="Modo noturno">
         <svg id="darkModeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1222,13 +1229,7 @@ textarea.finput{resize:none;line-height:1.4;padding:2px 0}
   </div><!-- /det-card -->
 </div>
 
-<!-- ── NOTIFICATION BANNER ── -->
-<div id="notifBanner" style="display:none;position:fixed;top:12px;left:12px;right:12px;z-index:900;background:#1c1c1e;border-radius:16px;padding:12px 14px;align-items:center;gap:10px;box-shadow:0 4px 24px rgba(0,0,0,.45);transform:translateY(-140%);transition:transform .35s cubic-bezier(.32,1,.65,1);">
-  <div style="font-size:22px;flex-shrink:0">🔔</div>
-  <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ativar notificações</div><div style="font-size:11px;color:#8e8e93;margin-top:1px">Receba alarmes dos seus lembretes</div></div>
-  <button onclick="enableNotifFromBanner()" style="background:#0a84ff;color:#fff;border:none;border-radius:9px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0;white-space:nowrap">Ativar</button>
-  <button onclick="closeNotifBanner()" style="background:none;border:none;color:#636366;font-size:18px;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0">✕</button>
-</div>
+<!-- notif banner removido -->
 
 <!-- ── RECURRENCE PICKER ── -->
 <div class="overlay" id="repOverlay" onclick="closeRep(event)" style="z-index:700">
@@ -1419,7 +1420,7 @@ function itemHTML(it,showDate=false){
   const leftEl=it.type==='event'
     ?`<div class="ev-ico" onclick="openEdit('${it.id}')"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="1" y="3" width="20" height="18" rx="3"/><path d="M1 8h20"/><path d="M7 1v4M15 1v4"/><text x="11" y="18" font-size="7" font-weight="600" text-anchor="middle" fill="currentColor" stroke="none">${it.date?new Date(it.date+'T12:00').getDate():''}</text></svg></div>`
     :`<div class="chk ${it.done?'done':''}" onclick="toggleDone('${it.id}',event)">${SVG_CHK}</div>`;
-  return`<div class="item-row" id="row-${it.id}">${leftEl}<div class="item-body" onclick="openEdit('${it.id}')"><div class="item-title ${it.done?'done-text':''}">${it.title}</div>${it.body&&it.type!='note'?`<div class="item-note">${it.body}</div>`:''}${notePreview}${metaToShow.length?`<div class="item-subtitle">${metaToShow.join('')}</div>`:''}${tags?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${tags}</div>`:''}</div><div class="item-right" onclick="openEdit('${it.id}')"><span class="inbox-tag">Entrada</span><span class="inbox-icon">${SVG_INB}</span></div></div>`;
+  return`<div class="item-row" id="row-${it.id}" data-id="${it.id}" data-overdue="${isOverdue(it)?'1':'0'}">${leftEl}<div class="item-body" onclick="openEdit('${it.id}')"><div class="item-title ${it.done?'done-text':''}">${it.title}</div>${it.body&&it.type!='note'?`<div class="item-note">${it.body}</div>`:''}${notePreview}${metaToShow.length?`<div class="item-subtitle">${metaToShow.join('')}</div>`:''}${tags?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${tags}</div>`:''}</div><div class="item-right" onclick="openEdit('${it.id}')"><span class="inbox-tag">Entrada</span><span class="inbox-icon">${SVG_INB}</span></div></div>`;
 }
 
 // ══════════════════════════════════════════
@@ -1433,8 +1434,7 @@ function renderEmBreve(){
     h+=`<div class="overdue-hdr"><span class="overdue-hdr-title">Atrasada${overdue.length>1?'s':''}</span><div class="overdue-hdr-right" onclick="toggleOver()"><span class="overdue-hdr-action">Reagendar</span><span class="overdue-hdr-chevron" id="overChev">⌄</span></div></div><div id="overItems">`;
     overdue.forEach(it=>{h+=itemHTML(it,true);});
     h+=`</div>`;
-  }
-  if(filterDay){
+  }  if(filterDay){
     const d=dparse(selDay);
     const dayItems=S.items.filter(x=>x.date===selDay&&!x.done).sort((a,b)=>(a.time||'99').localeCompare(b.time||'99'));
     const label=`${d.getDate()} ${MO_ABBR[d.getMonth()]}. · ${DOW_PT[d.getDay()]}`;
@@ -1459,6 +1459,7 @@ function renderEmBreve(){
   const hdivider=el.querySelector('.hdivider');
   if(hdivider){let next=hdivider.nextSibling;while(next){const tmp=next.nextSibling;el.removeChild(next);next=tmp;}el.insertAdjacentHTML('beforeend',h);}
   else{el.innerHTML=h;}
+  attachAllLongPress();
 }
 let overOpen=true;
 function toggleOver(){overOpen=!overOpen;const el=document.getElementById('overItems');const ch=document.getElementById('overChev');if(el)el.style.display=overOpen?'':'none';if(ch)ch.style.transform=overOpen?'':'rotate(-90deg)';}
@@ -1549,7 +1550,7 @@ function buildDrum(colId,items,initIdx=0){
     scrollEndTimer=setTimeout(()=>{
       const i=Math.round(col.scrollTop/ITEM_H);const clamped=Math.max(0,Math.min(i,(col._items||[]).length-1));
       col.scrollTo({top:clamped*ITEM_H,behavior:'smooth'});_updateDrumHighlight(col,clamped);col._lastIdx=clamped;
-    },80);
+    },120);
   },{passive:true});
 }
 
@@ -1875,9 +1876,9 @@ async function requestNotifNow(){
   if(p==='granted'){if(el)el.textContent='Ativo';showSnack('Notificações ativadas ✓');scheduleAlarms();}
   else{if(el)el.textContent='Negado';showSnack('Permissão negada');}
 }
-function showNotifBanner(){const b=document.getElementById('notifBanner');if(b){b.style.display='flex';setTimeout(()=>b.classList.add('show'),50);}}
-function closeNotifBanner(){const b=document.getElementById('notifBanner');if(b){b.classList.remove('show');setTimeout(()=>b.style.display='none',300);}}
-async function enableNotifFromBanner(){closeNotifBanner();await requestNotifNow();}
+
+
+
 function openSettings(){document.getElementById('settingsOverlay').classList.add('show');}
 function closeSettings(e){if(e.target===document.getElementById('settingsOverlay'))document.getElementById('settingsOverlay').classList.remove('show');}
 function exportData(){const b=new Blob([JSON.stringify(S.items,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`focusflow_${dfmt(today())}.json`;a.click();}
@@ -1900,7 +1901,7 @@ function showSnack(msg){const s=document.getElementById('snack');s.textContent=m
 let _alarmTimers=[];
 const ALARM_OFFSET_MS=[null,0,5*60000,10*60000,15*60000,30*60000,60*60000,120*60000,86400000];
 
-async function requestNotifPermission(){if(!('Notification'in window))return false;if(Notification.permission==='granted')return true;if(Notification.permission==='denied')return false;const p=await Notification.requestPermission();return p==='granted';}
+async function requestNotifPermission(){if(!('Notification'in window))return false;return Notification.permission==='granted';}
 function alarmBeep(){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.frequency.value=880;gain.gain.setValueAtTime(0.4,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.6);osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.6);}catch(e){}if(navigator.vibrate)navigator.vibrate([300,100,300]);}
 function showAlarmBanner(title,body){const old=document.getElementById('alarm-banner');if(old)old.remove();const el=document.createElement('div');el.id='alarm-banner';el.style.cssText=`position:fixed;top:calc(env(safe-area-inset-top,44px)+12px);left:16px;right:16px;background:rgba(30,30,30,.96);color:#fff;border-radius:16px;padding:14px 16px;z-index:2000;box-shadow:0 4px 24px rgba(0,0,0,.4);display:flex;align-items:flex-start;gap:12px;animation:bannerIn .3s cubic-bezier(.32,1,.65,1);font-family:-apple-system,BlinkMacSystemFont,sans-serif;`;el.innerHTML=`<div style="font-size:24px;flex-shrink:0">🔔</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</div>${body?`<div style="font-size:13px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${body}</div>`:''}</div><div onclick="this.parentElement.remove()" style="font-size:18px;opacity:.6;cursor:pointer;padding:0 2px">✕</div>`;document.body.appendChild(el);alarmBeep();setTimeout(()=>{if(el.parentNode)el.style.opacity='0',setTimeout(()=>el.remove(),300);},8000);}
 (function(){if(document.getElementById('alarm-style'))return;const s=document.createElement('style');s.id='alarm-style';s.textContent=`@keyframes bannerIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}`;document.head.appendChild(s);})();
@@ -1920,8 +1921,96 @@ function scheduleAlarms(){
 }
 
 // ══════════════════════════════════════════
+// REAGENDAR MODAL
+function openReagendarModal(itemId){
+  var it = itemId ? S.items.find(function(x){return x.id===itemId;}) : null;
+  var overdue = S.items.filter(function(x){return isOverdue(x)&&!x.done;});
+  if(!overdue.length)return;
+
+  // Build overlay
+  var ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center;';
+  var sheet=document.createElement('div');
+  sheet.style.cssText='width:100%;background:var(--bg);border-radius:20px 20px 0 0;padding:0 0 calc(var(--safe-bot)+20px);max-height:80dvh;overflow-y:auto;animation:sheetUp .28s cubic-bezier(.32,1,.65,1);';
+
+  var today_=dfmt(today());
+  var tom=dfmt(new Date(Date.now()+864e5));
+  var nextWeek=dfmt(new Date(Date.now()+7*864e5));
+
+  var title=it?'Reagendar: '+it.title:'Reagendar '+(overdue.length)+' atrasado'+(overdue.length>1?'s':'');
+
+  sheet.innerHTML='<div style="width:36px;height:4px;background:var(--sep);border-radius:2px;margin:10px auto 14px"></div>'
+    +'<div style="font-size:17px;font-weight:600;text-align:center;padding:0 20px 16px;color:var(--ink)">'+title+'</div>'
+    +'<div style="background:var(--bg2);border-radius:12px;margin:0 16px 10px;overflow:hidden">'
+      +'<div class="reag-opt" onclick="doReagendar(\''+today_+'\',\''+itemId+'\')"><span>Hoje</span><span style="color:var(--gray);font-size:14px">'+today_.split('-')[2]+' '+MO_ABBR[+today_.split('-')[1]-1]+'.</span></div>'
+      +'<div class="reag-opt" onclick="doReagendar(\''+tom+'\',\''+itemId+'\')"><span>Amanhã</span><span style="color:var(--gray);font-size:14px">'+tom.split('-')[2]+' '+MO_ABBR[+tom.split('-')[1]-1]+'.</span></div>'
+      +'<div class="reag-opt" onclick="doReagendar(\''+nextWeek+'\',\''+itemId+'\')" style="border-bottom:none"><span>Próxima semana</span><span style="color:var(--gray);font-size:14px">'+nextWeek.split('-')[2]+' '+MO_ABBR[+nextWeek.split('-')[1]-1]+'.</span></div>'
+    +'</div>'
+    +'<div style="background:var(--bg2);border-radius:12px;margin:0 16px 10px;overflow:hidden;display:flex;align-items:center;padding:12px 16px;gap:10px">'
+      +'<span style="font-size:15px;color:var(--ink)">Data personalizada</span>'
+      +'<input type="date" id="reag-custom-date" value="'+today_+'" style="flex:1;border:none;background:transparent;font-family:inherit;font-size:15px;color:var(--gray);outline:none;text-align:right;-webkit-appearance:none">'
+    +'</div>'
+    +'<div style="background:var(--bg2);border-radius:12px;margin:0 16px 10px;overflow:hidden">'
+      +'<div class="reag-opt" onclick="doReagendarCustom(\''+itemId+'\')" style="border-bottom:none;color:var(--red)"><span>Confirmar data personalizada</span></div>'
+    +'</div>'
+    +'<div style="background:var(--bg2);border-radius:12px;margin:0 16px;overflow:hidden">'
+      +'<div class="reag-opt" onclick="this.closest(\'div[style*=fixed]\').remove()" style="border-bottom:none;color:var(--gray)"><span>Cancelar</span></div>'
+    +'</div>';
+
+  ov.appendChild(sheet);
+  document.body.appendChild(ov);
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+
+  // inject style once
+  if(!document.getElementById('reag-style')){
+    var s=document.createElement('style');s.id='reag-style';
+    s.textContent='.reag-opt{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:.5px solid var(--sep);cursor:pointer;font-size:16px;color:var(--ink)}.reag-opt:active{background:var(--sep)}';
+    document.head.appendChild(s);
+  }
+}
+
+function doReagendar(newDate, itemId){
+  if(itemId){
+    var it=S.items.find(function(x){return x.id===itemId;});
+    if(it){it.date=newDate;if(it.datetime)it.datetime=newDate+'T'+(it.datetime.slice(11)||'09:00');}
+  } else {
+    var t=dfmt(today());
+    S.items.forEach(function(x){if(x.date&&x.date<t&&!x.done)x.date=newDate;});
+  }
+  save();renderAll();buildWeek();
+  document.querySelectorAll('div[style*="position:fixed"][style*="z-index:700"]').forEach(function(el){el.remove();});
+  showSnack('Reagendado ✓');
+}
+
+function doReagendarCustom(itemId){
+  var inp=document.getElementById('reag-custom-date');
+  if(!inp||!inp.value)return;
+  doReagendar(inp.value,itemId);
+}
+
+// ── Long-press to reagendar ──
+var _lpTimer=null;
+function attachAllLongPress(){
+  document.querySelectorAll('.item-row[data-id]').forEach(function(row){
+    if(row._lpSet)return; row._lpSet=true;
+    var id=row.getAttribute('data-id');
+    addLongPress(row,function(){openReagendarModal(id);});
+  });
+}
+function addLongPress(el, callback){
+  el.addEventListener('touchstart',function(e){
+    _lpTimer=setTimeout(function(){
+      if(navigator.vibrate)navigator.vibrate(40);
+      callback();
+    },500);
+  },{passive:true});
+  el.addEventListener('touchend',function(){clearTimeout(_lpTimer);},{passive:true});
+  el.addEventListener('touchmove',function(){clearTimeout(_lpTimer);},{passive:true});
+}
+
+// ══════════════════════════════════════════
 // RENDER ALL
-function renderAll(){renderEmBreve();renderHoje();renderEntrada();renderNavegar();}
+function renderAll(){renderEmBreve();renderHoje();renderEntrada();renderNavegar();setTimeout(attachAllLongPress,50);}
 
 // ══════════════════════════════════════════
 // INIT
@@ -1932,12 +2021,19 @@ window.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('togSys').classList.toggle('on',S.sys);
   document.getElementById('navTodayNum').textContent=today().getDate();
   buildWeek();renderAll();initDrums();
+
+  // ── Bloqueia seleção e menu de copiar ──
+  document.addEventListener('selectstart',function(e){
+    if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'){e.preventDefault();}
+  });
+  document.addEventListener('contextmenu',function(e){e.preventDefault();});
+
   setTimeout(()=>{
     scheduleAlarms();
     const el=document.getElementById('notifStatus');
     if(el&&'Notification'in window)el.textContent=Notification.permission==='granted'?'Ativo':Notification.permission==='denied'?'Negado':'Toque para ativar';
-    if('Notification'in window&&Notification.permission==='default'&&!S.notifBannerShown){S.notifBannerShown=true;save();showNotifBanner();}
   },1000);
+
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleAlarms();});
   window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',e=>{if(S.sys){S.dark=e.matches;applyDark();save();}});
   let tx=0;
