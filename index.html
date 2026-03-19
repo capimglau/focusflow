@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="FocusFlow">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#000000" id="themeColor">
-<link rel="manifest" href='data:application/manifest+json,{"name":"FocusFlow","short_name":"FocusFlow","display":"standalone","start_url":".","background_color":"#ffffff","theme_color":"#000000","icons":[{"src":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==","sizes":"512x512","type":"image/png"}]}'>
+<link rel="manifest" href='data:application/manifest+json,{"name":"FocusFlow","short_name":"FocusFlow","display":"standalone","orientation":"portrait","start_url":"/focusflow/","scope":"/focusflow/","background_color":"#000000","theme_color":"#000000","icons":[{"src":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==","sizes":"512x512","type":"image/png"}]}'>
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232c3040'/><text y='.9em' font-size='70' x='15'>🗓</text></svg>">
 <title>FocusFlow</title>
 <style>
@@ -31,7 +31,9 @@ html{-webkit-text-size-adjust:none;text-size-adjust:none;background:#000;}
 }
 /* ─── BASE ─── */
 html,body{
-  margin:0;padding:0;width:100%;height:100dvh;
+  margin:0;padding:0;width:100%;
+  height:100dvh;
+  height:-webkit-fill-available;
   position:fixed;overflow:hidden;
   background:var(--bg);color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;
@@ -39,7 +41,9 @@ html,body{
 html,body,.app{background:var(--bg);}
 .app{
   position:fixed;top:0;left:0;right:0;bottom:0;
-  width:100%;height:100dvh;
+  width:100%;
+  height:100dvh;
+  height:-webkit-fill-available;
   display:flex;flex-direction:column;overflow:hidden;
 }
 /* Dark mode — tudo escuro */
@@ -799,7 +803,7 @@ if('serviceWorker' in navigator){
 <div class="page active" id="page-embreve">
   <div class="topbar">
     <div class="topbar-spacer"></div>
-    <div class="topbar-title" id="topbar-title-embreve">Em breve <span style="font-size:10px;opacity:.4">v9</span></div>
+    <div class="topbar-title" id="topbar-title-embreve">Em breve <span style="font-size:10px;opacity:.4">v10</span></div>
     <div class="topbar-actions">
       <div class="topbar-btn" id="darkModeBtn" onclick="toggleDark()" title="Modo noturno">
         <svg id="darkModeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1139,7 +1143,7 @@ if('serviceWorker' in navigator){
           </div>
         </div>
         <div class="ios-card">
-          <div class="ios-row only"><span class="ios-row-lbl">Repete</span><span class="ios-row-val" id="eRepete">Nunca</span><span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span></div>
+          <div class="ios-row only" onclick="tapRepetition()"><span class="ios-row-lbl">Repete</span><span class="ios-row-val" id="eRepete">Nunca</span><span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span></div>
         </div>
         <div class="ios-card">
           <div class="ios-row"><span class="ios-row-lbl">Calendário</span><span class="ios-row-val" style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#32ade6;display:inline-block"></span>Padrão</span><span class="ios-row-chev" style="font-size:10px;line-height:1;margin-left:6px">▲<br>▼</span></div>
