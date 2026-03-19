@@ -31,19 +31,18 @@ html{-webkit-text-size-adjust:none;text-size-adjust:none;background:#000;}
 }
 /* ─── BASE ─── */
 html,body{
-  margin:0;padding:0;width:100%;
-  height:100%;
+  margin:0;padding:0;width:100%;height:100%;
   overflow:hidden;
   background:var(--bg);color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;
 }
 html,body,.app{background:var(--bg);}
 .app{
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  width:100%;
-  height:100dvh;
-  height:-webkit-fill-available;
-  display:flex;flex-direction:column;overflow:hidden;
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  overflow:hidden;
 }
 /* Dark mode — tudo escuro */
 [data-dark="1"] html,
