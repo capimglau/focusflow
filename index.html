@@ -1453,7 +1453,7 @@ function itemHTML(it,showDate=false){
   else if(it.time){meta.push(`<span class="meta-icon">${SVG_CAL} ${it.time}${it.timeEnd?'–'+it.timeEnd:''}</span>`);}
   if(it.comments)meta.push(`<span class="meta-icon">${SVG_CHT} ${it.comments}</span>`);
   if(it.alarm1>0)meta.push(`<span class="meta-icon" style="color:#d94030"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M7 1.5a4 4 0 014 4v2.5l1 1.5H2L3 8V5.5a4 4 0 014-4z"/><path d="M5.5 11.5a1.5 1.5 0 003 0"/></svg> ${ALARM_LABELS[it.alarm1]}</span>`);
-  if(it.recur&&it.recur!=='never')meta.push(`<span class="meta-icon">🔁 ${RECUR_OPTIONS.find(o=>o.val===it.recur)?.label||''}</span>`);
+  if(it.recur&&it.recur!=='never')meta.push(`<span class="meta-icon" style="color:#d94030"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7V5.5a4 4 0 017 0V7"/><path d="M1 5.5l1.5-1.5 1.5 1.5"/><path d="M11.5 7v1.5a4 4 0 01-7 0V7"/><path d="M13 8.5l-1.5 1.5-1.5-1.5"/></svg> ${RECUR_OPTIONS.find(o=>o.val===it.recur)?.label||''}</span>`);
   if(it.loc)meta.push(`<span class="meta-icon" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">📍 ${it.loc}</span>`);
   if(it.url)meta.push(`<span class="meta-icon" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🔗 ${it.url}</span>`);
   const tags=it.tags&&it.tags.length?it.tags.map(t=>`<span style="font-size:11px;padding:2px 8px;border-radius:20px;background:#f2f2f7;color:#636366;border:.5px solid #e5e5ea">${t}</span>`).join(''):'';
@@ -1495,7 +1495,7 @@ function renderEmBreve(){
       if(isT)label+=' · Hoje';else if(isTom)label+=' · Amanhã';
       label+=` · ${DOW_PT[d.getDay()]}`;
       const bold=dayItems.length>0||isT;
-      h+=`<div class="sec-hdr ${bold?'bold':''}" style="${isT?'color:#007aff':''}">` + label + `</div>`;
+      h+=`<div class="sec-hdr ${bold?'bold':''}" style="${isT?'color:#007aff':''}">${label}</div>`;
       dayItems.forEach(it=>{h+=itemHTML(it,false);});
     }
     if(!overdue.length&&!S.items.some(x=>!isOverdue(x)&&x.date)){h+=`<div class="empty"><div class="empty-icon">🎉</div><div class="empty-t">Tudo em dia</div><div class="empty-s">Nenhum item próximo.</div></div>`;}
@@ -1577,7 +1577,7 @@ const ALARM_LABELS=['Nenhum','Na hora','5 min antes','10 min antes','15 min ante
 const MONTHS_DRUM=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 const ITEM_H=44;
 
-function haptic(){if(navigator.vibrate)navigator.vibrate(4);}
+function haptic(){if(navigator.vibrate)navigator.vibrate(8);}
 
 function buildDrum(colId,items,initIdx=0){
   const col=document.getElementById(colId);if(!col)return;
@@ -1663,7 +1663,7 @@ function tapEventPill(which,part){
 }
 function updateEventPills(){
   const p2x=n=>String(n).padStart(2,'0');
-  const df=(d,m,y)=>`${d} ${MO_CAL_ABBR[m]} ${y}`;const tf=(h,mi)=>`${p2x(h)}:${p2x(mi*5)}`;
+  const df=(d,m,y)=>`${d} ${MO_CAL_ABBR[m]} ${y}`;const tf=(h,mi)=>`${p2x(h)}:${p2x(mi)}`;
   const sd=document.getElementById('pill-sdate'),st=document.getElementById('pill-stime');
   const ed=document.getElementById('pill-edate'),et=document.getElementById('pill-etime');
   if(sd)sd.textContent=df(ECAL.start.selD,ECAL.start.selM,ECAL.start.selY);
@@ -1700,7 +1700,7 @@ function selCalDay(d){CAL.selD=d;CAL.selM=CAL.viewM;CAL.selY=CAL.viewY;DR.day=d;
 function shiftCalMonth(dir){CAL.viewM+=dir;if(CAL.viewM>11){CAL.viewM=0;CAL.viewY++;}if(CAL.viewM<0){CAL.viewM=11;CAL.viewY--;}haptic();renderCalGrid();}
 function toggleMonthDrum(){const pk=document.getElementById('pk-cal-my');if(!pk)return;const open=pk.style.display!=='none';pk.style.display=open?'none':'';if(!open){const yrs=[];for(let y=CAL.viewY-5;y<=CAL.viewY+10;y++)yrs.push(String(y));buildDrum('dc-cal-month',MO_CAL_ABBR,CAL.viewM);buildDrum('dc-cal-year',yrs,5);}}
 function updateDateLabel(){const td=today();const lbl=document.getElementById('disp-date-lbl');if(!lbl)return;const isToday=CAL.selD===td.getDate()&&CAL.selM===td.getMonth()&&CAL.selY===td.getFullYear();lbl.textContent=isToday?'Hoje':`${CAL.selD} de ${MO_CAL_PT[CAL.selM]}`;}
-function updateTimeLabel(){const lbl=document.getElementById('disp-time-lbl');if(lbl)lbl.textContent=`${p2(DR.h)}:${p2(DR.mi*5)}`;}
+function updateTimeLabel(){const lbl=document.getElementById('disp-time-lbl');if(lbl)lbl.textContent=`${p2(DR.h)}:${p2(DR.mi)}`;}
 
 function initDrums(){
   const td=today();
@@ -1708,7 +1708,7 @@ function initDrums(){
   DR.eed=td.getDate();DR.eem=td.getMonth();DR.eey=td.getFullYear();DR.eeh=9;DR.een=0;
   DR.xd=td.getDate();DR.xm=td.getMonth();DR.xy=td.getFullYear();
   DR.alarm1=0;DR.alarm2=0;DR.ealarm1=0;DR.ealarm2=0;DR.h=8;DR.mi=0;
-  const hrs=Array.from({length:24},(_,i)=>p2(i));const mins5=Array.from({length:12},(_,i)=>p2(i*5));
+  const hrs=Array.from({length:24},(_,i)=>p2(i));const mins5=Array.from({length:60},(_,i)=>p2(i));
   buildDrum('dc-hour',hrs,DR.h);buildDrum('dc-min',mins5,DR.mi);
   buildDrum('dc-alarm1',ALARM_LABELS,0);buildDrum('dc-alarm2',ALARM_LABELS,0);
   buildDrum('dc-esh',hrs,DR.esh);buildDrum('dc-esn',mins5,DR.esn);
@@ -1853,7 +1853,7 @@ function saveItem(){
   const hasDate=curType==='task'?document.getElementById('tog-date').classList.contains('on'):true;
   const dateStr=(curType==='task'&&!hasDate)?'':curType==='event'?`${DR.esy}-${p2(DR.esm+1)}-${p2(DR.esd)}`:curType==='expense'?`${DR.xy}-${p2(DR.xm+1)}-${p2(DR.xd)}`:`${DR.yr}-${p2(DR.mo+1)}-${p2(DR.day)}`;
   const hasTime=curType==='task'?document.getElementById('tog-time').classList.contains('on'):curType==='event';
-  const timeStr=!hasTime?'':curType==='event'?`${p2(DR.esh)}:${p2(DR.esn*5)}`:`${p2(DR.h)}:${p2(DR.mi*5)}`;
+  const timeStr=!hasTime?'':curType==='event'?`${p2(DR.esh)}:${p2(DR.esn)}`:`${p2(DR.h)}:${p2(DR.mi)}`;
   const endStr=curType==='event'?`${p2(DR.eeh)}:${p2(DR.een*5)}`:'';
   const bodyMap={task:'dBody',event:'eBody',note:'nBody',expense:'xBody'};
   const locMap={task:getField('dLoc'),event:getField('eLoc')};
