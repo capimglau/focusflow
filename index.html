@@ -142,7 +142,7 @@ body{background:var(--bg);}
   display:flex;align-items:center;justify-content:space-between;
   padding:14px 18px 6px;
 }
-.overdue-hdr-title{font-size:15px;font-weight:700;color:var(--red)}
+.overdue-hdr-title{font-size:14px;font-weight:500;color:var(--red)}
 .overdue-hdr-right{display:flex;align-items:center;gap:5px;cursor:pointer}
 .overdue-hdr-action{font-size:14px;font-weight:500;color:var(--red)}
 .overdue-hdr-chevron{font-size:15px;color:var(--red);transition:transform .2s}
@@ -1293,8 +1293,32 @@ if('serviceWorker' in navigator){
 // SUPABASE
 const SB='https://jsyiriqtzpbuqvjrkwin.supabase.co';
 const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzeWlyaXF0enBidXF2anJrd2luIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMDEyNjksImV4cCI6MjA4ODU3NzI2OX0.BCeCKcwLGnrRhfaFryeTbbCRoGyt3wRPlZzfsxuV0mM';
+const SB_HEADERS={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'};
 async function sbGet(t,q=''){
-  try{const r=await fetch(`${SB}/rest/v1/${t}${q}`,{headers:{'apikey':SK,'Authorization':'Bearer '+SK}});return r.ok?await r.json():null;}catch{return null;}
+  try{const r=await fetch(`${SB}/rest/v1/${t}${q}`,{headers:SB_HEADERS});return r.ok?await r.json():null;}catch{return null;}
+}
+async function sbUpsert(t,body){
+  try{const r=await fetch(`${SB}/rest/v1/${t}`,{method:'POST',headers:SB_HEADERS,body:JSON.stringify(body)});return r.ok;}catch{return false;}
+}
+
+// ── Supabase sync ──────────────────────
+const FF_ID='focusflow-main'; // single row key
+
+async function sbSave(){
+  await sbUpsert('focusflow_items',{id:FF_ID,data:{items:S.items,dark:S.dark,sys:S.sys},updated_at:new Date().toISOString()});
+}
+
+async function sbLoad(){
+  const rows=await sbGet('focusflow_items',`?id=eq.${FF_ID}&select=data`);
+  if(rows&&rows.length&&rows[0].data){
+    const p=rows[0].data;
+    S.items=p.items||[];
+    S.dark=!!p.dark;
+    S.sys=!!p.sys;
+    localStorage.setItem('ff3',JSON.stringify({items:S.items,dark:S.dark,sys:S.sys}));
+    return true;
+  }
+  return false;
 }
 
 // ══════════════════════════════════════════
@@ -1320,12 +1344,29 @@ function isToday(it){return it.date===dfmt(today())}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 
 // ── PERSIST ──
-function save(){localStorage.setItem('ff3',JSON.stringify({items:S.items,dark:S.dark,sys:S.sys}))}
-function load(){
+function save(){
+  localStorage.setItem('ff3',JSON.stringify({items:S.items,dark:S.dark,sys:S.sys}));
+  sbSave(); // sync to Supabase silently
+}
+async function load(){
+  // Try localStorage first (fast, offline)
   const r=localStorage.getItem('ff3');
   if(r){const p=JSON.parse(r);S.items=p.items||[];S.dark=!!p.dark;S.sys=!!p.sys;}
   else{S.items=demo();}
   S.selDay=dfmt(today());
+  // Then try Supabase in background (has newer data?)
+  try{
+    const rows=await sbGet('focusflow_items',`?id=eq.${FF_ID}&select=data,updated_at`);
+    if(rows&&rows.length&&rows[0].data){
+      const remote=rows[0].data;
+      // Use remote if it has more items or localStorage was empty
+      if(!r||(remote.items&&remote.items.length>=S.items.length)){
+        S.items=remote.items||[];S.dark=!!remote.dark;S.sys=!!remote.sys;
+        localStorage.setItem('ff3',JSON.stringify({items:S.items,dark:S.dark,sys:S.sys}));
+        applyDark();renderAll();buildWeek();
+      }
+    }
+  }catch(e){}
 }
 function demo(){
   const t=dfmt(today());const tom=dfmt(new Date(Date.now()+864e5));const d2=dfmt(new Date(Date.now()+2*864e5));const yst7=dfmt(new Date(Date.now()-7*864e5));const yst2=dfmt(new Date(Date.now()-2*864e5));
@@ -1454,7 +1495,7 @@ function renderEmBreve(){
       if(isT)label+=' · Hoje';else if(isTom)label+=' · Amanhã';
       label+=` · ${DOW_PT[d.getDay()]}`;
       const bold=dayItems.length>0||isT;
-      h+=`<div class="sec-hdr ${bold?'bold':''}">${label}</div>`;
+      h+=`<div class="sec-hdr ${bold?'bold':''}" style="${isT?'color:#007aff':''}">` + label + `</div>`;
       dayItems.forEach(it=>{h+=itemHTML(it,false);});
     }
     if(!overdue.length&&!S.items.some(x=>!isOverdue(x)&&x.date)){h+=`<div class="empty"><div class="empty-icon">🎉</div><div class="empty-t">Tudo em dia</div><div class="empty-s">Nenhum item próximo.</div></div>`;}
@@ -1762,6 +1803,11 @@ function openNew(){
   ['task','event','note','expense'].forEach(v=>{const el=document.getElementById('dg-delete-'+v);if(el)el.style.display='none';});
   buildTagsForView('task');buildTagsForView('event');buildTagsForView('note');buildTagsForView('expense');
   renderAttachList();_resetModal();initDrums();
+  // Force event calendars to selected day
+  const _sel=S.selDay?dparse(S.selDay):today();
+  ECAL.start={viewY:_sel.getFullYear(),viewM:_sel.getMonth(),selY:_sel.getFullYear(),selM:_sel.getMonth(),selD:_sel.getDate()};
+  ECAL.end={viewY:_sel.getFullYear(),viewM:_sel.getMonth(),selY:_sel.getFullYear(),selM:_sel.getMonth(),selD:_sel.getDate()};
+  renderEventCal('start');renderEventCal('end');updateEventPills();
   const sel=S.selDay?dparse(S.selDay):today();
   DR.day=sel.getDate();DR.mo=sel.getMonth();DR.yr=sel.getFullYear();
   DR.esd=DR.day;DR.esm=DR.mo;DR.esy=DR.yr;DR.xd=DR.day;DR.xm=DR.mo;DR.xy=DR.yr;
@@ -1815,7 +1861,9 @@ function saveItem(){
   const it={id:S.editId||uid(),type:curType,title,body:getField(bodyMap[curType])||'',date:dateStr,time:timeStr,timeEnd:endStr,loc:locMap[curType]||'',url:urlMap[curType]||'',done:false,tags:getTagsForView(curType),val:parseFloat(document.getElementById('dVal')?.value)||0,sub:parseInt(document.getElementById('dSub')?.value)||0,subDone:0,comments:0,alarm1:curType==='event'?DR.ealarm1:DR.alarm1,alarm2:curType==='event'?DR.ealarm2:DR.alarm2,attachments:[...pendingAttachments],recur:curRecur,anchorDate:curType==='task'&&dateStr?dateStr:null};
   if(S.editId){const idx=S.items.findIndex(x=>x.id===S.editId);if(idx>=0){it.done=S.items[idx].done;it.subDone=S.items[idx].subDone||0;S.items[idx]=it;}}
   else{S.items.unshift(it);}
-  save();renderAll();buildWeek();scheduleAlarms();closeDetail();showSnack(S.editId?'Salvo':'Adicionado');S.editId=null;
+  save();renderAll();buildWeek();scheduleAlarms();closeDetail();
+  showSnack(S.editId?'Salvo':'Adicionado');
+  S.editId=null;
 }
 function deleteItem(){if(!S.editId)return;if(!confirm('Apagar este item?'))return;S.items=S.items.filter(x=>x.id!==S.editId);save();renderAll();buildWeek();closeDetail();showSnack('Apagado');S.editId=null;}
 function toggleDone(id,e){
@@ -2018,8 +2066,8 @@ function renderAll(){renderEmBreve();renderHoje();renderEntrada();renderNavegar(
 
 // ══════════════════════════════════════════
 // INIT
-window.addEventListener('DOMContentLoaded',()=>{
-  load();
+window.addEventListener('DOMContentLoaded',async ()=>{
+  await load();
   if(S.sys)S.dark=window.matchMedia('(prefers-color-scheme:dark)').matches;
   applyDark();
   document.getElementById('togSys').classList.toggle('on',S.sys);
