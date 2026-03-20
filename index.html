@@ -62,11 +62,11 @@ body{background:var(--bg);}
 [data-dark="1"] .item-row{background:transparent;}
 [data-dark="1"] .item-row:active{background:#1c1c1e;}
 [data-dark="1"] .overdue-hdr,
-[data-dark="1"] .sec-hdr{background:transparent;}[data-dark="1"] .sec-hdr.bold{color:#ebebf5;}
+[data-dark="1"] .sec-hdr{background:transparent;}[data-dark="1"] .sec-hdr.bold{color:#ebebf5 !important;}
 
 /* ─── TOP BAR ────────────────────────── */
 .topbar{
-  padding:calc(env(safe-area-inset-top) + 10px) 16px 8px;
+  padding:max(env(safe-area-inset-top), 44px) 16px 8px;
   display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;background:transparent;
   position:sticky;top:0;z-index:90;
@@ -1579,7 +1579,7 @@ function itemHTML(it,showDate=false){
   if(it.recur&&it.recur!=='never')meta.push(`<span class="meta-icon" style="color:#d94030"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7V5.5a4 4 0 017 0V7"/><path d="M1 5.5l1.5-1.5 1.5 1.5"/><path d="M11.5 7v1.5a4 4 0 01-7 0V7"/><path d="M13 8.5l-1.5 1.5-1.5-1.5"/></svg> ${RECUR_OPTIONS.find(o=>o.val===it.recur)?.label||''}</span>`);
   if(it.loc)meta.push(`<span class="meta-icon" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">📍 ${it.loc}</span>`);
   if(it.url)meta.push(`<span class="meta-icon" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🔗 ${it.url}</span>`);
-  const tags=it.tags&&it.tags.length?it.tags.map(t=>`<span style="font-size:11px;padding:2px 8px;border-radius:20px;background:#f2f2f7;color:#636366;border:.5px solid #e5e5ea">${t}</span>`).join(''):'';
+  const tags=it.tags&&it.tags.length?it.tags.map(t=>`<span style="font-size:11px;padding:2px 8px;border-radius:20px;background:var(--bg2);color:var(--gray);border:.5px solid var(--sep)">${t}</span>`).join(''):'';
   let notePreview='';
   if(it.type==='note'&&it.body){const lines=it.body.split('\n').slice(0,5).join('\n');notePreview=`<div class="note-preview">${lines.replace(/\n/g,'<br>')}</div>`;}
   if(it.type==='expense'&&it.val)meta.push(`<span class="meta-icon">R$ ${Number(it.val).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>`);
