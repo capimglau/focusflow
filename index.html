@@ -62,7 +62,7 @@ body{background:var(--bg);}
 [data-dark="1"] .item-row{background:transparent;}
 [data-dark="1"] .item-row:active{background:#1c1c1e;}
 [data-dark="1"] .overdue-hdr,
-[data-dark="1"] .sec-hdr{background:transparent;}
+[data-dark="1"] .sec-hdr{background:transparent;}[data-dark="1"] .sec-hdr.bold{color:#ebebf5;}
 
 /* ─── TOP BAR ────────────────────────── */
 .topbar{
@@ -134,7 +134,7 @@ body{background:var(--bg);}
   padding:20px 18px 6px;
   font-size:12px;color:var(--gray);font-weight:400;letter-spacing:.1px;
 }
-.sec-hdr.bold{font-size:14px;font-weight:500;color:var(--ink2)}
+.sec-hdr.bold{font-size:14px;font-weight:500;color:#1c1c1e}
 .sec-hdr .dot{margin:0 4px}
 
 /* ─── OVERDUE HEADER ─────────────────── */
@@ -161,14 +161,14 @@ body{background:var(--bg);}
 .item-row:last-child{border-bottom:none}
 
 .chk{
-  width:24px;height:24px;border-radius:50%;
+  width:22px;height:22px;border-radius:50%;
   border:1.5px solid var(--gray2);
   flex-shrink:0;margin-right:12px;margin-top:1px;
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;transition:all .15s;
 }
 .chk.done{background:var(--green,#34c759);border-color:var(--green,#34c759)}
-.chk-check{display:none;width:13px;height:13px}
+.chk-check{display:none;width:11px;height:11px}
 .chk.done .chk-check{display:block}
 
 /* Calendar icon for events in list */
@@ -830,7 +830,7 @@ if('serviceWorker' in navigator){
 <div class="page active" id="page-embreve">
   <div class="topbar">
     <div class="topbar-spacer"></div>
-    <div class="topbar-title" id="topbar-title-embreve">Em breve <span style="font-size:10px;opacity:.4">v10</span></div>
+    <div class="topbar-title" id="topbar-title-embreve">Em breve</div>
     <div class="topbar-actions">
       <div class="topbar-btn" id="calViewBtn" onclick="openCalAgenda()" title="Visão do calendário">
         <svg id="calViewIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1406,24 +1406,24 @@ function save(){
   sbSave(); // sync to Supabase silently
 }
 async function load(){
-  // Try localStorage first (fast, offline)
   const r=localStorage.getItem('ff3');
-  if(r){const p=JSON.parse(r);S.items=p.items||[];S.dark=!!p.dark;S.sys=!!p.sys;}
-  else{S.items=demo();}
-  S.selDay=dfmt(today());
-  // Then try Supabase in background (has newer data?)
-  try{
-    const rows=await sbGet('focusflow_items',`?id=eq.${FF_ID}&select=data,updated_at`);
-    if(rows&&rows.length&&rows[0].data){
-      const remote=rows[0].data;
-      // Only use remote if localStorage was empty (first load / after cache clear)
-      if(!r){
+  if(r){
+    // localStorage has data — use it immediately
+    const p=JSON.parse(r);S.items=p.items||[];S.dark=!!p.dark;S.sys=!!p.sys;
+  } else {
+    // No local data — WAIT for Supabase before showing anything
+    try{
+      const rows=await sbGet('focusflow_items',`?id=eq.${FF_ID}&select=data`);
+      if(rows&&rows.length&&rows[0].data){
+        const remote=rows[0].data;
         S.items=remote.items||[];S.dark=!!remote.dark;S.sys=!!remote.sys;
         localStorage.setItem('ff3',JSON.stringify({items:S.items,dark:S.dark,sys:S.sys}));
-        applyDark();renderAll();buildWeek();
+      } else {
+        S.items=demo();
       }
-    }
-  }catch(e){}
+    }catch(e){S.items=demo();}
+  }
+  S.selDay=dfmt(today());
 }
 function demo(){
   const t=dfmt(today());const tom=dfmt(new Date(Date.now()+864e5));const d2=dfmt(new Date(Date.now()+2*864e5));const yst7=dfmt(new Date(Date.now()-7*864e5));const yst2=dfmt(new Date(Date.now()-2*864e5));
