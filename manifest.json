@@ -2,15 +2,8 @@
   "name": "FocusFlow",
   "short_name": "FocusFlow",
   "display": "standalone",
-  "start_url": "/focusflow/",
-  "scope": "/focusflow/",
+  "start_url": "/",
+  "scope": "/",
   "background_color": "#000000",
-  "theme_color": "#000000",
-  "icons": [
-    {
-      "src": "/focusflow/icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+  "theme_color": "#000000"
 }
