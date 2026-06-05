@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Blox Pets — Loja Oficial</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -133,7 +133,7 @@ main{max-width:1200px;margin:0 auto;padding:40px 24px;position:relative;z-index:
 .btn-gp:hover{filter:brightness(1.15)}
 
 /* ── CARRINHO ── */
-.cart-wrap{position:fixed;bottom:24px;right:24px;z-index:200}
+.cart-wrap{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom));right:24px;z-index:200}
 .cart-btn{background:linear-gradient(135deg,#00d4ff,#0077aa);color:#000;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:900;font-size:.9rem;padding:14px 22px;cursor:pointer;box-shadow:0 8px 32px rgba(0,212,255,.4);display:flex;align-items:center;gap:8px;transition:.2s}
 .cart-btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
 .cart-count{background:#ff4466;color:#fff;border-radius:50%;width:22px;height:22px;font-size:.75rem;display:flex;align-items:center;justify-content:center;font-weight:900}
@@ -570,7 +570,7 @@ footer{background:#030d18;border-top:1px solid rgba(0,212,255,.08);padding:32px 
 // ── SENHA ADMIN (altere aqui) ──
 const ADMIN_PASSWORD = 'bloxpets2025';
 // Atalho: pressione  B P A D M  em sequência rápida no teclado
-const ADMIN_SEQUENCE = ['b','p','a','d','m'];
+const ADMIN_SEQUENCE = ['n','i','t','a','o'];
 
 // ── DADOS (persistem no localStorage) ──
 function load(key, def){ try{ const d=localStorage.getItem(key); return d?JSON.parse(d):def; }catch(e){ return def; } }
