@@ -3,401 +3,1047 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blox Pets</title>
-
+<title>Blox Pets — Loja Oficial</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
+:root{
+  --bg:#04111f;
+  --bg2:#071828;
+  --card:#0a2035;
+  --card2:#0d2a42;
+  --accent:#00d4ff;
+  --accent2:#ff6b00;
+  --gold:#ffd700;
+  --text:#e8f4ff;
+  --muted:#5a8aaa;
+  --danger:#ff4466;
+  --success:#00e676;
+  --radius:14px;
+  --glow:0 0 20px rgba(0,212,255,.35);
+  --glow2:0 0 20px rgba(255,107,0,.35);
 }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-body{
-    background:#081f5c;
-    color:white;
-}
+/* ── PARTÍCULAS BG ── */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;animation:float linear infinite;opacity:.18}
+@keyframes float{0%{transform:translateY(110vh) scale(0)}50%{opacity:.25}100%{transform:translateY(-10vh) scale(1)}}
 
-header{
-    background:#05133a;
-    padding:20px;
-    text-align:center;
-}
+/* ── HEADER ── */
+header{position:relative;z-index:10;background:linear-gradient(135deg,#010e1a 0%,#051c30 60%,#030f1c 100%);border-bottom:1px solid rgba(0,212,255,.15);padding:0 24px}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{font-size:2.2rem;filter:drop-shadow(0 0 10px #00d4ff)}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;background:linear-gradient(135deg,#00d4ff,#7af3ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:.7rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:-4px}
+.header-badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.badge{font-size:.7rem;font-weight:800;padding:4px 10px;border-radius:20px;letter-spacing:1px;text-transform:uppercase}
+.badge-live{background:rgba(0,230,118,.15);color:var(--success);border:1px solid rgba(0,230,118,.3);animation:pulse 2s infinite}
+.badge-fast{background:rgba(255,107,0,.12);color:var(--accent2);border:1px solid rgba(255,107,0,.3)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 
-header h1{
-    font-size:40px;
-}
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(4,17,31,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,212,255,.08)}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:4px;padding:0 24px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-btn{background:none;border:none;color:var(--muted);font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;padding:14px 18px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.5px;text-transform:uppercase}
+.nav-btn:hover,.nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.nav-search{margin-left:auto;position:relative;display:flex;align-items:center}
+.nav-search input{background:rgba(255,255,255,.05);border:1px solid rgba(0,212,255,.2);border-radius:8px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.85rem;padding:8px 14px 8px 36px;width:200px;outline:none;transition:.2s}
+.nav-search input:focus{border-color:var(--accent);width:240px;background:rgba(0,212,255,.05)}
+.nav-search .si{position:absolute;left:10px;color:var(--muted);font-size:.9rem}
 
-nav{
-    background:#0d3dbd;
-    padding:15px;
-    display:flex;
-    justify-content:center;
-    gap:20px;
-}
+/* ── HERO BANNER ── */
+.hero{position:relative;z-index:5;background:linear-gradient(135deg,#041622 0%,#07253d 50%,#031219 100%);padding:60px 24px 50px;text-align:center;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,212,255,.12),transparent)}
+.hero-tag{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--accent);border:1px solid rgba(0,212,255,.3);padding:5px 14px;border-radius:20px;margin-bottom:18px;background:rgba(0,212,255,.06)}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,9vw,6rem);letter-spacing:4px;line-height:1;margin-bottom:16px;background:linear-gradient(135deg,#fff 30%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1rem;color:var(--muted);max-width:520px;margin:0 auto 30px;line-height:1.7}
+.hero-stats{display:flex;gap:32px;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent);letter-spacing:2px}
+.stat-l{font-size:.72rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
 
-nav a{
-    color:white;
-    text-decoration:none;
-    font-weight:bold;
-}
+/* ── PROMO TICKER ── */
+.ticker{background:linear-gradient(90deg,var(--accent2),#ff9500);color:#000;font-size:.8rem;font-weight:900;padding:9px 0;overflow:hidden;position:relative;z-index:5}
+.ticker-inner{display:flex;animation:tick 30s linear infinite;white-space:nowrap}
+.ticker-inner span{padding:0 40px}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-.banner{
-    background:gold;
-    color:black;
-    text-align:center;
-    padding:15px;
-    font-weight:bold;
-    font-size:20px;
-}
+/* ── MAIN ── */
+main{max-width:1200px;margin:0 auto;padding:40px 24px;position:relative;z-index:5}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,212,255,.3),transparent);margin-left:10px}
+.section-sub{font-size:.82rem;color:var(--muted);margin-bottom:28px;letter-spacing:.5px}
 
-.busca{
-    text-align:center;
-    margin:25px;
-}
+/* ── FILTROS ── */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.filter-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;padding:7px 16px;border-radius:20px;cursor:pointer;transition:.2s;letter-spacing:.5px}
+.filter-btn:hover,.filter-btn.on{background:rgba(0,212,255,.1);border-color:rgba(0,212,255,.4);color:var(--accent)}
 
-.busca input{
-    width:300px;
-    max-width:90%;
-    padding:10px;
-    border:none;
-    border-radius:10px;
-}
+/* ── GRID DE CARDS ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
 
-.produtos{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:20px;
-    padding:20px;
-}
+/* ── CARD ── */
+.card{background:var(--card);border:1px solid rgba(0,212,255,.08);border-radius:var(--radius);overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s;cursor:pointer;position:relative}
+.card:hover{transform:translateY(-5px);box-shadow:var(--glow);border-color:rgba(0,212,255,.3)}
+.card-img{width:100%;aspect-ratio:1;object-fit:cover;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:cover}
+.card-img-placeholder{width:100%;aspect-ratio:1;background:linear-gradient(135deg,#0a2035,#0d3050);display:flex;align-items:center;justify-content:center;font-size:3.5rem}
+.card-rarity{position:absolute;top:10px;left:10px;font-size:.65rem;font-weight:900;padding:3px 9px;border-radius:10px;letter-spacing:1px;text-transform:uppercase}
+.r-comum{background:rgba(120,120,120,.3);color:#aaa;border:1px solid rgba(120,120,120,.4)}
+.r-raro{background:rgba(0,100,255,.25);color:#5599ff;border:1px solid rgba(0,100,255,.4)}
+.r-epico{background:rgba(150,0,255,.25);color:#cc66ff;border:1px solid rgba(150,0,255,.4)}
+.r-lendario{background:rgba(255,180,0,.2);color:var(--gold);border:1px solid rgba(255,180,0,.4)}
+.r-divino{background:linear-gradient(135deg,rgba(0,212,255,.2),rgba(255,0,150,.2));color:#ff66cc;border:1px solid rgba(255,100,200,.4)}
+.card-new{position:absolute;top:10px;right:10px;background:var(--danger);color:#fff;font-size:.6rem;font-weight:900;padding:2px 7px;border-radius:8px;letter-spacing:1px}
+.card-body{padding:14px}
+.card-name{font-weight:900;font-size:1rem;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-desc{font-size:.75rem;color:var(--muted);line-height:1.5;margin-bottom:12px;min-height:34px}
+.card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-price{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:1px;color:var(--accent2)}
+.btn-add{background:linear-gradient(135deg,#00d4ff,#0099cc);color:#000;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:900;padding:8px 14px;cursor:pointer;transition:.2s;white-space:nowrap}
+.btn-add:hover{filter:brightness(1.15);transform:scale(1.04)}
+.btn-add:active{transform:scale(.97)}
+.card-unavail .btn-add{background:rgba(255,255,255,.08);color:var(--muted);cursor:not-allowed}
+.card-unavail .btn-add:hover{filter:none;transform:none}
 
-.card{
-    background:#123ea0;
-    width:280px;
-    padding:20px;
-    border-radius:15px;
-    text-align:center;
-}
+/* ── SEÇÃO CONTAS ── */
+.conta-card{background:var(--card);border:1px solid rgba(255,180,0,.15);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;gap:10px;transition:.25s}
+.conta-card:hover{border-color:rgba(255,180,0,.4);box-shadow:0 0 20px rgba(255,180,0,.1)}
+.conta-header{display:flex;justify-content:space-between;align-items:flex-start}
+.conta-name{font-weight:900;font-size:1rem}
+.conta-price{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold)}
+.conta-tags{display:flex;gap:6px;flex-wrap:wrap}
+.conta-tag{font-size:.65rem;font-weight:700;padding:3px 9px;border-radius:10px;background:rgba(255,180,0,.1);color:var(--gold);border:1px solid rgba(255,180,0,.25);letter-spacing:.5px}
+.conta-desc{font-size:.8rem;color:var(--muted);line-height:1.6}
+.btn-conta{background:linear-gradient(135deg,#ffd700,#ff9500);color:#000;border:none;border-radius:8px;font-weight:900;font-size:.85rem;padding:10px;cursor:pointer;transition:.2s;font-family:'Nunito',sans-serif}
+.btn-conta:hover{filter:brightness(1.1)}
 
-.card h3{
-    margin-bottom:10px;
-}
+/* ── GAMEPASSES ── */
+.gp-card{background:var(--card);border:1px solid rgba(150,0,255,.15);border-radius:var(--radius);padding:20px;transition:.25s}
+.gp-card:hover{border-color:rgba(150,0,255,.4);box-shadow:0 0 20px rgba(150,0,255,.12)}
+.gp-icon{font-size:2.5rem;margin-bottom:10px}
+.gp-name{font-weight:900;font-size:1rem;margin-bottom:6px}
+.gp-desc{font-size:.78rem;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.gp-price{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:#cc66ff;margin-bottom:12px}
+.btn-gp{background:linear-gradient(135deg,#9900ff,#6600cc);color:#fff;border:none;border-radius:8px;font-weight:900;font-size:.85rem;padding:10px;cursor:pointer;transition:.2s;width:100%;font-family:'Nunito',sans-serif}
+.btn-gp:hover{filter:brightness(1.15)}
 
-.preco{
-    font-size:25px;
-    margin:10px 0;
-    font-weight:bold;
-}
+/* ── CARRINHO ── */
+.cart-wrap{position:fixed;bottom:24px;right:24px;z-index:200}
+.cart-btn{background:linear-gradient(135deg,#00d4ff,#0077aa);color:#000;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:900;font-size:.9rem;padding:14px 22px;cursor:pointer;box-shadow:0 8px 32px rgba(0,212,255,.4);display:flex;align-items:center;gap:8px;transition:.2s}
+.cart-btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.cart-count{background:#ff4466;color:#fff;border-radius:50%;width:22px;height:22px;font-size:.75rem;display:flex;align-items:center;justify-content:center;font-weight:900}
+.cart-panel{display:none;position:fixed;bottom:80px;right:24px;width:340px;max-height:70vh;background:#07192a;border:1px solid rgba(0,212,255,.2);border-radius:var(--radius);box-shadow:0 20px 60px rgba(0,0,0,.5);z-index:200;overflow:hidden;flex-direction:column}
+.cart-panel.open{display:flex}
+.cart-head{padding:16px 18px;border-bottom:1px solid rgba(0,212,255,.1);font-weight:900;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}
+.cart-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem}
+.cart-items{flex:1;overflow-y:auto;padding:12px 18px;display:flex;flex-direction:column;gap:8px}
+.cart-item{display:flex;justify-content:space-between;align-items:center;background:var(--card);border-radius:8px;padding:10px 12px;font-size:.85rem}
+.cart-item-name{font-weight:700;flex:1}
+.cart-item-price{color:var(--accent2);font-weight:900;margin-right:10px}
+.cart-item-rm{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem}
+.cart-item-rm:hover{color:var(--danger)}
+.cart-empty{text-align:center;color:var(--muted);font-size:.85rem;padding:30px 0}
+.cart-foot{padding:14px 18px;border-top:1px solid rgba(0,212,255,.1)}
+.cart-total{display:flex;justify-content:space-between;font-weight:900;margin-bottom:12px}
+.cart-total-val{color:var(--accent2);font-family:'Bebas Neue',sans-serif;font-size:1.3rem}
+.btn-checkout{width:100%;background:linear-gradient(135deg,#00cc44,#007722);color:#fff;border:none;border-radius:8px;font-weight:900;font-size:.9rem;padding:12px;cursor:pointer;font-family:'Nunito',sans-serif;transition:.2s}
+.btn-checkout:hover{filter:brightness(1.1)}
 
-button{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:bold;
-}
+/* ── FAQ ── */
+.faq-item{border-bottom:1px solid rgba(0,212,255,.08);overflow:hidden}
+.faq-q{padding:16px 0;cursor:pointer;font-weight:800;display:flex;justify-content:space-between;align-items:center;font-size:.92rem;transition:.2s}
+.faq-q:hover{color:var(--accent)}
+.faq-a{font-size:.85rem;color:var(--muted);line-height:1.7;padding-bottom:16px;display:none}
+.faq-a.open{display:block}
 
-.btn{
-    background:#22a6ff;
-    color:white;
-}
+/* ── CONTATO ── */
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:30px}
+.contact-card{background:var(--card);border:1px solid rgba(0,212,255,.1);border-radius:var(--radius);padding:20px;text-align:center;transition:.25s}
+.contact-card:hover{border-color:rgba(0,212,255,.3);transform:translateY(-3px)}
+.contact-icon{font-size:2rem;margin-bottom:10px}
+.contact-label{font-size:.75rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.contact-val{font-weight:900;font-size:.95rem}
+.horario-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.horario-card{background:var(--card);border:1px solid rgba(0,212,255,.08);border-radius:var(--radius);padding:16px;text-align:center}
+.horario-day{font-size:.75rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.horario-time{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--accent);letter-spacing:2px}
 
-.carrinho{
-    background:#05133a;
-    padding:20px;
-    margin:20px;
-    border-radius:15px;
-}
+/* ── FOOTER ── */
+footer{background:#030d18;border-top:1px solid rgba(0,212,255,.08);padding:32px 24px;text-align:center;position:relative;z-index:5}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:4px;background:linear-gradient(135deg,#00d4ff,#7af3ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.footer-copy{font-size:.75rem;color:var(--muted)}
 
-.carrinho ul{
-    margin-top:10px;
-    padding-left:20px;
-}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#00e676;color:#000;font-weight:900;font-size:.85rem;padding:12px 22px;border-radius:30px;opacity:0;transition:.3s;z-index:300;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-.info{
-    padding:30px;
-    text-align:center;
-}
+/* ── MODAL IMAGEM ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:400;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#07192a;border:1px solid rgba(0,212,255,.2);border-radius:var(--radius);width:100%;max-width:480px;overflow:hidden}
+.modal-head{padding:18px 20px;border-bottom:1px solid rgba(0,212,255,.1);display:flex;justify-content:space-between;align-items:center;font-weight:900}
+.modal-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.3rem}
+.modal-body{padding:20px}
+.modal-img-preview{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;margin-bottom:14px;background:var(--card)}
+.modal-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.modal-price{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent2);margin-bottom:16px}
+.modal-rarity-badge{display:inline-block;margin-bottom:14px}
+.btn-modal-add{width:100%;background:linear-gradient(135deg,#00d4ff,#0099cc);color:#000;border:none;border-radius:8px;font-weight:900;font-size:.95rem;padding:13px;cursor:pointer;font-family:'Nunito',sans-serif;transition:.2s}
+.btn-modal-add:hover{filter:brightness(1.1)}
 
-footer{
-    background:#05133a;
-    padding:25px;
-    text-align:center;
-}
+/* ══════════════════════════════════
+   PAINEL ADMIN — TOTALMENTE OCULTO
+══════════════════════════════════ */
+#admin-panel{display:none;position:fixed;inset:0;background:#030d18;z-index:1000;overflow-y:auto;padding:24px}
+#admin-panel.visible{display:block}
+.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid rgba(0,212,255,.15)}
+.admin-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:3px;color:var(--accent)}
+.btn-admin-close{background:rgba(255,68,102,.15);border:1px solid rgba(255,68,102,.3);color:#ff4466;font-family:'Nunito',sans-serif;font-weight:800;font-size:.85rem;padding:8px 16px;border-radius:8px;cursor:pointer;transition:.2s}
+.btn-admin-close:hover{background:rgba(255,68,102,.25)}
+.admin-tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.admin-tab{background:var(--card);border:1px solid rgba(0,212,255,.1);color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;padding:8px 18px;border-radius:20px;cursor:pointer;transition:.2s}
+.admin-tab.on{background:rgba(0,212,255,.12);border-color:rgba(0,212,255,.35);color:var(--accent)}
+.admin-section{display:none}
+.admin-section.on{display:block}
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.admin-card{background:var(--card2);border:1px solid rgba(0,212,255,.1);border-radius:var(--radius);padding:16px;position:relative}
+.admin-card-name{font-weight:900;margin-bottom:4px}
+.admin-card-price{color:var(--accent2);font-weight:800;font-size:.9rem;margin-bottom:8px}
+.admin-card-actions{display:flex;gap:8px}
+.btn-edit{background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(--accent);font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;padding:6px 12px;border-radius:6px;cursor:pointer;transition:.2s}
+.btn-edit:hover{background:rgba(0,212,255,.2)}
+.btn-del{background:rgba(255,68,102,.1);border:1px solid rgba(255,68,102,.2);color:#ff4466;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;padding:6px 12px;border-radius:6px;cursor:pointer;transition:.2s}
+.btn-del:hover{background:rgba(255,68,102,.2)}
+.btn-toggle-avail{font-size:.72rem;padding:5px 10px;border-radius:6px;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;transition:.2s;border:none}
+.avail-on{background:rgba(0,230,118,.12);color:var(--success)}
+.avail-off{background:rgba(255,100,0,.12);color:var(--accent2)}
+/* form admin */
+.admin-form{background:var(--card);border:1px solid rgba(0,212,255,.12);border-radius:var(--radius);padding:20px;max-width:600px}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:.78rem;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.form-row input,.form-row select,.form-row textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(0,212,255,.15);border-radius:8px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.9rem;padding:10px 12px;outline:none;transition:.2s}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--accent);background:rgba(0,212,255,.04)}
+.form-row select option{background:#07192a}
+.form-row textarea{resize:vertical;min-height:70px}
+.img-upload-area{border:2px dashed rgba(0,212,255,.25);border-radius:8px;padding:24px;text-align:center;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.img-upload-area:hover{border-color:rgba(0,212,255,.5);background:rgba(0,212,255,.03)}
+.img-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.img-upload-area p{font-size:.82rem;color:var(--muted)}
+.img-upload-area .icon{font-size:2rem;margin-bottom:8px}
+.img-preview-admin{width:100%;max-width:160px;aspect-ratio:1;object-fit:cover;border-radius:8px;margin-top:10px;display:none}
+.btn-save{background:linear-gradient(135deg,#00d4ff,#0077aa);color:#000;border:none;border-radius:8px;font-weight:900;font-size:.9rem;padding:12px 24px;cursor:pointer;font-family:'Nunito',sans-serif;transition:.2s;margin-top:4px}
+.btn-save:hover{filter:brightness(1.1)}
+.btn-cancel{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;font-size:.9rem;padding:12px 20px;border-radius:8px;cursor:pointer;margin-left:8px;margin-top:4px;transition:.2s}
+.btn-cancel:hover{background:rgba(255,255,255,.1)}
 
-@media(max-width:768px){
+/* ── SENHA ADMIN OVERLAY ── */
+#admin-login{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:center;justify-content:center}
+#admin-login.open{display:flex}
+.login-box{background:#07192a;border:1px solid rgba(0,212,255,.2);border-radius:var(--radius);padding:32px;width:300px;text-align:center}
+.login-box h3{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:3px;color:var(--accent);margin-bottom:20px}
+.login-box input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(0,212,255,.2);border-radius:8px;color:var(--text);font-family:'Nunito',sans-serif;font-size:1rem;padding:11px 14px;outline:none;text-align:center;letter-spacing:4px;margin-bottom:14px}
+.login-box input:focus{border-color:var(--accent)}
+.btn-login{width:100%;background:linear-gradient(135deg,#00d4ff,#0077aa);color:#000;border:none;border-radius:8px;font-weight:900;font-size:.9rem;padding:12px;cursor:pointer;font-family:'Nunito',sans-serif}
+.login-err{font-size:.78rem;color:var(--danger);margin-top:8px;display:none}
 
-    .produtos{
-        flex-direction:column;
-        align-items:center;
-    }
-
-}
+/* Utilitários */
+.hidden{display:none!important}
+.section-gap{margin-bottom:56px}
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.15),transparent);margin:48px 0}
 </style>
 </head>
-
 <body>
 
+<!-- PARTÍCULAS -->
+<div id="particles"></div>
+
+<!-- HEADER -->
 <header>
-
-<h1>🐾 BLOX PETS</h1>
-
-<p>Produtos Digitais</p>
-
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-icon">🐾</span>
+      <div>
+        <div class="logo-text">BLOX PETS</div>
+        <div class="logo-sub">Loja Oficial · Brainrots & Raros</div>
+      </div>
+    </div>
+    <div class="header-badges">
+      <span class="badge badge-live">● Online</span>
+      <span class="badge badge-fast">⚡ Entrega rápida</span>
+    </div>
+  </div>
 </header>
 
+<!-- NAV -->
 <nav>
-
-<a href="#produtos">Produtos</a>
-
-<a href="#carrinho">Carrinho</a>
-
-<a href="#faq">FAQ</a>
-
-<a href="#contato">Contato</a>
-
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="scrollTo('brainrots',this)">Brainrots</button>
+    <button class="nav-btn" onclick="scrollTo('contas',this)">Contas Raras</button>
+    <button class="nav-btn" onclick="scrollTo('gamepasses',this)">Gamepasses</button>
+    <button class="nav-btn" onclick="scrollTo('faq',this)">FAQ</button>
+    <button class="nav-btn" onclick="scrollTo('contato',this)">Contato</button>
+    <div class="nav-search">
+      <span class="si">🔍</span>
+      <input id="searchInput" placeholder="Buscar pet..." oninput="filterPets()">
+    </div>
+  </div>
 </nav>
 
-<div class="banner" id="banner">
-🔥 Promoções da Semana
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="tickerInner"></div>
 </div>
 
-<div class="busca">
-
-<input
-type="text"
-id="pesquisa"
-placeholder="Pesquisar produto..."
-onkeyup="buscarProduto()">
-
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">✦ Loja Premium de Brainrots ✦</div>
+  <h1>PETS RAROS<br>DO JOGO</h1>
+  <p>Brainrots aleatórios, contas exclusivas e gamepasses. Entrega garantida dentro do jogo em até 1 hora.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n" id="statPets">0</div><div class="stat-l">Pets disponíveis</div></div>
+    <div class="stat"><div class="stat-n">1h</div><div class="stat-l">Tempo de entrega</div></div>
+    <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Seguro</div></div>
+  </div>
 </div>
 
-<section id="produtos" class="produtos">
+<!-- MAIN -->
+<main>
 
-<div class="card produto">
+  <!-- BRAINROTS -->
+  <section id="brainrots" class="section-gap">
+    <div class="section-title">🎲 Brainrots Aleatórios</div>
+    <div class="section-sub">Pets surpresa — quanto maior o pacote, mais raros os resultados</div>
+    <div class="filters" id="filterBar">
+      <button class="filter-btn on" onclick="setFilter('todos',this)">Todos</button>
+      <button class="filter-btn" onclick="setFilter('comum',this)">Comum</button>
+      <button class="filter-btn" onclick="setFilter('raro',this)">Raro</button>
+      <button class="filter-btn" onclick="setFilter('epico',this)">Épico</button>
+      <button class="filter-btn" onclick="setFilter('lendario',this)">Lendário</button>
+      <button class="filter-btn" onclick="setFilter('divino',this)">Divino</button>
+    </div>
+    <div class="grid" id="petsGrid"></div>
+  </section>
 
-<h3>Pacote Básico</h3>
+  <div class="divider"></div>
 
-<p>Produto digital básico.</p>
+  <!-- CONTAS -->
+  <section id="contas" class="section-gap">
+    <div class="section-title">👑 Contas Raras</div>
+    <div class="section-sub">Contas com combinações exclusivas e itens difíceis de conseguir</div>
+    <div class="grid" id="contasGrid"></div>
+  </section>
 
-<div class="preco">
-R$ 4,99
-</div>
+  <div class="divider"></div>
 
-<button
-class="btn"
-onclick="adicionarCarrinho('Pacote Básico - R$ 4,99')">
+  <!-- GAMEPASSES -->
+  <section id="gamepasses" class="section-gap">
+    <div class="section-title">🎟️ Gamepasses</div>
+    <div class="section-sub">Potencialize sua experiência no jogo</div>
+    <div class="grid" id="gamepassGrid"></div>
+  </section>
 
-Adicionar ao Carrinho
+  <div class="divider"></div>
 
-</button>
+  <!-- FAQ -->
+  <section id="faq" class="section-gap">
+    <div class="section-title">❓ Perguntas Frequentes</div>
+    <div class="section-sub">Dúvidas mais comuns dos nossos clientes</div>
+    <div id="faqList"></div>
+  </section>
 
-</div>
+  <div class="divider"></div>
 
-<div class="card produto">
+  <!-- CONTATO -->
+  <section id="contato" class="section-gap">
+    <div class="section-title">📱 Contato & Atendimento</div>
+    <div class="section-sub">Entre em contato para fazer seu pedido</div>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="contact-icon">📱</div>
+        <div class="contact-label">WhatsApp Principal</div>
+        <div class="contact-val">(11) 98999-0949</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">📲</div>
+        <div class="contact-label">WhatsApp Reserva</div>
+        <div class="contact-val">(13) 99721-4424</div>
+      </div>
+    </div>
+    <div class="section-title" style="font-size:1.4rem;margin-bottom:16px">🕒 Horários de Atendimento</div>
+    <div class="horario-grid">
+      <div class="horario-card"><div class="horario-day">Segunda — Sexta</div><div class="horario-time">18:00 — 22:30</div></div>
+      <div class="horario-card"><div class="horario-day">Sábado — Domingo</div><div class="horario-time">12:00 — 23:00</div></div>
+      <div class="horario-card"><div class="horario-day">Feriados</div><div class="horario-time">Sem atendimento</div></div>
+    </div>
+  </section>
 
-<h3>Pacote Intermediário</h3>
+</main>
 
-<p>Produto digital intermediário.</p>
-
-<div class="preco">
-R$ 15,00
-</div>
-
-<button
-class="btn"
-onclick="adicionarCarrinho('Pacote Intermediário - R$ 15,00')">
-
-Adicionar ao Carrinho
-
-</button>
-
-</div>
-
-<div class="card produto">
-
-<h3>Pacote Avançado</h3>
-
-<p>Produto digital avançado.</p>
-
-<div class="preco">
-R$ 44,99
-</div>
-
-<button
-class="btn"
-onclick="adicionarCarrinho('Pacote Avançado - R$ 44,99')">
-
-Adicionar ao Carrinho
-
-</button>
-
-</div>
-
-</section>
-
-<section
-id="carrinho"
-class="carrinho">
-
-<h2>🛒 Carrinho</h2>
-
-<ul id="listaCarrinho"></ul>
-
-<br>
-
-<button onclick="limparCarrinho()">
-Limpar Carrinho
-</button>
-
-</section>
-
-<section class="info" id="faq">
-
-<h2>❓ FAQ</h2>
-
-<br>
-
-<p><b>Como funciona?</b></p>
-
-<p>Após a confirmação do pedido, o contato é realizado pelos canais informados.</p>
-
-<br>
-
-<p><b>Prazo de atendimento?</b></p>
-
-<p>Até 1 hora durante o horário de funcionamento.</p>
-
-</section>
-
-<section class="info" id="contato">
-
-<h2>📱 Contato</h2>
-
-<br>
-
-<p>WhatsApp Principal:</p>
-
-<p>(11) 98999-0949</p>
-
-<br>
-
-<p>WhatsApp Reserva:</p>
-
-<p>(13) 99721-4424</p>
-
-<br>
-
-<h2>🕒 Horários</h2>
-
-<br>
-
-<p>Segunda a Sexta: 18h00 às 22h30</p>
-
-<p>Sábado e Domingo: 12h00 às 23h00</p>
-
-<p>Feriados: sem atendimento</p>
-
-</section>
-
+<!-- FOOTER -->
 <footer>
-
-<p>© Blox Pets</p>
-
+  <div class="footer-logo">🐾 BLOX PETS</div>
+  <div class="footer-copy">© 2025 Blox Pets — Todos os direitos reservados</div>
 </footer>
 
+<!-- CARRINHO (BOTÃO FLUTUANTE) -->
+<div class="cart-wrap">
+  <div class="cart-panel" id="cartPanel">
+    <div class="cart-head">
+      🛒 Carrinho
+      <button class="cart-close" onclick="toggleCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot">
+      <div class="cart-total">Total <span class="cart-total-val" id="cartTotal">R$ 0,00</span></div>
+      <button class="btn-checkout" onclick="checkout()">Finalizar no WhatsApp 📱</button>
+    </div>
+  </div>
+  <button class="cart-btn" onclick="toggleCart()">
+    🛒 Carrinho <span class="cart-count" id="cartCount">0</span>
+  </button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- MODAL PET -->
+<div class="modal-overlay" id="petModal" onclick="closeModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <span id="modalName">Pet</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="modalImgWrap" style="width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;margin-bottom:14px;background:var(--card2);display:flex;align-items:center;justify-content:center"></div>
+      <span class="modal-rarity-badge card-rarity" id="modalRarity"></span>
+      <div class="modal-price" id="modalPrice"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <button class="btn-modal-add" id="modalAddBtn">Adicionar ao Carrinho</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN ADMIN -->
+<div id="admin-login">
+  <div class="login-box">
+    <h3>🔐 Admin</h3>
+    <input type="password" id="adminPwd" placeholder="••••••" onkeydown="if(event.key==='Enter')checkLogin()">
+    <button class="btn-login" onclick="checkLogin()">Entrar</button>
+    <div class="login-err" id="loginErr">Senha incorreta</div>
+  </div>
+</div>
+
+<!-- PAINEL ADMIN -->
+<div id="admin-panel">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="admin-header">
+      <div class="admin-title">⚙️ Painel Admin — Blox Pets</div>
+      <button class="btn-admin-close" onclick="closeAdmin()">✕ Fechar</button>
+    </div>
+
+    <div class="admin-tabs">
+      <button class="admin-tab on" onclick="adminTab('pets',this)">🎲 Brainrots / Pets</button>
+      <button class="admin-tab" onclick="adminTab('contas',this)">👑 Contas</button>
+      <button class="admin-tab" onclick="adminTab('gamepasses',this)">🎟️ Gamepasses</button>
+      <button class="admin-tab" onclick="adminTab('faq',this)">❓ FAQ</button>
+    </div>
+
+    <!-- ADMIN: PETS -->
+    <div id="admin-pets" class="admin-section on">
+      <div class="admin-grid" id="adminPetsList"></div>
+      <div id="petFormWrap">
+        <div class="section-title" style="font-size:1.3rem;margin-bottom:16px" id="petFormTitle">➕ Novo Pet / Brainrot</div>
+        <div class="admin-form">
+          <input type="hidden" id="editPetId">
+          <div class="form-row"><label>Nome</label><input type="text" id="pName" placeholder="Ex: Lendário Supremo"></div>
+          <div class="form-row"><label>Descrição</label><textarea id="pDesc" placeholder="Descrição curta do pet..."></textarea></div>
+          <div class="form-row"><label>Preço (R$)</label><input type="number" id="pPrice" step="0.01" placeholder="9.99"></div>
+          <div class="form-row">
+            <label>Raridade</label>
+            <select id="pRarity">
+              <option value="comum">Comum</option>
+              <option value="raro">Raro</option>
+              <option value="epico">Épico</option>
+              <option value="lendario">Lendário</option>
+              <option value="divino">Divino</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>Disponível?</label>
+            <select id="pAvail">
+              <option value="1">Sim — disponível</option>
+              <option value="0">Não — esgotado</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>Novidade? (badge NEW)</label>
+            <select id="pNew">
+              <option value="0">Não</option>
+              <option value="1">Sim</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>Imagem</label>
+            <div class="img-upload-area" onclick="document.getElementById('pImgFile').click()">
+              <input type="file" id="pImgFile" accept="image/*" style="display:none" onchange="previewImg('pImgFile','pImgPreview','pImgData')">
+              <div class="icon">📁</div>
+              <p>Clique para enviar imagem</p>
+            </div>
+            <img id="pImgPreview" class="img-preview-admin" alt="preview">
+            <input type="hidden" id="pImgData">
+          </div>
+          <div>
+            <button class="btn-save" onclick="savePet()">💾 Salvar</button>
+            <button class="btn-cancel" onclick="cancelEditPet()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN: CONTAS -->
+    <div id="admin-contas" class="admin-section">
+      <div class="admin-grid" id="adminContasList"></div>
+      <div id="contaFormWrap">
+        <div class="section-title" style="font-size:1.3rem;margin-bottom:16px" id="contaFormTitle">➕ Nova Conta</div>
+        <div class="admin-form">
+          <input type="hidden" id="editContaId">
+          <div class="form-row"><label>Nome da conta</label><input type="text" id="cName" placeholder="Ex: Conta Gold Pro"></div>
+          <div class="form-row"><label>Descrição</label><textarea id="cDesc" placeholder="Itens e raridades incluídas..."></textarea></div>
+          <div class="form-row"><label>Preço (R$)</label><input type="number" id="cPrice" step="0.01" placeholder="49.99"></div>
+          <div class="form-row"><label>Tags (separadas por vírgula)</label><input type="text" id="cTags" placeholder="Lendário, Raro, Exclusivo"></div>
+          <div class="form-row"><label>Disponível?</label><select id="cAvail"><option value="1">Sim</option><option value="0">Não</option></select></div>
+          <div>
+            <button class="btn-save" onclick="saveConta()">💾 Salvar</button>
+            <button class="btn-cancel" onclick="cancelEditConta()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN: GAMEPASSES -->
+    <div id="admin-gamepasses" class="admin-section">
+      <div class="admin-grid" id="adminGpList"></div>
+      <div id="gpFormWrap">
+        <div class="section-title" style="font-size:1.3rem;margin-bottom:16px">➕ Novo Gamepass</div>
+        <div class="admin-form">
+          <input type="hidden" id="editGpId">
+          <div class="form-row"><label>Nome</label><input type="text" id="gName" placeholder="Ex: VIP Pass"></div>
+          <div class="form-row"><label>Descrição</label><textarea id="gDesc" placeholder="Benefícios do gamepass..."></textarea></div>
+          <div class="form-row"><label>Preço (R$)</label><input type="number" id="gPrice" step="0.01" placeholder="29.99"></div>
+          <div class="form-row"><label>Emoji/Ícone</label><input type="text" id="gIcon" placeholder="🎟️"></div>
+          <div class="form-row"><label>Disponível?</label><select id="gAvail"><option value="1">Sim</option><option value="0">Não</option></select></div>
+          <div>
+            <button class="btn-save" onclick="saveGp()">💾 Salvar</button>
+            <button class="btn-cancel" onclick="cancelEditGp()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN: FAQ -->
+    <div id="admin-faq" class="admin-section">
+      <div class="admin-grid" id="adminFaqList"></div>
+      <div class="section-title" style="font-size:1.3rem;margin-bottom:16px">➕ Nova Pergunta</div>
+      <div class="admin-form">
+        <input type="hidden" id="editFaqId">
+        <div class="form-row"><label>Pergunta</label><input type="text" id="faqQ" placeholder="Como funciona a entrega?"></div>
+        <div class="form-row"><label>Resposta</label><textarea id="faqA" placeholder="Resposta detalhada..."></textarea></div>
+        <div>
+          <button class="btn-save" onclick="saveFaq()">💾 Salvar</button>
+          <button class="btn-cancel" onclick="cancelEditFaq()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCRIPT PRINCIPAL
+════════════════════════════════════ -->
 <script>
+// ── SENHA ADMIN (altere aqui) ──
+const ADMIN_PASSWORD = 'bloxpets2025';
+// Atalho: pressione  B P A D M  em sequência rápida no teclado
+const ADMIN_SEQUENCE = ['b','p','a','d','m'];
 
-const banners = [
+// ── DADOS (persistem no localStorage) ──
+function load(key, def){ try{ const d=localStorage.getItem(key); return d?JSON.parse(d):def; }catch(e){ return def; } }
+function save(key,val){ localStorage.setItem(key,JSON.stringify(val)); }
 
-"🔥 Promoções da Semana",
+let pets    = load('bp_pets', [
+  {id:1,name:'Básico',desc:'Um brainrot surpresa para começar!',price:4.99,rarity:'comum',avail:1,isNew:0,img:''},
+  {id:2,name:'Intermediário',desc:'Chance de pets raros incluída.',price:15.00,rarity:'raro',avail:1,isNew:0,img:''},
+  {id:3,name:'Avançado',desc:'Grandes chances de épicos.',price:44.99,rarity:'epico',avail:1,isNew:1,img:''},
+  {id:4,name:'Supremo',desc:'Lendários garantidos na mistura.',price:59.99,rarity:'lendario',avail:1,isNew:0,img:''},
+  {id:5,name:'Divino',desc:'O topo absoluto. Ultra raro.',price:99.99,rarity:'divino',avail:1,isNew:1,img:''},
+]);
+let contas  = load('bp_contas', [
+  {id:1,name:'Conta Gold',desc:'Conta com vários itens raros e combinações exclusivas.',price:89.99,tags:['Lendário','Raro'],avail:1},
+]);
+let gamepasses = load('bp_gps', [
+  {id:1,name:'VIP Pass',desc:'Acesso VIP com benefícios exclusivos dentro do jogo.',price:29.99,icon:'🎟️',avail:1},
+]);
+let faqs = load('bp_faqs', [
+  {id:1,q:'Como recebo meu pet?',a:'A entrega é feita por troca dentro do próprio jogo. Após o pagamento, entre em contato pelo WhatsApp.'},
+  {id:2,q:'Qual o prazo de entrega?',a:'Até 1 hora dentro do horário de funcionamento.'},
+  {id:3,q:'É seguro comprar?',a:'Sim! Todos os nossos pedidos são entregues pessoalmente dentro do jogo. Nenhuma informação da conta é solicitada.'},
+  {id:4,q:'Aceitam quais formas de pagamento?',a:'PIX, transferência e outros. Entre em contato para combinar.'},
+]);
 
-"⭐ Novidades Disponíveis",
+let cart = [];
+let currentFilter = 'todos';
+let nextPetId = Math.max(0,...pets.map(p=>p.id))+1;
+let nextContaId = Math.max(0,...contas.map(c=>c.id))+1;
+let nextGpId = Math.max(0,...gamepasses.map(g=>g.id))+1;
+let nextFaqId = Math.max(0,...faqs.map(f=>f.id))+1;
 
-"⚡ Atendimento Rápido",
+// ── PARTÍCULAS ──
+(function(){
+  const wrap=document.getElementById('particles');
+  const colors=['#00d4ff','#ff6b00','#ffd700','#cc66ff','#00e676'];
+  for(let i=0;i<22;i++){
+    const d=document.createElement('div');
+    const size=Math.random()*6+3;
+    d.className='particle';
+    d.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${10+Math.random()*20}s;animation-delay:${Math.random()*15}s`;
+    wrap.appendChild(d);
+  }
+})();
 
-"🎁 Confira os Destaques"
-
-];
-
-let indice = 0;
-
-setInterval(()=>{
-
-indice++;
-
-if(indice >= banners.length){
-
-indice = 0;
-
+// ── TICKER ──
+function buildTicker(){
+  const items=[...pets.filter(p=>p.avail),...contas.filter(c=>c.avail)].map(p=>`🔥 ${p.name} — R$ ${parseFloat(p.price).toFixed(2).replace('.',',')} `);
+  const full=[...items,...items].map(t=>`<span>${t}</span>`).join('');
+  document.getElementById('tickerInner').innerHTML=full;
 }
 
-document.getElementById("banner").innerText =
-banners[indice];
+// ── RARIDADE ──
+const rarityLabel={comum:'Comum',raro:'Raro',epico:'Épico',lendario:'Lendário',divino:'Divino'};
+const rarityClass={comum:'r-comum',raro:'r-raro',epico:'r-epico',lendario:'r-lendario',divino:'r-divino'};
 
-},4000);
-
-let carrinho = [];
-
-function adicionarCarrinho(produto){
-
-carrinho.push(produto);
-
-atualizarCarrinho();
-
+// ── RENDERIZAR PETS ──
+function renderPets(){
+  const g=document.getElementById('petsGrid');
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  let filtered=pets.filter(p=>{
+    if(currentFilter!=='todos'&&p.rarity!==currentFilter) return false;
+    if(q&&!p.name.toLowerCase().includes(q)&&!p.desc.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  if(!filtered.length){g.innerHTML='<p style="color:var(--muted);font-size:.9rem;grid-column:1/-1">Nenhum pet encontrado.</p>';return;}
+  g.innerHTML=filtered.map(p=>`
+    <div class="card${p.avail?'':' card-unavail'}" onclick="openModal(${p.id})">
+      <div style="position:relative">
+        ${p.img?`<div class="card-img"><img src="${p.img}" alt="${p.name}" loading="lazy"></div>`:`<div class="card-img-placeholder">${rarityEmoji(p.rarity)}</div>`}
+        <span class="card-rarity ${rarityClass[p.rarity]}">${rarityLabel[p.rarity]}</span>
+        ${p.isNew?'<span class="card-new">NEW</span>':''}
+        ${!p.avail?'<div style="position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900;color:var(--muted);letter-spacing:1px">ESGOTADO</div>':''}
+      </div>
+      <div class="card-body">
+        <div class="card-name">${p.name}</div>
+        <div class="card-desc">${p.desc}</div>
+        <div class="card-footer">
+          <div class="card-price">R$ ${parseFloat(p.price).toFixed(2).replace('.',',')}</div>
+          <button class="btn-add" onclick="event.stopPropagation();${p.avail?`addCart(${p.id},'pet')`:'void(0)'}">${p.avail?'+ Adicionar':'Esgotado'}</button>
+        </div>
+      </div>
+    </div>`).join('');
+  document.getElementById('statPets').textContent=pets.filter(p=>p.avail).length;
 }
 
-function atualizarCarrinho(){
+function rarityEmoji(r){return{comum:'🟤',raro:'🔵',epico:'🟣',lendario:'🟡',divino:'🌈'}[r]||'🐾';}
 
-let lista =
-document.getElementById("listaCarrinho");
+// ── FILTRO ──
+function setFilter(f,btn){
+  currentFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderPets();
+}
+function filterPets(){renderPets();}
 
-lista.innerHTML = "";
+// ── CONTAS ──
+function renderContas(){
+  const g=document.getElementById('contasGrid');
+  if(!contas.length){g.innerHTML='<p style="color:var(--muted);font-size:.9rem">Nenhuma conta cadastrada.</p>';return;}
+  g.innerHTML=contas.map(c=>`
+    <div class="conta-card${c.avail?'':' card-unavail'}">
+      <div class="conta-header">
+        <div class="conta-name">${c.name}</div>
+        <div class="conta-price">R$ ${parseFloat(c.price).toFixed(2).replace('.',',')}</div>
+      </div>
+      ${c.tags&&c.tags.length?`<div class="conta-tags">${c.tags.map(t=>`<span class="conta-tag">${t}</span>`).join('')}</div>`:''}
+      <div class="conta-desc">${c.desc}</div>
+      <button class="btn-conta" onclick="${c.avail?`addCart(${c.id},'conta')`:'void(0)'}">${c.avail?'Quero essa conta →':'Indisponível'}</button>
+    </div>`).join('');
+}
 
-carrinho.forEach(item=>{
+// ── GAMEPASSES ──
+function renderGps(){
+  const g=document.getElementById('gamepassGrid');
+  if(!gamepasses.length){g.innerHTML='<p style="color:var(--muted);font-size:.9rem">Nenhum gamepass cadastrado.</p>';return;}
+  g.innerHTML=gamepasses.map(gp=>`
+    <div class="gp-card${gp.avail?'':' card-unavail'}">
+      <div class="gp-icon">${gp.icon||'🎟️'}</div>
+      <div class="gp-name">${gp.name}</div>
+      <div class="gp-desc">${gp.desc}</div>
+      <div class="gp-price">R$ ${parseFloat(gp.price).toFixed(2).replace('.',',')}</div>
+      <button class="btn-gp" onclick="${gp.avail?`addCart(${gp.id},'gp')`:'void(0)'}">${gp.avail?'Adquirir Gamepass':'Indisponível'}</button>
+    </div>`).join('');
+}
 
-lista.innerHTML +=
-"<li>"+item+"</li>";
+// ── FAQ ──
+function renderFaq(){
+  const el=document.getElementById('faqList');
+  el.innerHTML=faqs.map(f=>`
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>${f.q}</span><span>▾</span></div>
+      <div class="faq-a">${f.a}</div>
+    </div>`).join('');
+}
+function toggleFaq(el){
+  const a=el.nextElementSibling;
+  a.classList.toggle('open');
+}
 
+// ── CARRINHO ──
+function addCart(id,type){
+  let item;
+  if(type==='pet') item=pets.find(p=>p.id===id);
+  else if(type==='conta') item=contas.find(c=>c.id===id);
+  else item=gamepasses.find(g=>g.id===id);
+  if(!item||!item.avail) return;
+  const uid=Date.now()+Math.random();
+  cart.push({uid,id,type,name:item.name,price:parseFloat(item.price)});
+  renderCart();
+  showToast(`✓ ${item.name} adicionado!`);
+}
+function removeCart(uid){
+  cart=cart.filter(c=>c.uid!==uid);
+  renderCart();
+}
+function renderCart(){
+  const el=document.getElementById('cartItems');
+  const count=document.getElementById('cartCount');
+  const total=document.getElementById('cartTotal');
+  count.textContent=cart.length;
+  if(!cart.length){el.innerHTML='<div class="cart-empty">Seu carrinho está vazio 🐾</div>';total.textContent='R$ 0,00';return;}
+  el.innerHTML=cart.map(c=>`
+    <div class="cart-item">
+      <span class="cart-item-name">${c.name}</span>
+      <span class="cart-item-price">R$ ${c.price.toFixed(2).replace('.',',')}</span>
+      <button class="cart-item-rm" onclick="removeCart(${c.uid})">✕</button>
+    </div>`).join('');
+  const sum=cart.reduce((a,c)=>a+c.price,0);
+  total.textContent='R$ '+sum.toFixed(2).replace('.',',');
+}
+function toggleCart(){
+  document.getElementById('cartPanel').classList.toggle('open');
+}
+function checkout(){
+  if(!cart.length){showToast('Carrinho vazio!');return;}
+  const sum=cart.reduce((a,c)=>a+c.price,0);
+  const items=cart.map(c=>`• ${c.name} — R$ ${c.price.toFixed(2).replace('.',',')}`).join('%0A');
+  const msg=`Olá! Quero fazer um pedido:%0A%0A${items}%0A%0ATotal: R$ ${sum.toFixed(2).replace('.',',')}`;
+  window.open(`https://wa.me/5511989990949?text=${msg}`,'_blank');
+}
+
+// ── MODAL ──
+function openModal(id){
+  const p=pets.find(x=>x.id===id);
+  if(!p) return;
+  document.getElementById('modalName').textContent=p.name;
+  document.getElementById('modalPrice').textContent='R$ '+parseFloat(p.price).toFixed(2).replace('.',',');
+  document.getElementById('modalDesc').textContent=p.desc||'Sem descrição.';
+  const rar=document.getElementById('modalRarity');
+  rar.textContent=rarityLabel[p.rarity];
+  rar.className=`card-rarity ${rarityClass[p.rarity]}`;
+  const wrap=document.getElementById('modalImgWrap');
+  wrap.innerHTML=p.img?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover" alt="${p.name}">`:`<span style="font-size:5rem">${rarityEmoji(p.rarity)}</span>`;
+  const btn=document.getElementById('modalAddBtn');
+  btn.onclick=()=>{addCart(p.id,'pet');closeModal();};
+  btn.textContent=p.avail?'Adicionar ao Carrinho':'Indisponível';
+  btn.disabled=!p.avail;
+  document.getElementById('petModal').classList.add('open');
+}
+function closeModal(e){
+  if(!e||e.target===document.getElementById('petModal'))
+    document.getElementById('petModal').classList.remove('open');
+}
+
+// ── TOAST ──
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ── SCROLL NAV ──
+function scrollTo(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+
+// ── ATALHO ADMIN (sequência de teclas) ──
+let adminSeq=[];
+document.addEventListener('keydown',e=>{
+  adminSeq.push(e.key.toLowerCase());
+  if(adminSeq.length>ADMIN_SEQUENCE.length) adminSeq.shift();
+  if(JSON.stringify(adminSeq)===JSON.stringify(ADMIN_SEQUENCE)){
+    adminSeq=[];
+    document.getElementById('admin-login').classList.add('open');
+    setTimeout(()=>document.getElementById('adminPwd').focus(),100);
+  }
 });
 
+// ── LOGIN ADMIN ──
+function checkLogin(){
+  const pwd=document.getElementById('adminPwd').value;
+  if(pwd===ADMIN_PASSWORD){
+    document.getElementById('admin-login').classList.remove('open');
+    document.getElementById('adminPwd').value='';
+    document.getElementById('loginErr').style.display='none';
+    openAdmin();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+    document.getElementById('adminPwd').value='';
+  }
+}
+function openAdmin(){
+  document.getElementById('admin-panel').classList.add('visible');
+  renderAdminPets();renderAdminContas();renderAdminGps();renderAdminFaq();
+}
+function closeAdmin(){
+  document.getElementById('admin-panel').classList.remove('visible');
+  renderAll();
 }
 
-function limparCarrinho(){
-
-carrinho = [];
-
-atualizarCarrinho();
-
+// ── TABS ADMIN ──
+function adminTab(tab,btn){
+  document.querySelectorAll('.admin-tab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('admin-'+tab).classList.add('on');
 }
 
-function buscarProduto(){
-
-let pesquisa =
-document.getElementById("pesquisa")
-.value
-.toLowerCase();
-
-let produtos =
-document.querySelectorAll(".produto");
-
-produtos.forEach(produto=>{
-
-let texto =
-produto.innerText.toLowerCase();
-
-produto.style.display =
-texto.includes(pesquisa)
-? "block"
-: "none";
-
-});
-
+// ── UPLOAD IMAGEM ──
+function previewImg(inputId,previewId,dataId){
+  const f=document.getElementById(inputId).files[0];
+  if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const img=document.getElementById(previewId);
+    img.src=e.target.result;img.style.display='block';
+    document.getElementById(dataId).value=e.target.result;
+  };
+  r.readAsDataURL(f);
 }
 
+// ══ ADMIN: PETS ══
+function renderAdminPets(){
+  const el=document.getElementById('adminPetsList');
+  if(!pets.length){el.innerHTML='<p style="color:var(--muted);font-size:.85rem">Nenhum pet.</p>';return;}
+  el.innerHTML=pets.map(p=>`
+    <div class="admin-card">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+        ${p.img?`<img src="${p.img}" style="width:48px;height:48px;border-radius:8px;object-fit:cover">`:`<div style="width:48px;height:48px;background:var(--card);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem">${rarityEmoji(p.rarity)}</div>`}
+        <div>
+          <div class="admin-card-name">${p.name}</div>
+          <div class="admin-card-price">R$ ${parseFloat(p.price).toFixed(2).replace('.',',')}</div>
+        </div>
+      </div>
+      <span class="card-rarity ${rarityClass[p.rarity]}" style="margin-bottom:10px;display:inline-block">${rarityLabel[p.rarity]}</span>
+      <div class="admin-card-actions" style="flex-wrap:wrap">
+        <button class="btn-edit" onclick="editPet(${p.id})">✏️ Editar</button>
+        <button class="btn-del" onclick="delPet(${p.id})">🗑️ Excluir</button>
+        <button class="btn-toggle-avail ${p.avail?'avail-on':'avail-off'}" onclick="togglePetAvail(${p.id})">${p.avail?'✓ Disponível':'✗ Esgotado'}</button>
+      </div>
+    </div>`).join('');
+}
+function editPet(id){
+  const p=pets.find(x=>x.id===id);if(!p) return;
+  document.getElementById('editPetId').value=id;
+  document.getElementById('pName').value=p.name;
+  document.getElementById('pDesc').value=p.desc;
+  document.getElementById('pPrice').value=p.price;
+  document.getElementById('pRarity').value=p.rarity;
+  document.getElementById('pAvail').value=p.avail;
+  document.getElementById('pNew').value=p.isNew||0;
+  document.getElementById('pImgData').value=p.img||'';
+  const prev=document.getElementById('pImgPreview');
+  if(p.img){prev.src=p.img;prev.style.display='block';}else{prev.style.display='none';}
+  document.getElementById('petFormTitle').textContent='✏️ Editando: '+p.name;
+  document.getElementById('petFormWrap').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function cancelEditPet(){
+  document.getElementById('editPetId').value='';
+  document.getElementById('pName').value='';document.getElementById('pDesc').value='';
+  document.getElementById('pPrice').value='';document.getElementById('pRarity').value='comum';
+  document.getElementById('pAvail').value='1';document.getElementById('pNew').value='0';
+  document.getElementById('pImgData').value='';document.getElementById('pImgPreview').style.display='none';
+  document.getElementById('petFormTitle').textContent='➕ Novo Pet / Brainrot';
+}
+function savePet(){
+  const name=document.getElementById('pName').value.trim();
+  const price=parseFloat(document.getElementById('pPrice').value);
+  if(!name||isNaN(price)){showToast('Preencha nome e preço!');return;}
+  const editId=parseInt(document.getElementById('editPetId').value)||0;
+  const obj={
+    id:editId||nextPetId,
+    name,desc:document.getElementById('pDesc').value.trim(),
+    price,rarity:document.getElementById('pRarity').value,
+    avail:parseInt(document.getElementById('pAvail').value),
+    isNew:parseInt(document.getElementById('pNew').value),
+    img:document.getElementById('pImgData').value
+  };
+  if(editId){pets=pets.map(p=>p.id===editId?obj:p);}
+  else{pets.push(obj);nextPetId++;}
+  save('bp_pets',pets);
+  cancelEditPet();renderAdminPets();showToast('✓ Pet salvo!');
+}
+function delPet(id){
+  if(!confirm('Excluir este pet?')) return;
+  pets=pets.filter(p=>p.id!==id);save('bp_pets',pets);renderAdminPets();showToast('Pet removido.');
+}
+function togglePetAvail(id){
+  pets=pets.map(p=>p.id===id?{...p,avail:p.avail?0:1}:p);
+  save('bp_pets',pets);renderAdminPets();
+}
+
+// ══ ADMIN: CONTAS ══
+function renderAdminContas(){
+  const el=document.getElementById('adminContasList');
+  el.innerHTML=contas.length?contas.map(c=>`
+    <div class="admin-card">
+      <div class="admin-card-name">${c.name}</div>
+      <div class="admin-card-price">R$ ${parseFloat(c.price).toFixed(2).replace('.',',')}</div>
+      <div class="admin-card-actions" style="flex-wrap:wrap">
+        <button class="btn-edit" onclick="editConta(${c.id})">✏️ Editar</button>
+        <button class="btn-del" onclick="delConta(${c.id})">🗑️ Excluir</button>
+        <button class="btn-toggle-avail ${c.avail?'avail-on':'avail-off'}" onclick="toggleContaAvail(${c.id})">${c.avail?'✓ Disponível':'✗ Indisponível'}</button>
+      </div>
+    </div>`).join(''):'<p style="color:var(--muted);font-size:.85rem">Nenhuma conta.</p>';
+}
+function editConta(id){
+  const c=contas.find(x=>x.id===id);if(!c) return;
+  document.getElementById('editContaId').value=id;
+  document.getElementById('cName').value=c.name;
+  document.getElementById('cDesc').value=c.desc;
+  document.getElementById('cPrice').value=c.price;
+  document.getElementById('cTags').value=(c.tags||[]).join(', ');
+  document.getElementById('cAvail').value=c.avail;
+  document.getElementById('contaFormTitle').textContent='✏️ Editando: '+c.name;
+  document.getElementById('contaFormWrap').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function cancelEditConta(){
+  document.getElementById('editContaId').value='';
+  ['cName','cDesc','cPrice','cTags'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cAvail').value='1';
+  document.getElementById('contaFormTitle').textContent='➕ Nova Conta';
+}
+function saveConta(){
+  const name=document.getElementById('cName').value.trim();
+  const price=parseFloat(document.getElementById('cPrice').value);
+  if(!name||isNaN(price)){showToast('Preencha nome e preço!');return;}
+  const editId=parseInt(document.getElementById('editContaId').value)||0;
+  const tags=document.getElementById('cTags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  const obj={id:editId||nextContaId,name,desc:document.getElementById('cDesc').value.trim(),price,tags,avail:parseInt(document.getElementById('cAvail').value)};
+  if(editId){contas=contas.map(c=>c.id===editId?obj:c);}else{contas.push(obj);nextContaId++;}
+  save('bp_contas',contas);cancelEditConta();renderAdminContas();showToast('✓ Conta salva!');
+}
+function delConta(id){if(!confirm('Excluir conta?')) return;contas=contas.filter(c=>c.id!==id);save('bp_contas',contas);renderAdminContas();}
+function toggleContaAvail(id){contas=contas.map(c=>c.id===id?{...c,avail:c.avail?0:1}:c);save('bp_contas',contas);renderAdminContas();}
+
+// ══ ADMIN: GAMEPASSES ══
+function renderAdminGps(){
+  const el=document.getElementById('adminGpList');
+  el.innerHTML=gamepasses.length?gamepasses.map(g=>`
+    <div class="admin-card">
+      <div style="font-size:2rem;margin-bottom:6px">${g.icon||'🎟️'}</div>
+      <div class="admin-card-name">${g.name}</div>
+      <div class="admin-card-price">R$ ${parseFloat(g.price).toFixed(2).replace('.',',')}</div>
+      <div class="admin-card-actions" style="flex-wrap:wrap">
+        <button class="btn-edit" onclick="editGp(${g.id})">✏️ Editar</button>
+        <button class="btn-del" onclick="delGp(${g.id})">🗑️ Excluir</button>
+        <button class="btn-toggle-avail ${g.avail?'avail-on':'avail-off'}" onclick="toggleGpAvail(${g.id})">${g.avail?'✓ Disponível':'✗ Indisponível'}</button>
+      </div>
+    </div>`).join(''):'<p style="color:var(--muted);font-size:.85rem">Nenhum gamepass.</p>';
+}
+function editGp(id){
+  const g=gamepasses.find(x=>x.id===id);if(!g) return;
+  document.getElementById('editGpId').value=id;
+  document.getElementById('gName').value=g.name;
+  document.getElementById('gDesc').value=g.desc;
+  document.getElementById('gPrice').value=g.price;
+  document.getElementById('gIcon').value=g.icon||'';
+  document.getElementById('gAvail').value=g.avail;
+  document.getElementById('gpFormWrap').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function cancelEditGp(){
+  document.getElementById('editGpId').value='';
+  ['gName','gDesc','gPrice','gIcon'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('gAvail').value='1';
+}
+function saveGp(){
+  const name=document.getElementById('gName').value.trim();
+  const price=parseFloat(document.getElementById('gPrice').value);
+  if(!name||isNaN(price)){showToast('Preencha nome e preço!');return;}
+  const editId=parseInt(document.getElementById('editGpId').value)||0;
+  const obj={id:editId||nextGpId,name,desc:document.getElementById('gDesc').value.trim(),price,icon:document.getElementById('gIcon').value||'🎟️',avail:parseInt(document.getElementById('gAvail').value)};
+  if(editId){gamepasses=gamepasses.map(g=>g.id===editId?obj:g);}else{gamepasses.push(obj);nextGpId++;}
+  save('bp_gps',gamepasses);cancelEditGp();renderAdminGps();showToast('✓ Gamepass salvo!');
+}
+function delGp(id){if(!confirm('Excluir gamepass?')) return;gamepasses=gamepasses.filter(g=>g.id!==id);save('bp_gps',gamepasses);renderAdminGps();}
+function toggleGpAvail(id){gamepasses=gamepasses.map(g=>g.id===id?{...g,avail:g.avail?0:1}:g);save('bp_gps',gamepasses);renderAdminGps();}
+
+// ══ ADMIN: FAQ ══
+function renderAdminFaq(){
+  const el=document.getElementById('adminFaqList');
+  el.innerHTML=faqs.length?faqs.map(f=>`
+    <div class="admin-card">
+      <div class="admin-card-name" style="font-size:.9rem;margin-bottom:8px">${f.q}</div>
+      <div style="font-size:.78rem;color:var(--muted);margin-bottom:10px;line-height:1.5">${f.a.substring(0,80)}...</div>
+      <div class="admin-card-actions">
+        <button class="btn-edit" onclick="editFaq(${f.id})">✏️ Editar</button>
+        <button class="btn-del" onclick="delFaq(${f.id})">🗑️ Excluir</button>
+      </div>
+    </div>`).join(''):'<p style="color:var(--muted);font-size:.85rem">Nenhuma pergunta.</p>';
+}
+function editFaq(id){
+  const f=faqs.find(x=>x.id===id);if(!f) return;
+  document.getElementById('editFaqId').value=id;
+  document.getElementById('faqQ').value=f.q;
+  document.getElementById('faqA').value=f.a;
+}
+function cancelEditFaq(){
+  document.getElementById('editFaqId').value='';
+  document.getElementById('faqQ').value='';document.getElementById('faqA').value='';
+}
+function saveFaq(){
+  const q=document.getElementById('faqQ').value.trim();
+  const a=document.getElementById('faqA').value.trim();
+  if(!q||!a){showToast('Preencha pergunta e resposta!');return;}
+  const editId=parseInt(document.getElementById('editFaqId').value)||0;
+  const obj={id:editId||nextFaqId,q,a};
+  if(editId){faqs=faqs.map(f=>f.id===editId?obj:f);}else{faqs.push(obj);nextFaqId++;}
+  save('bp_faqs',faqs);cancelEditFaq();renderAdminFaq();showToast('✓ FAQ salvo!');
+}
+function delFaq(id){if(!confirm('Excluir pergunta?')) return;faqs=faqs.filter(f=>f.id!==id);save('bp_faqs',faqs);renderAdminFaq();}
+
+// ── RENDER ALL ──
+function renderAll(){
+  renderPets();renderContas();renderGps();renderFaq();buildTicker();
+}
+
+// ── INIT ──
+renderAll();
 </script>
-
 </body>
 </html>
