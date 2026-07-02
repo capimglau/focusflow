@@ -572,29 +572,49 @@ const ADMIN_PASSWORD = 'bloxpets2025';
 // Atalho: pressione  B P A D M  em sequência rápida no teclado
 const ADMIN_SEQUENCE = ['n','i','t','a','o'];
 
-// ── DADOS (persistem no localStorage) ──
-function load(key, def){ try{ const d=localStorage.getItem(key); return d?JSON.parse(d):def; }catch(e){ return def; } }
-function save(key,val){ localStorage.setItem(key,JSON.stringify(val)); }
+// ── SUPABASE (dados compartilhados entre dispositivos) ──
+const SB_URL = 'https://jsyiriqtzpbuqvjrkwin.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzeWlyaXF0enBidXF2anJrd2luIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMDEyNjksImV4cCI6MjA4ODU3NzI2OX0.BCeCKcwLGnrRhfaFryeTbbCRoGyt3wRPlZzfsxuV0mM';
+const SB_HEADERS = { apikey: SB_KEY, Authorization: 'Bearer '+SB_KEY, 'Content-Type': 'application/json' };
+async function sbSelect(table){
+  try{ const r=await fetch(`${SB_URL}/rest/v1/${table}?select=*&order=id.asc`,{headers:SB_HEADERS}); return r.ok?await r.json():null; }
+  catch(e){ return null; }
+}
+async function sbInsert(table,row){
+  const r=await fetch(`${SB_URL}/rest/v1/${table}`,{method:'POST',headers:Object.assign({},SB_HEADERS,{Prefer:'return=representation'}),body:JSON.stringify(row)});
+  if(!r.ok) throw new Error('insert failed');
+  return (await r.json())[0];
+}
+async function sbUpdate(table,id,row){
+  const r=await fetch(`${SB_URL}/rest/v1/${table}?id=eq.${id}`,{method:'PATCH',headers:Object.assign({},SB_HEADERS,{Prefer:'return=representation'}),body:JSON.stringify(row)});
+  if(!r.ok) throw new Error('update failed');
+  return (await r.json())[0];
+}
+async function sbDelete(table,id){
+  const r=await fetch(`${SB_URL}/rest/v1/${table}?id=eq.${id}`,{method:'DELETE',headers:SB_HEADERS});
+  if(!r.ok) throw new Error('delete failed');
+}
 
-let pets    = load('bp_pets', [
+// ── DADOS (estado inicial exibido até a sincronização com o Supabase concluir) ──
+let pets    = [
   {id:1,name:'Básico',desc:'Um brainrot surpresa para começar!',price:4.99,rarity:'comum',avail:1,isNew:0,img:''},
   {id:2,name:'Intermediário',desc:'Chance de pets raros incluída.',price:15.00,rarity:'raro',avail:1,isNew:0,img:''},
   {id:3,name:'Avançado',desc:'Grandes chances de épicos.',price:44.99,rarity:'epico',avail:1,isNew:1,img:''},
   {id:4,name:'Supremo',desc:'Lendários garantidos na mistura.',price:59.99,rarity:'lendario',avail:1,isNew:0,img:''},
   {id:5,name:'Divino',desc:'O topo absoluto. Ultra raro.',price:99.99,rarity:'divino',avail:1,isNew:1,img:''},
-]);
-let contas  = load('bp_contas', [
+];
+let contas  = [
   {id:1,name:'Conta Gold',desc:'Conta com vários itens raros e combinações exclusivas.',price:89.99,tags:['Lendário','Raro'],avail:1},
-]);
-let gamepasses = load('bp_gps', [
+];
+let gamepasses = [
   {id:1,name:'VIP Pass',desc:'Acesso VIP com benefícios exclusivos dentro do jogo.',price:29.99,icon:'🎟️',avail:1},
-]);
-let faqs = load('bp_faqs', [
+];
+let faqs = [
   {id:1,q:'Como recebo meu pet?',a:'A entrega é feita por troca dentro do próprio jogo. Após o pagamento, entre em contato pelo WhatsApp.'},
   {id:2,q:'Qual o prazo de entrega?',a:'Até 1 hora dentro do horário de funcionamento.'},
   {id:3,q:'É seguro comprar?',a:'Sim! Todos os nossos pedidos são entregues pessoalmente dentro do jogo. Nenhuma informação da conta é solicitada.'},
   {id:4,q:'Aceitam quais formas de pagamento?',a:'PIX, transferência e outros. Entre em contato para combinar.'},
-]);
+];
 
 let cart = [];
 let currentFilter = 'todos';
@@ -890,31 +910,33 @@ function cancelEditPet(){
   document.getElementById('pImgData').value='';document.getElementById('pImgPreview').style.display='none';
   document.getElementById('petFormTitle').textContent='➕ Novo Pet / Brainrot';
 }
-function savePet(){
+async function savePet(){
   const name=document.getElementById('pName').value.trim();
   const price=parseFloat(document.getElementById('pPrice').value);
   if(!name||isNaN(price)){showToast('Preencha nome e preço!');return;}
   const editId=parseInt(document.getElementById('editPetId').value)||0;
-  const obj={
-    id:editId||nextPetId,
+  const row={
     name,desc:document.getElementById('pDesc').value.trim(),
     price,rarity:document.getElementById('pRarity').value,
     avail:parseInt(document.getElementById('pAvail').value),
     isNew:parseInt(document.getElementById('pNew').value),
     img:document.getElementById('pImgData').value
   };
-  if(editId){pets=pets.map(p=>p.id===editId?obj:p);}
-  else{pets.push(obj);nextPetId++;}
-  save('bp_pets',pets);
-  cancelEditPet();renderAdminPets();showToast('✓ Pet salvo!');
+  try{
+    if(editId){ const updated=await sbUpdate('bp_pets',editId,row); pets=pets.map(p=>p.id===editId?updated:p); }
+    else{ const created=await sbInsert('bp_pets',row); pets.push(created); nextPetId=created.id+1; }
+    cancelEditPet();renderAdminPets();renderPets();buildTicker();showToast('✓ Pet salvo!');
+  }catch(e){ showToast('Erro ao salvar. Verifique sua conexão.'); }
 }
-function delPet(id){
+async function delPet(id){
   if(!confirm('Excluir este pet?')) return;
-  pets=pets.filter(p=>p.id!==id);save('bp_pets',pets);renderAdminPets();showToast('Pet removido.');
+  try{ await sbDelete('bp_pets',id); pets=pets.filter(p=>p.id!==id); renderAdminPets();renderPets();buildTicker(); showToast('Pet removido.'); }
+  catch(e){ showToast('Erro ao excluir.'); }
 }
-function togglePetAvail(id){
-  pets=pets.map(p=>p.id===id?{...p,avail:p.avail?0:1}:p);
-  save('bp_pets',pets);renderAdminPets();
+async function togglePetAvail(id){
+  const p=pets.find(x=>x.id===id); if(!p) return;
+  try{ const updated=await sbUpdate('bp_pets',id,{avail:p.avail?0:1}); pets=pets.map(x=>x.id===id?updated:x); renderAdminPets();renderPets();buildTicker(); }
+  catch(e){ showToast('Erro ao atualizar.'); }
 }
 
 // ══ ADMIN: CONTAS ══
@@ -948,18 +970,29 @@ function cancelEditConta(){
   document.getElementById('cAvail').value='1';
   document.getElementById('contaFormTitle').textContent='➕ Nova Conta';
 }
-function saveConta(){
+async function saveConta(){
   const name=document.getElementById('cName').value.trim();
   const price=parseFloat(document.getElementById('cPrice').value);
   if(!name||isNaN(price)){showToast('Preencha nome e preço!');return;}
   const editId=parseInt(document.getElementById('editContaId').value)||0;
   const tags=document.getElementById('cTags').value.split(',').map(t=>t.trim()).filter(Boolean);
-  const obj={id:editId||nextContaId,name,desc:document.getElementById('cDesc').value.trim(),price,tags,avail:parseInt(document.getElementById('cAvail').value)};
-  if(editId){contas=contas.map(c=>c.id===editId?obj:c);}else{contas.push(obj);nextContaId++;}
-  save('bp_contas',contas);cancelEditConta();renderAdminContas();showToast('✓ Conta salva!');
+  const row={name,desc:document.getElementById('cDesc').value.trim(),price,tags,avail:parseInt(document.getElementById('cAvail').value)};
+  try{
+    if(editId){ const updated=await sbUpdate('bp_contas',editId,row); contas=contas.map(c=>c.id===editId?updated:c); }
+    else{ const created=await sbInsert('bp_contas',row); contas.push(created); nextContaId=created.id+1; }
+    cancelEditConta();renderAdminContas();renderContas();buildTicker();showToast('✓ Conta salva!');
+  }catch(e){ showToast('Erro ao salvar. Verifique sua conexão.'); }
 }
-function delConta(id){if(!confirm('Excluir conta?')) return;contas=contas.filter(c=>c.id!==id);save('bp_contas',contas);renderAdminContas();}
-function toggleContaAvail(id){contas=contas.map(c=>c.id===id?{...c,avail:c.avail?0:1}:c);save('bp_contas',contas);renderAdminContas();}
+async function delConta(id){
+  if(!confirm('Excluir conta?')) return;
+  try{ await sbDelete('bp_contas',id); contas=contas.filter(c=>c.id!==id); renderAdminContas();renderContas();buildTicker(); }
+  catch(e){ showToast('Erro ao excluir.'); }
+}
+async function toggleContaAvail(id){
+  const c=contas.find(x=>x.id===id); if(!c) return;
+  try{ const updated=await sbUpdate('bp_contas',id,{avail:c.avail?0:1}); contas=contas.map(x=>x.id===id?updated:x); renderAdminContas();renderContas();buildTicker(); }
+  catch(e){ showToast('Erro ao atualizar.'); }
+}
 
 // ══ ADMIN: GAMEPASSES ══
 function renderAdminGps(){
@@ -991,17 +1024,28 @@ function cancelEditGp(){
   ['gName','gDesc','gPrice','gIcon'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('gAvail').value='1';
 }
-function saveGp(){
+async function saveGp(){
   const name=document.getElementById('gName').value.trim();
   const price=parseFloat(document.getElementById('gPrice').value);
   if(!name||isNaN(price)){showToast('Preencha nome e preço!');return;}
   const editId=parseInt(document.getElementById('editGpId').value)||0;
-  const obj={id:editId||nextGpId,name,desc:document.getElementById('gDesc').value.trim(),price,icon:document.getElementById('gIcon').value||'🎟️',avail:parseInt(document.getElementById('gAvail').value)};
-  if(editId){gamepasses=gamepasses.map(g=>g.id===editId?obj:g);}else{gamepasses.push(obj);nextGpId++;}
-  save('bp_gps',gamepasses);cancelEditGp();renderAdminGps();showToast('✓ Gamepass salvo!');
+  const row={name,desc:document.getElementById('gDesc').value.trim(),price,icon:document.getElementById('gIcon').value||'🎟️',avail:parseInt(document.getElementById('gAvail').value)};
+  try{
+    if(editId){ const updated=await sbUpdate('bp_gamepasses',editId,row); gamepasses=gamepasses.map(g=>g.id===editId?updated:g); }
+    else{ const created=await sbInsert('bp_gamepasses',row); gamepasses.push(created); nextGpId=created.id+1; }
+    cancelEditGp();renderAdminGps();renderGps();buildTicker();showToast('✓ Gamepass salvo!');
+  }catch(e){ showToast('Erro ao salvar. Verifique sua conexão.'); }
 }
-function delGp(id){if(!confirm('Excluir gamepass?')) return;gamepasses=gamepasses.filter(g=>g.id!==id);save('bp_gps',gamepasses);renderAdminGps();}
-function toggleGpAvail(id){gamepasses=gamepasses.map(g=>g.id===id?{...g,avail:g.avail?0:1}:g);save('bp_gps',gamepasses);renderAdminGps();}
+async function delGp(id){
+  if(!confirm('Excluir gamepass?')) return;
+  try{ await sbDelete('bp_gamepasses',id); gamepasses=gamepasses.filter(g=>g.id!==id); renderAdminGps();renderGps();buildTicker(); }
+  catch(e){ showToast('Erro ao excluir.'); }
+}
+async function toggleGpAvail(id){
+  const g=gamepasses.find(x=>x.id===id); if(!g) return;
+  try{ const updated=await sbUpdate('bp_gamepasses',id,{avail:g.avail?0:1}); gamepasses=gamepasses.map(x=>x.id===id?updated:x); renderAdminGps();renderGps();buildTicker(); }
+  catch(e){ showToast('Erro ao atualizar.'); }
+}
 
 // ══ ADMIN: FAQ ══
 function renderAdminFaq(){
@@ -1026,24 +1070,47 @@ function cancelEditFaq(){
   document.getElementById('editFaqId').value='';
   document.getElementById('faqQ').value='';document.getElementById('faqA').value='';
 }
-function saveFaq(){
+async function saveFaq(){
   const q=document.getElementById('faqQ').value.trim();
   const a=document.getElementById('faqA').value.trim();
   if(!q||!a){showToast('Preencha pergunta e resposta!');return;}
   const editId=parseInt(document.getElementById('editFaqId').value)||0;
-  const obj={id:editId||nextFaqId,q,a};
-  if(editId){faqs=faqs.map(f=>f.id===editId?obj:f);}else{faqs.push(obj);nextFaqId++;}
-  save('bp_faqs',faqs);cancelEditFaq();renderAdminFaq();showToast('✓ FAQ salvo!');
+  const row={q,a};
+  try{
+    if(editId){ const updated=await sbUpdate('bp_faqs',editId,row); faqs=faqs.map(f=>f.id===editId?updated:f); }
+    else{ const created=await sbInsert('bp_faqs',row); faqs.push(created); nextFaqId=created.id+1; }
+    cancelEditFaq();renderAdminFaq();renderFaq();showToast('✓ FAQ salvo!');
+  }catch(e){ showToast('Erro ao salvar. Verifique sua conexão.'); }
 }
-function delFaq(id){if(!confirm('Excluir pergunta?')) return;faqs=faqs.filter(f=>f.id!==id);save('bp_faqs',faqs);renderAdminFaq();}
+async function delFaq(id){
+  if(!confirm('Excluir pergunta?')) return;
+  try{ await sbDelete('bp_faqs',id); faqs=faqs.filter(f=>f.id!==id); renderAdminFaq();renderFaq(); }
+  catch(e){ showToast('Erro ao excluir.'); }
+}
 
 // ── RENDER ALL ──
 function renderAll(){
   renderPets();renderContas();renderGps();renderFaq();buildTicker();
 }
 
+// ── SINCRONIZAÇÃO COM SUPABASE ──
+async function syncFromSupabase(){
+  const [p,c,g,f] = await Promise.all([
+    sbSelect('bp_pets'), sbSelect('bp_contas'), sbSelect('bp_gamepasses'), sbSelect('bp_faqs')
+  ]);
+  if(p){ pets=p; nextPetId=Math.max(0,...pets.map(x=>x.id))+1; }
+  if(c){ contas=c; nextContaId=Math.max(0,...contas.map(x=>x.id))+1; }
+  if(g){ gamepasses=g; nextGpId=Math.max(0,...gamepasses.map(x=>x.id))+1; }
+  if(f){ faqs=f; nextFaqId=Math.max(0,...faqs.map(x=>x.id))+1; }
+  renderAll();
+  if(document.getElementById('admin-panel').classList.contains('visible')){
+    renderAdminPets();renderAdminContas();renderAdminGps();renderAdminFaq();
+  }
+}
+
 // ── INIT ──
 renderAll();
+syncFromSupabase();
 </script>
 </body>
 </html>
